@@ -1,0 +1,1702 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info.cleaned - src/btree.cc</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - btree.cc<span style="font-size: 80%;"> (source / <a href="btree.cc.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">687</td>
+            <td class="headerCovTableEntry">777</td>
+            <td class="headerCovTableEntryMed">88.4 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2014-10-07 10:14:54</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntryHi">96.7 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */</a>
+<span class="lineNum">       2 </span>            : /*
+<span class="lineNum">       3 </span>            :  * Generic B+Tree
+<span class="lineNum">       4 </span>            :  * (C) 2013  Jung-Sang Ahn &lt;jungsang.ahn@gmail.com&gt;
+<span class="lineNum">       5 </span>            :  */
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : #include &lt;stdio.h&gt;
+<span class="lineNum">       8 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">       9 </span>            : #include &lt;string.h&gt;
+<span class="lineNum">      10 </span>            : #include &lt;assert.h&gt;
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            : #include &quot;btree.h&quot;
+<span class="lineNum">      13 </span>            : #include &quot;common.h&quot;
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;list.h&quot;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifdef __DEBUG
+<span class="lineNum">      18 </span>            :     #include &quot;memleak.h&quot;
+<span class="lineNum">      19 </span>            : #ifndef __DEBUG_BTREE
+<span class="lineNum">      20 </span>            :     #undef DBG
+<span class="lineNum">      21 </span>            :     #undef DBGCMD
+<span class="lineNum">      22 </span>            :     #undef DBGSW
+<span class="lineNum">      23 </span>            :     #define DBG(...)
+<span class="lineNum">      24 </span>            :     #define DBGCMD(...)
+<span class="lineNum">      25 </span>            :     #define DBGSW(n, ...)
+<span class="lineNum">      26 </span>            : #endif
+<span class="lineNum">      27 </span>            : #endif
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : #define METASIZE_ALIGN_UNIT (16)
+<span class="lineNum">      30 </span>            : #ifdef METASIZE_ALIGN_UNIT
+<span class="lineNum">      31 </span>            :     #define _metasize_align(size) \
+<span class="lineNum">      32 </span>            :         (((( (size + sizeof(metasize_t)) + (METASIZE_ALIGN_UNIT-1)) \
+<span class="lineNum">      33 </span>            :             / METASIZE_ALIGN_UNIT) * METASIZE_ALIGN_UNIT) - sizeof(metasize_t))
+<span class="lineNum">      34 </span>            : #else
+<span class="lineNum">      35 </span>            :     #define _metasize_align(size) (size)
+<span class="lineNum">      36 </span>            : #endif
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : INLINE int is_subblock(bid_t subbid)
+<a name="39"><span class="lineNum">      39 </span>            : {</a>
+<span class="lineNum">      40 </span>            :     uint8_t flag;
+<span class="lineNum">      41 </span><span class="lineCov">      54254 :     flag = (subbid &gt;&gt; (8 * (sizeof(bid_t)-2))) &amp; 0x00ff;</span>
+<span class="lineNum">      42 </span><span class="lineCov">      54254 :     return flag;</span>
+<a name="43"><span class="lineNum">      43 </span>            : }</a>
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span><span class="lineCov">   98783279 : INLINE struct bnode *_fetch_bnode(struct btree *btree, void *addr, uint16_t level)</span>
+<span class="lineNum">      46 </span>            : {
+<span class="lineNum">      47 </span><span class="lineCov">   98783279 :     struct bnode *node = NULL;</span>
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span><span class="lineCov">   98783279 :     node = (struct bnode *)addr;</span>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineCov">   98783279 :     if (!(node-&gt;flag &amp; BNODE_MASK_METADATA)) {</span>
+<span class="lineNum">      52 </span>            :         // no metadata
+<span class="lineNum">      53 </span><span class="lineCov">   65972356 :         node-&gt;data = (uint8_t *)addr + sizeof(struct bnode);</span>
+<span class="lineNum">      54 </span>            :     } else {
+<span class="lineNum">      55 </span>            :         // metadata
+<span class="lineNum">      56 </span>            :         metasize_t metasize;
+<span class="lineNum">      57 </span><span class="lineCov">   32810923 :         memcpy(&amp;metasize, (uint8_t *)addr + sizeof(struct bnode), sizeof(metasize_t));</span>
+<span class="lineNum">      58 </span><span class="lineCov">   32810923 :         metasize = _endian_decode(metasize);</span>
+<span class="lineNum">      59 </span>            :         node-&gt;data = (uint8_t *)addr + sizeof(struct bnode) + sizeof(metasize_t) +
+<span class="lineNum">      60 </span><span class="lineCov">   32810923 :                      _metasize_align(metasize);</span>
+<span class="lineNum">      61 </span>            :     }
+<span class="lineNum">      62 </span><span class="lineCov">   98783279 :     return node;</span>
+<a name="63"><span class="lineNum">      63 </span>            : }</a>
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span><span class="lineCov">   38698027 : struct bnode ** btree_get_bnode_array(void *addr, size_t *nnode_out)</span>
+<span class="lineNum">      66 </span>            : {
+<span class="lineNum">      67 </span>            :     // original b+tree always has only a single node per block
+<span class="lineNum">      68 </span>            :     struct bnode **ret;
+<span class="lineNum">      69 </span><span class="lineCov">   38698027 :     *nnode_out = 1;</span>
+<span class="lineNum">      70 </span><span class="lineCov">   38698027 :     ret = (struct bnode **)malloc(sizeof(struct bnode*) * (*nnode_out));</span>
+<span class="lineNum">      71 </span><span class="lineCov">   38698027 :     ret[0] = _fetch_bnode(NULL, addr, 0);</span>
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span><span class="lineCov">   38699841 :     return ret;</span>
+<a name="74"><span class="lineNum">      74 </span>            : }</a>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span><span class="lineCov">    8464736 : INLINE int _bnode_size(</span>
+<span class="lineNum">      77 </span>            :     struct btree *btree, struct bnode *node, void *new_minkey, void *key_arr, void *value_arr, size_t len)
+<span class="lineNum">      78 </span>            : {
+<span class="lineNum">      79 </span><span class="lineCov">    8464736 :     int nodesize = 0;</span>
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span><span class="lineCov">    8464736 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">      82 </span>            :         metasize_t size;
+<span class="lineNum">      83 </span><span class="lineCov">      28170 :         memcpy(&amp;size, (uint8_t *)node + sizeof(struct bnode), sizeof(metasize_t));</span>
+<span class="lineNum">      84 </span><span class="lineCov">      28170 :         size = _endian_decode(size);</span>
+<span class="lineNum">      85 </span>            :         nodesize =
+<span class="lineNum">      86 </span>            :             sizeof(struct bnode) +
+<span class="lineNum">      87 </span><span class="lineCov">      28170 :             btree-&gt;kv_ops-&gt;get_data_size(node, new_minkey, key_arr, value_arr, len) +</span>
+<span class="lineNum">      88 </span><span class="lineCov">      56340 :             _metasize_align(size) + sizeof(metasize_t);</span>
+<span class="lineNum">      89 </span>            :     }else{
+<span class="lineNum">      90 </span>            :         nodesize =
+<span class="lineNum">      91 </span>            :             sizeof(struct bnode) +
+<span class="lineNum">      92 </span><span class="lineCov">    8436566 :             btree-&gt;kv_ops-&gt;get_data_size(node, new_minkey, key_arr, value_arr, len);</span>
+<span class="lineNum">      93 </span>            :     }
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineCov">    8464736 :     return nodesize;</span>
+<span class="lineNum">      96 </span>            : }
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : struct kv_ins_item {
+<span class="lineNum">      99 </span>            :     void *key;
+<span class="lineNum">     100 </span>            :     void *value;
+<span class="lineNum">     101 </span>            :     struct list_elem le;
+<a name="102"><span class="lineNum">     102 </span>            : };</a>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineCov">    8463826 : INLINE struct kv_ins_item * _kv_ins_item_create(</span>
+<span class="lineNum">     105 </span>            :     struct btree *btree, void *key, void *value)
+<span class="lineNum">     106 </span>            : {
+<span class="lineNum">     107 </span>            :     struct kv_ins_item *item;
+<span class="lineNum">     108 </span><span class="lineCov">    8463826 :     item = (struct kv_ins_item*)malloc(sizeof(struct kv_ins_item));</span>
+<span class="lineNum">     109 </span><span class="lineCov">    8463826 :     item-&gt;key = (void *)malloc(btree-&gt;ksize);</span>
+<span class="lineNum">     110 </span><span class="lineCov">    8463826 :     item-&gt;value = (void *)malloc(btree-&gt;vsize);</span>
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span><span class="lineCov">    8463826 :     btree-&gt;kv_ops-&gt;init_kv_var(btree, item-&gt;key, item-&gt;value);</span>
+<span class="lineNum">     113 </span><span class="lineCov">    8463826 :     if (key) {</span>
+<span class="lineNum">     114 </span><span class="lineCov">    8410741 :         btree-&gt;kv_ops-&gt;set_key(btree, item-&gt;key, key);</span>
+<span class="lineNum">     115 </span>            :     }
+<span class="lineNum">     116 </span><span class="lineCov">    8463826 :     if (value) {</span>
+<span class="lineNum">     117 </span><span class="lineCov">    8463826 :         btree-&gt;kv_ops-&gt;set_value(btree, item-&gt;value, value);</span>
+<span class="lineNum">     118 </span>            :     }
+<span class="lineNum">     119 </span><span class="lineCov">    8463826 :     return item;</span>
+<a name="120"><span class="lineNum">     120 </span>            : }</a>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineCov">    8463826 : INLINE void _kv_ins_item_free(struct kv_ins_item *item){</span>
+<span class="lineNum">     123 </span><span class="lineCov">    8463826 :     free(item-&gt;key);</span>
+<span class="lineNum">     124 </span><span class="lineCov">    8463826 :     free(item-&gt;value);</span>
+<span class="lineNum">     125 </span><span class="lineCov">    8463826 :     free(item);</span>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">    8463826 : }</span></a>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span><span class="lineCov">    8464736 : INLINE int _bnode_size_check(</span>
+<span class="lineNum">     129 </span>            :     struct btree *btree, bid_t bid, struct bnode *node,
+<span class="lineNum">     130 </span>            :     void *new_minkey, struct list *kv_ins_list, size_t *size_out)
+<span class="lineNum">     131 </span>            : {
+<span class="lineNum">     132 </span>            :     size_t nitem;
+<span class="lineNum">     133 </span>            :     size_t cursize;
+<span class="lineNum">     134 </span>            :     size_t nodesize;
+<span class="lineNum">     135 </span>            :     struct list_elem *e;
+<span class="lineNum">     136 </span>            :     struct kv_ins_item *item;
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineCov">    8464736 :     nodesize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     139 </span>            : #ifdef __CRC32
+<span class="lineNum">     140 </span><span class="lineCov">    8464736 :     nodesize -= BLK_MARKER_SIZE;</span>
+<span class="lineNum">     141 </span>            : #endif
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineCov">    8464736 :     nitem = 0;</span>
+<span class="lineNum">     144 </span><span class="lineCov">    8464736 :     if (kv_ins_list) {</span>
+<span class="lineNum">     145 </span><span class="lineCov">    8464736 :         e = list_begin(kv_ins_list);</span>
+<span class="lineNum">     146 </span><span class="lineCov">   25393982 :         while(e){</span>
+<span class="lineNum">     147 </span><span class="lineCov">    8464510 :             nitem++;</span>
+<span class="lineNum">     148 </span><span class="lineCov">    8464510 :             e = list_next(e);</span>
+<span class="lineNum">     149 </span>            :         }
+<span class="lineNum">     150 </span>            :     }
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span><span class="lineCov">    8464736 :     if (nitem &gt; 1) {</span>
+<span class="lineNum">     153 </span>            :         int i;
+<span class="lineNum">     154 </span>            :         void *key_arr, *value_arr;
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :         key_arr = (void*)malloc(btree-&gt;ksize * nitem);</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :         value_arr = (void*)malloc(btree-&gt;vsize * nitem);</span>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :         i = 0;</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :         e = list_begin(kv_ins_list);</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :         while(e){</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :             item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :             memcpy((uint8_t *)key_arr + btree-&gt;ksize * i, item-&gt;key, btree-&gt;ksize);</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :             memcpy((uint8_t *)value_arr + btree-&gt;ksize * i, item-&gt;value, btree-&gt;ksize);</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :             i++;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :             e = list_next(e);</span>
+<span class="lineNum">     167 </span>            :         }
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :         cursize = _bnode_size(btree, node, new_minkey, key_arr, value_arr, nitem);</span>
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         free(key_arr);</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :         free(value_arr);</span>
+<span class="lineNum">     172 </span><span class="lineCov">    8464736 :     }else if (nitem == 1) {</span>
+<span class="lineNum">     173 </span><span class="lineCov">    8464510 :         e = list_begin(kv_ins_list);</span>
+<span class="lineNum">     174 </span><span class="lineCov">    8464510 :         item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">     175 </span><span class="lineCov">   16929020 :         cursize = _bnode_size(btree, node, new_minkey, item-&gt;key, item-&gt;value, 1);</span>
+<span class="lineNum">     176 </span><span class="lineCov">        226 :     }else if (nitem == 0) {</span>
+<span class="lineNum">     177 </span><span class="lineCov">        226 :         cursize = _bnode_size(btree, node, new_minkey, NULL, NULL, 0);</span>
+<span class="lineNum">     178 </span>            :     }
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span><span class="lineCov">    8464736 :     *size_out = cursize;</span>
+<span class="lineNum">     181 </span><span class="lineCov">    8464736 :     return ( cursize &lt;= nodesize );</span>
+<a name="182"><span class="lineNum">     182 </span>            : }</a>
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span><span class="lineCov">      54594 : INLINE struct bnode * _btree_init_node(</span>
+<span class="lineNum">     185 </span>            :     struct btree *btree, bid_t bid, void *addr, bnode_flag_t flag, uint16_t level, struct btree_meta *meta)
+<span class="lineNum">     186 </span>            : {
+<span class="lineNum">     187 </span>            :     struct bnode *node;
+<span class="lineNum">     188 </span>            :     void *node_addr;
+<span class="lineNum">     189 </span>            :     metasize_t _size;
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span><span class="lineCov">      54594 :     node_addr = addr;</span>
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span><span class="lineCov">      54594 :     node = (struct bnode *)node_addr;</span>
+<span class="lineNum">     194 </span><span class="lineCov">      54594 :     node-&gt;kvsize = btree-&gt;ksize&lt;&lt;4 | btree-&gt;vsize;</span>
+<span class="lineNum">     195 </span><span class="lineCov">      54594 :     node-&gt;nentry = 0;</span>
+<span class="lineNum">     196 </span><span class="lineCov">      54594 :     node-&gt;level = level;</span>
+<span class="lineNum">     197 </span><span class="lineCov">      54594 :     node-&gt;flag = flag;</span>
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span><span class="lineCov">      54594 :     if ((flag &amp; BNODE_MASK_METADATA) &amp;&amp; meta) {</span>
+<span class="lineNum">     200 </span><span class="lineCov">        787 :         _size = _endian_encode(meta-&gt;size);</span>
+<span class="lineNum">     201 </span><span class="lineCov">        787 :         memcpy((uint8_t *)node_addr + sizeof(struct bnode), &amp;_size, sizeof(metasize_t));</span>
+<span class="lineNum">     202 </span><span class="lineCov">        787 :         memcpy((uint8_t *)node_addr + sizeof(struct bnode) + sizeof(metasize_t),</span>
+<span class="lineNum">     203 </span><span class="lineCov">        787 :                meta-&gt;data, meta-&gt;size);</span>
+<span class="lineNum">     204 </span>            :         node-&gt;data = (uint8_t *)node_addr + sizeof(struct bnode) + sizeof(metasize_t) +
+<span class="lineNum">     205 </span><span class="lineCov">        787 :                      _metasize_align(meta-&gt;size);</span>
+<span class="lineNum">     206 </span>            :     }else{
+<span class="lineNum">     207 </span><span class="lineCov">      53807 :         node-&gt;data = (uint8_t *)node_addr + sizeof(struct bnode);</span>
+<span class="lineNum">     208 </span>            :     }
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span><span class="lineCov">      54594 :     return node;</span>
+<a name="211"><span class="lineNum">     211 </span>            : }</a>
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span><span class="lineCov">      53570 : INLINE size_t _btree_get_nsplitnode(struct btree *btree, bid_t bid, struct bnode *node, size_t size)</span>
+<span class="lineNum">     214 </span>            : {
+<span class="lineNum">     215 </span>            :     size_t headersize, dataspace;
+<span class="lineNum">     216 </span>            :     size_t nodesize;
+<span class="lineNum">     217 </span><span class="lineCov">      53570 :     size_t nnode = 0;</span>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span><span class="lineCov">      53570 :     nodesize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     220 </span>            : #ifdef __CRC32
+<span class="lineNum">     221 </span><span class="lineCov">      53570 :     nodesize -= BLK_MARKER_SIZE;</span>
+<span class="lineNum">     222 </span>            : #endif
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineCov">      53570 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">     225 </span>            :         metasize_t size;
+<span class="lineNum">     226 </span><span class="lineCov">        382 :         memcpy(&amp;size, (uint8_t *)node + sizeof(struct bnode), sizeof(metasize_t));</span>
+<span class="lineNum">     227 </span><span class="lineCov">        382 :         size = _endian_decode(size);</span>
+<span class="lineNum">     228 </span><span class="lineCov">        382 :         headersize = sizeof(struct bnode) + _metasize_align(size) + sizeof(metasize_t);</span>
+<span class="lineNum">     229 </span>            :     }else{
+<span class="lineNum">     230 </span><span class="lineCov">      53188 :         headersize = sizeof(struct bnode);</span>
+<span class="lineNum">     231 </span>            :     }
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span><span class="lineCov">      53570 :     dataspace = nodesize - headersize;</span>
+<span class="lineNum">     234 </span>            :     // round up
+<span class="lineNum">     235 </span><span class="lineCov">      53570 :     nnode = ((size - headersize) + (dataspace-1)) / dataspace;</span>
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span><span class="lineCov">      53570 :     return nnode;</span>
+<a name="238"><span class="lineNum">     238 </span>            : }</a>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineCov">    6664001 : metasize_t btree_read_meta(struct btree *btree, void *buf)</span>
+<span class="lineNum">     241 </span>            : {
+<span class="lineNum">     242 </span>            :     void *addr;
+<span class="lineNum">     243 </span>            :     void *ptr;
+<span class="lineNum">     244 </span>            :     metasize_t size;
+<span class="lineNum">     245 </span>            :     struct bnode *node;
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span><span class="lineCov">    6664001 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     248 </span><span class="lineCov">    6664002 :     node = _fetch_bnode(btree, addr, btree-&gt;height);</span>
+<span class="lineNum">     249 </span><span class="lineCov">    6663993 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">     250 </span><span class="lineCov">    6663890 :         ptr = ((uint8_t *)node) + sizeof(struct bnode);</span>
+<span class="lineNum">     251 </span>            :         memcpy(&amp;size, (uint8_t *)ptr, sizeof(metasize_t));
+<span class="lineNum">     252 </span><span class="lineCov">    6663890 :         size = _endian_decode(size);</span>
+<span class="lineNum">     253 </span><span class="lineCov">    6663890 :         memcpy(buf, (uint8_t *)ptr + sizeof(metasize_t), size);</span>
+<span class="lineNum">     254 </span>            :     } else {
+<span class="lineNum">     255 </span><span class="lineCov">        103 :         size = 0;</span>
+<span class="lineNum">     256 </span>            :     }
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span><span class="lineCov">    6663993 :     return size;</span>
+<a name="259"><span class="lineNum">     259 </span>            : }</a>
+<span class="lineNum">     260 </span>            : 
+<span class="lineNum">     261 </span><span class="lineCov">        489 : void btree_update_meta(struct btree *btree, struct btree_meta *meta)</span>
+<span class="lineNum">     262 </span>            : {
+<span class="lineNum">     263 </span>            :     void *addr;
+<span class="lineNum">     264 </span>            :     void *ptr;
+<span class="lineNum">     265 </span>            :     metasize_t metasize, _metasize;
+<span class="lineNum">     266 </span>            :     metasize_t old_metasize;
+<span class="lineNum">     267 </span>            :     struct bnode *node;
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            :     // read root node
+<span class="lineNum">     270 </span><span class="lineCov">        489 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     271 </span><span class="lineCov">        489 :     node = _fetch_bnode(btree, addr, btree-&gt;height);</span>
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span><span class="lineCov">        489 :     ptr = ((uint8_t *)node) + sizeof(struct bnode);</span>
+<span class="lineNum">     274 </span><span class="lineCov">        489 :     metasize = old_metasize = 0;</span>
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span><span class="lineCov">        489 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">     277 </span>            :         memcpy(&amp;old_metasize, ptr, sizeof(metasize_t));
+<span class="lineNum">     278 </span><span class="lineCov">        386 :         old_metasize = _endian_decode(old_metasize);</span>
+<span class="lineNum">     279 </span>            :     }
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span><span class="lineCov">        489 :     if (meta) {</span>
+<span class="lineNum">     282 </span><span class="lineCov">          4 :         metasize = meta-&gt;size;</span>
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span>            :         // new meta size cannot be larger than old meta size
+<span class="lineNum">     285 </span><span class="lineCov">          4 :         assert(metasize &lt;= old_metasize);</span>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span>            :         // overwrite
+<span class="lineNum">     288 </span><span class="lineCov">          4 :         if (meta-&gt;size &gt; 0) {</span>
+<span class="lineNum">     289 </span><span class="lineCov">          4 :             _metasize = _endian_encode(metasize);</span>
+<span class="lineNum">     290 </span>            :             memcpy(ptr, &amp;_metasize, sizeof(metasize_t));
+<span class="lineNum">     291 </span><span class="lineCov">          4 :             memcpy((uint8_t *)ptr + sizeof(metasize_t), meta-&gt;data, metasize);</span>
+<span class="lineNum">     292 </span><span class="lineCov">          4 :             node-&gt;flag |= BNODE_MASK_METADATA;</span>
+<span class="lineNum">     293 </span>            :         }else{
+<span class="lineNum">     294 </span>            :             // clear the flag
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :             node-&gt;flag &amp;= ~BNODE_MASK_METADATA;</span>
+<span class="lineNum">     296 </span>            :         }
+<span class="lineNum">     297 </span>            :         // move kv-pairs (only if meta size is changed)
+<span class="lineNum">     298 </span><span class="lineCov">          4 :         if (_metasize_align(metasize) &lt; _metasize_align(old_metasize)){</span>
+<span class="lineNum">     299 </span>            :             memmove(
+<span class="lineNum">     300 </span><span class="lineCov">          2 :                 (uint8_t *)ptr + sizeof(metasize_t) + _metasize_align(metasize),</span>
+<span class="lineNum">     301 </span>            :                 node-&gt;data,
+<span class="lineNum">     302 </span><span class="lineCov">          2 :                 btree-&gt;kv_ops-&gt;get_data_size(node, NULL, NULL, NULL, 0));</span>
+<span class="lineNum">     303 </span>            :             node-&gt;data = (uint8_t *)node-&gt;data - (_metasize_align(old_metasize) -
+<span class="lineNum">     304 </span><span class="lineCov">          1 :                          _metasize_align(metasize));</span>
+<span class="lineNum">     305 </span>            :         }
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span>            :     }else {
+<span class="lineNum">     308 </span><span class="lineCov">        485 :         if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">     309 </span>            :             // existing metadata is removed
+<span class="lineNum">     310 </span><span class="lineCov">        382 :             memmove(ptr, node-&gt;data, btree-&gt;kv_ops-&gt;get_data_size(node, NULL, NULL, NULL, 0));</span>
+<span class="lineNum">     311 </span>            :             node-&gt;data = (uint8_t *)node-&gt;data - (_metasize_align(old_metasize) +
+<span class="lineNum">     312 </span><span class="lineCov">        382 :                          sizeof(metasize_t));</span>
+<span class="lineNum">     313 </span>            :             // clear the flag
+<span class="lineNum">     314 </span><span class="lineCov">        382 :             node-&gt;flag &amp;= ~BNODE_MASK_METADATA;</span>
+<span class="lineNum">     315 </span>            :         }
+<span class="lineNum">     316 </span>            :     }
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span><span class="lineCov">        489 :     if (!btree-&gt;blk_ops-&gt;blk_is_writable(btree-&gt;blk_handle, btree-&gt;root_bid)) {</span>
+<span class="lineNum">     319 </span>            :         // already flushed block -&gt; cannot overwrite, we have to move to new block
+<span class="lineNum">     320 </span><span class="lineCov">          5 :         addr = btree-&gt;blk_ops-&gt;blk_move(btree-&gt;blk_handle, btree-&gt;root_bid, &amp;btree-&gt;root_bid);</span>
+<span class="lineNum">     321 </span>            :     }else{
+<span class="lineNum">     322 </span><span class="lineCov">        484 :         btree-&gt;blk_ops-&gt;blk_set_dirty(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     323 </span>            :     }
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        489 : }</span></a>
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span><span class="lineCov">    6639607 : btree_result btree_init_from_bid(struct btree *btree, void *blk_handle,</span>
+<span class="lineNum">     327 </span>            :                                  struct btree_blk_ops *blk_ops,
+<span class="lineNum">     328 </span>            :                                  struct btree_kv_ops *kv_ops,
+<span class="lineNum">     329 </span>            :                                  uint32_t nodesize, bid_t root_bid)
+<span class="lineNum">     330 </span>            : {
+<span class="lineNum">     331 </span>            :     void *addr;
+<span class="lineNum">     332 </span>            :     struct bnode *root;
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span><span class="lineCov">    6639607 :     btree-&gt;blk_ops = blk_ops;</span>
+<span class="lineNum">     335 </span><span class="lineCov">    6639607 :     btree-&gt;blk_handle = blk_handle;</span>
+<span class="lineNum">     336 </span><span class="lineCov">    6639607 :     btree-&gt;kv_ops = kv_ops;</span>
+<span class="lineNum">     337 </span><span class="lineCov">    6639607 :     btree-&gt;blksize = nodesize;</span>
+<span class="lineNum">     338 </span><span class="lineCov">    6639607 :     btree-&gt;root_bid = root_bid;</span>
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span><span class="lineCov">    6639607 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     341 </span><span class="lineCov">    6663671 :     root = _fetch_bnode(btree, addr, 0);</span>
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span><span class="lineCov">    6663669 :     btree-&gt;root_flag = root-&gt;flag;</span>
+<span class="lineNum">     344 </span><span class="lineCov">    6663669 :     btree-&gt;height = root-&gt;level;</span>
+<span class="lineNum">     345 </span><span class="lineCov">    6663669 :     _get_kvsize(root-&gt;kvsize, btree-&gt;ksize, btree-&gt;vsize);</span>
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span><span class="lineCov">    6663669 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="348"><span class="lineNum">     348 </span>            : }</a>
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span><span class="lineCov">        540 : btree_result btree_init(</span>
+<span class="lineNum">     351 </span>            :         struct btree *btree, void *blk_handle,
+<span class="lineNum">     352 </span>            :         struct btree_blk_ops *blk_ops,     struct btree_kv_ops *kv_ops,
+<span class="lineNum">     353 </span>            :         uint32_t nodesize, uint8_t ksize, uint8_t vsize,
+<span class="lineNum">     354 </span>            :         bnode_flag_t flag, struct btree_meta *meta)
+<span class="lineNum">     355 </span>            : {
+<span class="lineNum">     356 </span>            :     void *addr;
+<span class="lineNum">     357 </span><span class="lineCov">        540 :     size_t min_nodesize = 0;</span>
+<span class="lineNum">     358 </span>            :     struct bnode *root;
+<span class="lineNum">     359 </span>            : 
+<span class="lineNum">     360 </span><span class="lineCov">        540 :     btree-&gt;root_flag = BNODE_MASK_ROOT | flag;</span>
+<span class="lineNum">     361 </span><span class="lineCov">        540 :     btree-&gt;blk_ops = blk_ops;</span>
+<span class="lineNum">     362 </span><span class="lineCov">        540 :     btree-&gt;blk_handle = blk_handle;</span>
+<span class="lineNum">     363 </span><span class="lineCov">        540 :     btree-&gt;kv_ops = kv_ops;</span>
+<span class="lineNum">     364 </span><span class="lineCov">        540 :     btree-&gt;height = 1;</span>
+<span class="lineNum">     365 </span><span class="lineCov">        540 :     btree-&gt;blksize = nodesize;</span>
+<span class="lineNum">     366 </span><span class="lineCov">        540 :     btree-&gt;ksize = ksize;</span>
+<span class="lineNum">     367 </span><span class="lineCov">        540 :     btree-&gt;vsize = vsize;</span>
+<span class="lineNum">     368 </span><span class="lineCov">        540 :     if (meta) {</span>
+<span class="lineNum">     369 </span><span class="lineCov">        406 :         btree-&gt;root_flag |= BNODE_MASK_METADATA;</span>
+<span class="lineNum">     370 </span>            :         min_nodesize = sizeof(struct bnode) + _metasize_align(meta-&gt;size) +
+<span class="lineNum">     371 </span><span class="lineCov">        406 :                        sizeof(metasize_t) + BLK_MARKER_SIZE;</span>
+<span class="lineNum">     372 </span>            :     } else {
+<span class="lineNum">     373 </span><span class="lineCov">        134 :         min_nodesize = sizeof(struct bnode) + BLK_MARKER_SIZE;</span>
+<span class="lineNum">     374 </span>            :     }
+<span class="lineNum">     375 </span>            : 
+<span class="lineNum">     376 </span><span class="lineCov">        540 :     if (min_nodesize &gt; btree-&gt;blksize) {</span>
+<span class="lineNum">     377 </span>            :         // too large metadata .. init fail
+<span class="lineNum">     378 </span><span class="lineCov">          1 :         return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">     379 </span>            :     }
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            :     // create the first root node
+<span class="lineNum">     382 </span><span class="lineCov">        539 :     if (btree-&gt;blk_ops-&gt;blk_alloc_sub &amp;&amp; btree-&gt;blk_ops-&gt;blk_enlarge_node) {</span>
+<span class="lineNum">     383 </span><span class="lineCov">        539 :         addr = btree-&gt;blk_ops-&gt;blk_alloc_sub(btree-&gt;blk_handle, &amp;btree-&gt;root_bid);</span>
+<span class="lineNum">     384 </span><span class="lineCov">        539 :         if (meta) {</span>
+<span class="lineNum">     385 </span>            :             // check if the initial node size including metadata is
+<span class="lineNum">     386 </span>            :             // larger than the subblock size
+<span class="lineNum">     387 </span>            :             size_t subblock_size;
+<span class="lineNum">     388 </span>            :             subblock_size = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle,
+<span class="lineNum">     389 </span><span class="lineCov">        405 :                                                          btree-&gt;root_bid);</span>
+<span class="lineNum">     390 </span><span class="lineCov">        405 :             if (subblock_size &lt; min_nodesize) {</span>
+<span class="lineNum">     391 </span>            :                 addr = btree-&gt;blk_ops-&gt;blk_enlarge_node(btree-&gt;blk_handle,
+<span class="lineNum">     392 </span>            :                                                         btree-&gt;root_bid,
+<span class="lineNum">     393 </span>            :                                                         min_nodesize,
+<span class="lineNum">     394 </span><span class="lineCov">        305 :                                                         &amp;btree-&gt;root_bid);</span>
+<span class="lineNum">     395 </span>            :             }
+<span class="lineNum">     396 </span>            :         }
+<span class="lineNum">     397 </span>            :     } else {
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :         addr = btree-&gt;blk_ops-&gt;blk_alloc (btree-&gt;blk_handle, &amp;btree-&gt;root_bid);</span>
+<span class="lineNum">     399 </span>            :     }
+<span class="lineNum">     400 </span>            :     root = _btree_init_node(btree, btree-&gt;root_bid, addr,
+<span class="lineNum">     401 </span><span class="lineCov">       1078 :                             btree-&gt;root_flag, BNODE_MASK_ROOT, meta);</span>
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span><span class="lineCov">        539 :     return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">     404 </span>            : }
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span>            : /*
+<span class="lineNum">     407 </span>            : return index# of largest key equal or smaller than KEY
+<span class="lineNum">     408 </span>            : example)
+<span class="lineNum">     409 </span>            : node: [2 4 6 8]
+<span class="lineNum">     410 </span>            : key: 5
+<span class="lineNum">     411 </span>            : largest key equal or smaller than KEY: 4
+<a name="412"><span class="lineNum">     412 </span>            : return: 1 (index# of the key '4')</a>
+<span class="lineNum">     413 </span>            : */
+<span class="lineNum">     414 </span><span class="lineCov">   49090926 : idx_t _btree_find_entry(struct btree *btree, struct bnode *node, void *key)</span>
+<span class="lineNum">     415 </span>            : {
+<span class="lineNum">     416 </span>            :     idx_t start, end, middle, temp;
+<span class="lineNum">     417 </span><span class="lineCov">   49090926 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     418 </span>            :     int cmp;
+<span class="lineNum">     419 </span>            :     #ifdef __BIT_CMP
+<span class="lineNum">     420 </span><span class="lineCov">   49090926 :         idx_t *_map1[3] = {&amp;end, &amp;start, &amp;start};</span>
+<span class="lineNum">     421 </span><span class="lineCov">   49090926 :         idx_t *_map2[3] = {&amp;temp, &amp;end, &amp;temp};</span>
+<span class="lineNum">     422 </span>            :     #endif
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span><span class="lineCov">   49090926 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     425 </span>            : 
+<span class="lineNum">     426 </span><span class="lineCov">   49097756 :     start = middle = 0;</span>
+<span class="lineNum">     427 </span><span class="lineCov">   49097756 :     end = node-&gt;nentry;</span>
+<span class="lineNum">     428 </span>            : 
+<span class="lineNum">     429 </span><span class="lineCov">   49097756 :     if (end &gt; 0) {</span>
+<span class="lineNum">     430 </span>            :         // compare with smallest key
+<span class="lineNum">     431 </span><span class="lineCov">   49095153 :         btree-&gt;kv_ops-&gt;get_kv(node, 0, k, NULL);</span>
+<span class="lineNum">     432 </span>            :         // smaller than smallest key
+<span class="lineNum">     433 </span><span class="lineCov">   49096918 :         if (btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &lt; 0) {</span>
+<span class="lineNum">     434 </span><span class="lineCov">       2204 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     435 </span><span class="lineCov">       2204 :             return BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">     436 </span>            :         }
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span>            :         // compare with largest key
+<span class="lineNum">     439 </span><span class="lineCov">   49087388 :         btree-&gt;kv_ops-&gt;get_kv(node, end-1, k, NULL);</span>
+<span class="lineNum">     440 </span>            :         // larger than largest key
+<span class="lineNum">     441 </span><span class="lineCov">   49092235 :         if (btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &gt;= 0) {</span>
+<span class="lineNum">     442 </span><span class="lineCov">   18993656 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     443 </span><span class="lineCov">   18993690 :             return end-1;</span>
+<span class="lineNum">     444 </span>            :         }
+<span class="lineNum">     445 </span>            : 
+<span class="lineNum">     446 </span>            :         // binary search
+<span class="lineNum">     447 </span><span class="lineCov">  222933584 :         while(start+1 &lt; end) {</span>
+<span class="lineNum">     448 </span><span class="lineCov">  192829187 :             middle = (start + end) &gt;&gt; 1;</span>
+<span class="lineNum">     449 </span>            : 
+<span class="lineNum">     450 </span>            :             // get key at middle
+<span class="lineNum">     451 </span><span class="lineCov">  192829187 :             btree-&gt;kv_ops-&gt;get_kv(node, middle, k, NULL);</span>
+<span class="lineNum">     452 </span><span class="lineCov">  192812254 :             cmp = btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux);</span>
+<span class="lineNum">     453 </span>            : 
+<span class="lineNum">     454 </span>            :             #ifdef __BIT_CMP
+<span class="lineNum">     455 </span><span class="lineCov">  192830658 :                 cmp = _MAP(cmp) + 1;</span>
+<span class="lineNum">     456 </span><span class="lineCov">  192830658 :                 *_map1[cmp] = middle;</span>
+<span class="lineNum">     457 </span><span class="lineCov">  192830658 :                 *_map2[cmp] = 0;</span>
+<span class="lineNum">     458 </span>            :             #else
+<span class="lineNum">     459 </span>            :                 if (cmp &lt; 0) end = middle;
+<span class="lineNum">     460 </span>            :                 else if (cmp &gt; 0) start = middle;
+<span class="lineNum">     461 </span>            :                 else {
+<span class="lineNum">     462 </span>            :                     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);
+<span class="lineNum">     463 </span>            :                     return middle;
+<span class="lineNum">     464 </span>            :                 }
+<span class="lineNum">     465 </span>            :             #endif
+<span class="lineNum">     466 </span>            :         }
+<span class="lineNum">     467 </span><span class="lineCov">   30104397 :         if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     468 </span><span class="lineCov">   30104839 :         return start;</span>
+<span class="lineNum">     469 </span>            :     }
+<span class="lineNum">     470 </span>            : 
+<span class="lineNum">     471 </span><span class="lineCov">       2603 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     472 </span><span class="lineCov">       2603 :     return BTREE_IDX_NOT_FOUND;</span>
+<a name="473"><span class="lineNum">     473 </span>            : }</a>
+<span class="lineNum">     474 </span>            : 
+<span class="lineNum">     475 </span><span class="lineCov">    8464796 : idx_t _btree_add_entry(struct btree *btree, struct bnode *node, void *key, void *value)</span>
+<span class="lineNum">     476 </span>            : {
+<span class="lineNum">     477 </span>            :     idx_t idx, idx_insert;
+<span class="lineNum">     478 </span>            :     void *ptr;
+<span class="lineNum">     479 </span><span class="lineCov">    8464796 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     480 </span>            : 
+<span class="lineNum">     481 </span><span class="lineCov">    8464796 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     482 </span>            : 
+<span class="lineNum">     483 </span><span class="lineCov">    8464796 :     if (node-&gt;nentry &gt; 0) {</span>
+<span class="lineNum">     484 </span><span class="lineCov">    8463798 :         idx = _btree_find_entry(btree, node, key);</span>
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span><span class="lineCov">    8463798 :         if (idx == BTREE_IDX_NOT_FOUND) idx_insert = 0;</span>
+<span class="lineNum">     487 </span>            :         else {
+<span class="lineNum">     488 </span><span class="lineCov">    8463087 :             btree-&gt;kv_ops-&gt;get_kv(node, idx, k, NULL);</span>
+<span class="lineNum">     489 </span><span class="lineCov">    8463087 :             if (!btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux)) {</span>
+<span class="lineNum">     490 </span>            :                 // if same key already exists -&gt; update its value
+<span class="lineNum">     491 </span><span class="lineCov">     481979 :                 btree-&gt;kv_ops-&gt;set_kv(node, idx, key, value);</span>
+<span class="lineNum">     492 </span><span class="lineCov">     481979 :                 if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     493 </span><span class="lineCov">     481979 :                 return idx;</span>
+<span class="lineNum">     494 </span>            :             }else{
+<span class="lineNum">     495 </span><span class="lineCov">    7981108 :                 idx_insert = idx+1;</span>
+<span class="lineNum">     496 </span>            :             }
+<span class="lineNum">     497 </span>            :         }
+<span class="lineNum">     498 </span>            : 
+<span class="lineNum">     499 </span><span class="lineCov">    7981819 :         if (idx_insert &lt; node-&gt;nentry) {</span>
+<span class="lineNum">     500 </span><span class="lineCov">    3790131 :             ptr = node-&gt;data;</span>
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span>            :             /*
+<span class="lineNum">     503 </span>            :             shift [idx+1, nentry) key-value pairs to right
+<span class="lineNum">     504 </span>            :             example)
+<span class="lineNum">     505 </span>            :             idx = 1 (i.e. idx_insert = 2)
+<span class="lineNum">     506 </span>            :             [2 4 6 8] -&gt; [2 4 _ 6 8]
+<span class="lineNum">     507 </span>            :             return 2
+<span class="lineNum">     508 </span>            :             */
+<span class="lineNum">     509 </span><span class="lineCov">    3790131 :             btree-&gt;kv_ops-&gt;ins_kv(node, idx_insert, key, value);</span>
+<span class="lineNum">     510 </span>            :         }else{
+<span class="lineNum">     511 </span><span class="lineCov">    4191688 :             btree-&gt;kv_ops-&gt;set_kv(node, idx_insert, key, value);</span>
+<span class="lineNum">     512 </span>            :         }
+<span class="lineNum">     513 </span>            : 
+<span class="lineNum">     514 </span>            :     }else{
+<span class="lineNum">     515 </span><span class="lineCov">        998 :         idx_insert = 0;</span>
+<span class="lineNum">     516 </span>            :         // add at idx_insert
+<span class="lineNum">     517 </span><span class="lineCov">        998 :         btree-&gt;kv_ops-&gt;set_kv(node, idx_insert, key, value);</span>
+<span class="lineNum">     518 </span>            :     }
+<span class="lineNum">     519 </span>            : 
+<span class="lineNum">     520 </span>            :     // add at idx_insert
+<span class="lineNum">     521 </span><span class="lineCov">    7982817 :     node-&gt;nentry++;</span>
+<span class="lineNum">     522 </span>            : 
+<span class="lineNum">     523 </span><span class="lineCov">    7982817 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     524 </span><span class="lineCov">    7982817 :     return idx_insert;</span>
+<a name="525"><span class="lineNum">     525 </span>            : }</a>
+<span class="lineNum">     526 </span>            : 
+<span class="lineNum">     527 </span><span class="lineCov">          2 : idx_t _btree_remove_entry(struct btree *btree, struct bnode *node, void *key)</span>
+<span class="lineNum">     528 </span>            : {
+<span class="lineNum">     529 </span>            :     idx_t idx;
+<span class="lineNum">     530 </span>            :     void *ptr;
+<span class="lineNum">     531 </span>            : 
+<span class="lineNum">     532 </span><span class="lineCov">          2 :     if (node-&gt;nentry &gt; 0) {</span>
+<span class="lineNum">     533 </span><span class="lineCov">          2 :         idx = _btree_find_entry(btree, node, key);</span>
+<span class="lineNum">     534 </span>            : 
+<span class="lineNum">     535 </span><span class="lineCov">          2 :         if (idx == BTREE_IDX_NOT_FOUND) return idx;</span>
+<span class="lineNum">     536 </span>            : 
+<span class="lineNum">     537 </span><span class="lineCov">          2 :         ptr = node-&gt;data;</span>
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span>            :         /*
+<span class="lineNum">     540 </span>            :         shift [idx+1, nentry) key-value pairs to left
+<span class="lineNum">     541 </span>            :         example)
+<span class="lineNum">     542 </span>            :         idx = 2
+<span class="lineNum">     543 </span>            :         [2 4 6 8 10] -&gt; [2 4 8 10]
+<span class="lineNum">     544 </span>            :         return 2
+<span class="lineNum">     545 </span>            :         */
+<span class="lineNum">     546 </span><span class="lineCov">          2 :         btree-&gt;kv_ops-&gt;ins_kv(node, idx, NULL, NULL);</span>
+<span class="lineNum">     547 </span>            : 
+<span class="lineNum">     548 </span><span class="lineCov">          2 :         node-&gt;nentry--;</span>
+<span class="lineNum">     549 </span>            : 
+<span class="lineNum">     550 </span><span class="lineCov">          2 :         return idx;</span>
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span>            :     }else{
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :         return BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">     554 </span>            :     }
+<a name="555"><span class="lineNum">     555 </span>            : }</a>
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span><span class="lineCov">         88 : void _btree_print_node(struct btree *btree, int depth, bid_t bid, btree_print_func func)</span>
+<span class="lineNum">     558 </span>            : {
+<span class="lineNum">     559 </span>            :     int i;
+<span class="lineNum">     560 </span><span class="lineCov">         88 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     561 </span><span class="lineCov">         88 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">     562 </span>            :     void *addr;
+<span class="lineNum">     563 </span>            :     bid_t _bid;
+<span class="lineNum">     564 </span>            :     struct bnode *node;
+<span class="lineNum">     565 </span>            : 
+<span class="lineNum">     566 </span><span class="lineCov">         88 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">     567 </span>            : 
+<span class="lineNum">     568 </span><span class="lineCov">         88 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     569 </span><span class="lineCov">         88 :     node = _fetch_bnode(btree, addr, depth);</span>
+<span class="lineNum">     570 </span>            : 
+<span class="lineNum">     571 </span><span class="lineCov">         88 :     fprintf(stderr, &quot;[d:%d n:%d f:%x b:%&quot; _F64 &quot; &quot;, node-&gt;level, node-&gt;nentry, node-&gt;flag, bid);</span>
+<span class="lineNum">     572 </span>            : 
+<span class="lineNum">     573 </span><span class="lineCov">        274 :     for (i=0;i&lt;node-&gt;nentry;++i){</span>
+<span class="lineNum">     574 </span><span class="lineCov">        186 :         btree-&gt;kv_ops-&gt;get_kv(node, i, k, v);</span>
+<span class="lineNum">     575 </span><span class="lineCov">        186 :         _bid = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     576 </span><span class="lineCov">        186 :         _bid = _endian_decode(_bid);</span>
+<span class="lineNum">     577 </span><span class="lineCov">        186 :         func(btree, k, (void*)&amp;_bid);</span>
+<span class="lineNum">     578 </span>            :     }
+<span class="lineNum">     579 </span><span class="lineCov">         88 :     fprintf(stderr, &quot;]\n&quot;);</span>
+<span class="lineNum">     580 </span><span class="lineCov">         88 :     if (depth &gt; 1) {</span>
+<span class="lineNum">     581 </span><span class="lineCov">        112 :         for (i=0;i&lt;node-&gt;nentry;++i){</span>
+<span class="lineNum">     582 </span><span class="lineCov">         78 :             btree-&gt;kv_ops-&gt;get_kv(node, i, k, v);</span>
+<span class="lineNum">     583 </span><span class="lineCov">         78 :             _bid = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     584 </span><span class="lineCov">         78 :             _bid = _endian_decode(_bid);</span>
+<span class="lineNum">     585 </span><span class="lineCov">         78 :             _btree_print_node(btree, depth-1, _bid, func);</span>
+<span class="lineNum">     586 </span>            :         }
+<span class="lineNum">     587 </span>            :     }
+<span class="lineNum">     588 </span>            : 
+<span class="lineNum">     589 </span><span class="lineCov">         88 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">         88 : }</span></a>
+<span class="lineNum">     591 </span>            : 
+<span class="lineNum">     592 </span><span class="lineCov">         10 : void btree_print_node(struct btree *btree, btree_print_func func)</span>
+<span class="lineNum">     593 </span>            : {
+<span class="lineNum">     594 </span><span class="lineCov">         10 :     fprintf(stderr, &quot;tree height: %d\n&quot;, btree-&gt;height);</span>
+<span class="lineNum">     595 </span><span class="lineCov">         10 :     _btree_print_node(btree, btree-&gt;height, btree-&gt;root_bid, func);</span>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">         10 : }</span></a>
+<span class="lineNum">     597 </span>            : 
+<span class="lineNum">     598 </span><span class="lineCov">          5 : btree_result btree_get_key_range(</span>
+<span class="lineNum">     599 </span>            :     struct btree *btree, idx_t num, idx_t den, void *key_begin, void *key_end)
+<span class="lineNum">     600 </span>            : {
+<span class="lineNum">     601 </span>            :     void *addr;
+<span class="lineNum">     602 </span><span class="lineCov">          5 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     603 </span><span class="lineCov">          5 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">     604 </span>            :     idx_t idx_begin, idx_end, idx;
+<span class="lineNum">     605 </span>            :     bid_t bid;
+<span class="lineNum">     606 </span>            :     struct bnode *root, *node;
+<span class="lineNum">     607 </span>            :     uint64_t _num, _den, _nentry, resolution, mask, _idx_begin, _idx_end;
+<span class="lineNum">     608 </span>            : 
+<span class="lineNum">     609 </span><span class="lineCov">          5 :     assert(num &lt; den);</span>
+<span class="lineNum">     610 </span><span class="lineCov">          5 :     resolution = 1&lt;&lt;4; mask = resolution-1;</span>
+<span class="lineNum">     611 </span>            : 
+<span class="lineNum">     612 </span><span class="lineCov">          5 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">     613 </span><span class="lineCov">          5 :     _num = (uint64_t)num * resolution;</span>
+<span class="lineNum">     614 </span><span class="lineCov">          5 :     _den = (uint64_t)den * resolution;</span>
+<span class="lineNum">     615 </span>            : 
+<span class="lineNum">     616 </span>            :     // get root node
+<span class="lineNum">     617 </span><span class="lineCov">          5 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     618 </span><span class="lineCov">          5 :     root = _fetch_bnode(btree, addr, btree-&gt;height);</span>
+<span class="lineNum">     619 </span><span class="lineCov">          5 :     _nentry = (uint64_t)root-&gt;nentry * resolution;</span>
+<span class="lineNum">     620 </span>            : 
+<span class="lineNum">     621 </span><span class="lineCov">          5 :     if (btree-&gt;height == 1) {</span>
+<span class="lineNum">     622 </span><span class="lineCov">          5 :         btree-&gt;kv_ops-&gt;get_kv(root, ((num+0) * root-&gt;nentry / den)-0, key_begin, NULL);</span>
+<span class="lineNum">     623 </span><span class="lineCov">          5 :         btree-&gt;kv_ops-&gt;get_kv(root, ((num+1) * root-&gt;nentry / den)-1, key_end, NULL);</span>
+<span class="lineNum">     624 </span>            :     }else{
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :         _idx_begin = (_num * _nentry / _den);</span>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :         _idx_end = ((_num+resolution) * _nentry / _den)-1;</span>
+<span class="lineNum">     627 </span>            : 
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :         idx_begin = _idx_begin / resolution;</span>
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :         idx_end = (_idx_end / resolution);</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :         if (idx_end &gt;= root-&gt;nentry) idx_end = root-&gt;nentry-1;</span>
+<span class="lineNum">     631 </span>            : 
+<span class="lineNum">     632 </span>            :         // get first child node (for KEY_BEGIN)
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;get_kv(root, idx_begin, k, v);</span>
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :         bid = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :         bid = _endian_decode(bid);</span>
+<span class="lineNum">     636 </span><span class="lineNoCov">          0 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :         node = _fetch_bnode(btree, addr, btree-&gt;height-1);</span>
+<span class="lineNum">     638 </span>            : 
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :         idx = ((_idx_begin &amp; mask) * (node-&gt;nentry-1) / (resolution-1));</span>
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;get_kv(node, idx, key_begin, NULL);</span>
+<span class="lineNum">     641 </span>            : 
+<span class="lineNum">     642 </span>            :         // get second child node (for KEY_END)
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :         if (idx_end != idx_begin) {</span>
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :             btree-&gt;kv_ops-&gt;get_kv(root, idx_end, k, v);</span>
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 :             bid = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :             bid = _endian_decode(bid);</span>
+<span class="lineNum">     647 </span><span class="lineNoCov">          0 :             addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 :             node = _fetch_bnode(btree, addr, btree-&gt;height-1);</span>
+<span class="lineNum">     649 </span>            :         }
+<span class="lineNum">     650 </span>            : 
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :         idx = ((_idx_end &amp; mask) * (node-&gt;nentry-1) / (resolution-1));</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;get_kv(node, idx, key_end, NULL);</span>
+<span class="lineNum">     653 </span>            :     }
+<span class="lineNum">     654 </span>            : 
+<span class="lineNum">     655 </span><span class="lineCov">          5 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">     656 </span><span class="lineCov">          5 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="657"><span class="lineNum">     657 </span>            : }</a>
+<span class="lineNum">     658 </span>            : 
+<span class="lineNum">     659 </span><span class="lineCov">    6864837 : btree_result btree_find(struct btree *btree, void *key, void *value_buf)</span>
+<span class="lineNum">     660 </span>            : {
+<span class="lineNum">     661 </span>            :     void *addr;
+<span class="lineNum">     662 </span><span class="lineCov">    6864837 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     663 </span><span class="lineCov">    6864837 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">     664 </span><span class="lineCov">    6864837 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     665 </span><span class="lineCov">    6864837 :     bid_t *bid = alca(bid_t, btree-&gt;height);</span>
+<span class="lineNum">     666 </span><span class="lineCov">    6864837 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
+<span class="lineNum">     667 </span>            :     int i;
+<span class="lineNum">     668 </span>            : 
+<span class="lineNum">     669 </span><span class="lineCov">    6864837 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">     670 </span>            : 
+<span class="lineNum">     671 </span>            :     // set root
+<span class="lineNum">     672 </span><span class="lineCov">    6863633 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
+<span class="lineNum">     673 </span>            : 
+<span class="lineNum">     674 </span><span class="lineCov">   21503290 :     for (i=btree-&gt;height-1; i&gt;=0; --i) {</span>
+<span class="lineNum">     675 </span>            :         // read block using bid
+<span class="lineNum">     676 </span><span class="lineCov">   18415229 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">     677 </span>            :         // fetch node structure from block
+<span class="lineNum">     678 </span><span class="lineCov">   18409645 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">     679 </span>            : 
+<span class="lineNum">     680 </span>            :         // lookup key in current node
+<span class="lineNum">     681 </span><span class="lineCov">   18411420 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
+<span class="lineNum">     682 </span>            : 
+<span class="lineNum">     683 </span><span class="lineCov">   18416852 :         if (idx[i] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">     684 </span>            :             // not found .. return NULL
+<span class="lineNum">     685 </span><span class="lineCov">       2499 :             if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :                 btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">     687 </span><span class="lineCov">       2499 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">     688 </span><span class="lineCov">       2499 :             return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">     689 </span>            :         }
+<span class="lineNum">     690 </span>            : 
+<span class="lineNum">     691 </span><span class="lineCov">   18414353 :         btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">     692 </span>            : 
+<span class="lineNum">     693 </span><span class="lineCov">   18417050 :         if (i&gt;0) {</span>
+<span class="lineNum">     694 </span>            :             // index (non-leaf) node
+<span class="lineNum">     695 </span>            :             // get bid of child node from value
+<span class="lineNum">     696 </span><span class="lineCov">   11556491 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     697 </span><span class="lineCov">   11556670 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
+<span class="lineNum">     698 </span>            :         }else{
+<span class="lineNum">     699 </span>            :             // leaf node
+<span class="lineNum">     700 </span>            :             // return (address of) value if KEY == k
+<span class="lineNum">     701 </span><span class="lineCov">    6860559 :             if (!btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux)) {</span>
+<span class="lineNum">     702 </span><span class="lineCov">    3087449 :                 btree-&gt;kv_ops-&gt;set_value(btree, value_buf, v);</span>
+<span class="lineNum">     703 </span>            :             }else{
+<span class="lineNum">     704 </span><span class="lineCov">    3773301 :                 if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :                     btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">     706 </span><span class="lineCov">    3773301 :                 if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">     707 </span><span class="lineCov">       2020 :                     btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">     708 </span>            :                 }
+<span class="lineNum">     709 </span><span class="lineCov">    3773301 :                 return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">     710 </span>            :             }
+<span class="lineNum">     711 </span>            :         }
+<span class="lineNum">     712 </span>            :     }
+<span class="lineNum">     713 </span><span class="lineCov">    3088061 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
+<span class="lineNum">     714 </span><span class="lineNoCov">          0 :         btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">     715 </span>            :     }
+<span class="lineNum">     716 </span><span class="lineCov">    3087031 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">     717 </span><span class="lineCov">    3087031 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="718"><span class="lineNum">     718 </span>            : }</a>
+<span class="lineNum">     719 </span>            : 
+<span class="lineNum">     720 </span><span class="lineCov">      53570 : int _btree_split_node(</span>
+<span class="lineNum">     721 </span>            :     struct btree *btree, void *key, struct bnode **node, bid_t *bid, idx_t *idx, int i,
+<span class="lineNum">     722 </span>            :     struct list *kv_ins_list, size_t nsplitnode, void *k, void *v,
+<span class="lineNum">     723 </span>            :     int8_t *modified, int8_t *minkey_replace, int8_t *ins)
+<span class="lineNum">     724 </span>            : {
+<span class="lineNum">     725 </span>            :     void *addr;
+<span class="lineNum">     726 </span><span class="lineCov">      53570 :     size_t nnode = nsplitnode;</span>
+<span class="lineNum">     727 </span><span class="lineCov">      53570 :     int j, *nentry = alca(int, nnode);</span>
+<span class="lineNum">     728 </span>            :     bid_t _bid;
+<span class="lineNum">     729 </span><span class="lineCov">      53570 :     bid_t *new_bid = alca(bid_t, nnode);</span>
+<span class="lineNum">     730 </span><span class="lineCov">      53570 :     idx_t *split_idx = alca(idx_t, nnode+1);</span>
+<span class="lineNum">     731 </span><span class="lineCov">      53570 :     idx_t *idx_ins = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     732 </span>            :     struct list_elem *e;
+<span class="lineNum">     733 </span><span class="lineCov">      53570 :     struct bnode **new_node = alca(struct bnode *, nnode);</span>
+<span class="lineNum">     734 </span>            :     struct kv_ins_item *kv_item;
+<span class="lineNum">     735 </span>            : 
+<span class="lineNum">     736 </span>            :     // allocate new block(s)
+<span class="lineNum">     737 </span><span class="lineCov">      53570 :     new_node[0] = node[i];</span>
+<span class="lineNum">     738 </span><span class="lineCov">     107140 :     for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     739 </span><span class="lineCov">      53570 :         addr = btree-&gt;blk_ops-&gt;blk_alloc(btree-&gt;blk_handle, &amp;new_bid[j]);</span>
+<span class="lineNum">     740 </span><span class="lineCov">     107140 :         new_node[j] = _btree_init_node(btree, new_bid[j], addr, 0x0,</span>
+<span class="lineNum">     741 </span><span class="lineCov">     160710 :                                        node[i]-&gt;level, NULL);</span>
+<span class="lineNum">     742 </span>            :     }
+<span class="lineNum">     743 </span>            : 
+<span class="lineNum">     744 </span>            :     // calculate # entry
+<span class="lineNum">     745 </span><span class="lineCov">     214280 :     for (j=0;j&lt;nnode+1;++j){</span>
+<span class="lineNum">     746 </span><span class="lineCov">     160710 :         btree-&gt;kv_ops-&gt;get_nth_idx(node[i], j, nnode, &amp;split_idx[j]);</span>
+<span class="lineNum">     747 </span><span class="lineCov">     160710 :         if (j&gt;0) {</span>
+<span class="lineNum">     748 </span><span class="lineCov">     107140 :             nentry[j-1] = split_idx[j] - split_idx[j-1];</span>
+<span class="lineNum">     749 </span>            :         }
+<span class="lineNum">     750 </span>            :     }
+<span class="lineNum">     751 </span>            : 
+<span class="lineNum">     752 </span>            :     // copy kv-pairs to new node(s)
+<span class="lineNum">     753 </span><span class="lineCov">     107140 :     for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     754 </span><span class="lineCov">     160710 :         btree-&gt;kv_ops-&gt;copy_kv(new_node[j], node[i], 0, split_idx[j],</span>
+<span class="lineNum">     755 </span><span class="lineCov">     214280 :                                nentry[j]);</span>
+<span class="lineNum">     756 </span>            :     }
+<span class="lineNum">     757 </span><span class="lineCov">      53570 :     j = 0;</span>
+<span class="lineNum">     758 </span><span class="lineCov">      53570 :     btree-&gt;kv_ops-&gt;copy_kv(new_node[j], node[i], 0, split_idx[j], nentry[j]);</span>
+<span class="lineNum">     759 </span>            : 
+<span class="lineNum">     760 </span>            :     // header
+<span class="lineNum">     761 </span><span class="lineCov">     160710 :     for (j=0;j&lt;nnode;++j){</span>
+<span class="lineNum">     762 </span><span class="lineCov">     107140 :         new_node[j]-&gt;nentry = nentry[j];</span>
+<span class="lineNum">     763 </span>            :     }
+<span class="lineNum">     764 </span><span class="lineCov">      53570 :     modified[i] = 1;</span>
+<span class="lineNum">     765 </span>            : 
+<span class="lineNum">     766 </span><span class="lineCov">      53570 :     if (ins[i]) {</span>
+<span class="lineNum">     767 </span>            :         // insert kv-pair(s) to appropriate node
+<span class="lineNum">     768 </span><span class="lineCov">      53570 :         e = list_begin(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">     769 </span><span class="lineCov">     160710 :         while(e) {</span>
+<span class="lineNum">     770 </span><span class="lineCov">      53570 :             kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">     771 </span>            : 
+<span class="lineNum">     772 </span><span class="lineCov">      53570 :             idx_ins[i] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">     773 </span><span class="lineCov">      97006 :             for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     774 </span><span class="lineCov">      53570 :                 btree-&gt;kv_ops-&gt;get_kv(new_node[j], 0, k, v);</span>
+<span class="lineNum">     775 </span><span class="lineCov">      53570 :                 if (btree-&gt;kv_ops-&gt;cmp(kv_item-&gt;key, k, btree-&gt;aux) &lt; 0) {</span>
+<span class="lineNum">     776 </span><span class="lineCov">      10134 :                     idx_ins[i] =</span>
+<span class="lineNum">     777 </span><span class="lineCov">      10134 :                         _btree_add_entry(btree, new_node[j-1], kv_item-&gt;key,</span>
+<span class="lineNum">     778 </span><span class="lineCov">      20268 :                                          kv_item-&gt;value);</span>
+<span class="lineNum">     779 </span><span class="lineCov">      10134 :                     break;</span>
+<span class="lineNum">     780 </span>            :                 }
+<span class="lineNum">     781 </span>            :             }
+<span class="lineNum">     782 </span><span class="lineCov">      53570 :             if (idx_ins[i] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">     783 </span>            :                 // insert into the last split node
+<span class="lineNum">     784 </span><span class="lineCov">      43436 :                 idx_ins[i] =</span>
+<span class="lineNum">     785 </span><span class="lineCov">      43436 :                     _btree_add_entry(btree, new_node[nnode-1], kv_item-&gt;key,</span>
+<span class="lineNum">     786 </span><span class="lineCov">      86872 :                                      kv_item-&gt;value);</span>
+<span class="lineNum">     787 </span>            :             }
+<span class="lineNum">     788 </span><span class="lineCov">      53570 :             e = list_next(e);</span>
+<span class="lineNum">     789 </span>            :         }
+<span class="lineNum">     790 </span>            :     }
+<span class="lineNum">     791 </span><span class="lineCov">      53570 :     if (minkey_replace[i]){</span>
+<span class="lineNum">     792 </span>            :         // replace the minimum key in the (first split) node to KEY
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;get_kv(new_node[0], idx[i], k, v);</span>
+<span class="lineNum">     794 </span><span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;set_kv(new_node[0], idx[i], key, v);</span>
+<span class="lineNum">     795 </span>            :     }
+<span class="lineNum">     796 </span>            : 
+<span class="lineNum">     797 </span><span class="lineCov">      53570 :     if (i+1 &lt; btree-&gt;height) {</span>
+<span class="lineNum">     798 </span>            :         // non-root node
+<span class="lineNum">     799 </span>            :         // reserve kv-pair (i.e. splitters) to be inserted into parent node
+<span class="lineNum">     800 </span><span class="lineCov">     106170 :         for (j=1; j&lt;nnode; ++j){</span>
+<span class="lineNum">     801 </span><span class="lineCov">      53085 :             _bid = _endian_encode(new_bid[j]);</span>
+<span class="lineNum">     802 </span><span class="lineCov">      53085 :             kv_item = _kv_ins_item_create(btree, NULL, (void *)&amp;_bid);</span>
+<span class="lineNum">     803 </span><span class="lineCov">     106170 :             btree-&gt;kv_ops-&gt;get_nth_splitter(new_node[j-1], new_node[j],</span>
+<span class="lineNum">     804 </span><span class="lineCov">     159255 :                                             kv_item-&gt;key);</span>
+<span class="lineNum">     805 </span><span class="lineCov">      53085 :             list_push_back(&amp;kv_ins_list[i+1], &amp;kv_item-&gt;le);</span>
+<span class="lineNum">     806 </span>            :         }
+<span class="lineNum">     807 </span><span class="lineCov">      53085 :         ins[i+1] = 1;</span>
+<span class="lineNum">     808 </span>            : 
+<span class="lineNum">     809 </span>            :     }else{
+<span class="lineNum">     810 </span>            :         //2 root node -&gt; height grow up
+<span class="lineNum">     811 </span>            :         // allocate new block for new root node
+<span class="lineNum">     812 </span>            :         bid_t new_root_bid;
+<span class="lineNum">     813 </span>            :         struct bnode *new_root;
+<span class="lineNum">     814 </span><span class="lineCov">        485 :         uint8_t *buf = alca(uint8_t, btree-&gt;blksize);</span>
+<span class="lineNum">     815 </span>            :         struct btree_meta meta;
+<span class="lineNum">     816 </span>            : 
+<span class="lineNum">     817 </span><span class="lineCov">        485 :         meta.size = btree_read_meta(btree, buf);</span>
+<span class="lineNum">     818 </span><span class="lineCov">        485 :         meta.data = buf;</span>
+<span class="lineNum">     819 </span>            :         // remove metadata section of existing node
+<span class="lineNum">     820 </span>            :         // (this node is not root anymore)
+<span class="lineNum">     821 </span><span class="lineCov">        485 :         btree_update_meta(btree, NULL);</span>
+<span class="lineNum">     822 </span>            : 
+<span class="lineNum">     823 </span><span class="lineCov">        485 :         btree-&gt;height++;</span>
+<span class="lineNum">     824 </span>            : 
+<span class="lineNum">     825 </span><span class="lineCov">        485 :         addr = btree-&gt;blk_ops-&gt;blk_alloc(btree-&gt;blk_handle, &amp;new_root_bid);</span>
+<span class="lineNum">     826 </span><span class="lineCov">        485 :         if (meta.size &gt; 0)</span>
+<span class="lineNum">     827 </span>            :             new_root =
+<span class="lineNum">     828 </span>            :                 _btree_init_node(
+<span class="lineNum">     829 </span>            :                     btree, new_root_bid, addr, btree-&gt;root_flag,
+<span class="lineNum">     830 </span><span class="lineCov">        764 :                     node[i]-&gt;level + 1, &amp;meta);</span>
+<span class="lineNum">     831 </span>            :         else
+<span class="lineNum">     832 </span>            :             new_root =
+<span class="lineNum">     833 </span>            :                 _btree_init_node(
+<span class="lineNum">     834 </span>            :                     btree, new_root_bid, addr, btree-&gt;root_flag,
+<span class="lineNum">     835 </span><span class="lineCov">        206 :                     node[i]-&gt;level + 1, NULL);</span>
+<span class="lineNum">     836 </span>            : 
+<span class="lineNum">     837 </span>            :         // clear old root node flag
+<span class="lineNum">     838 </span><span class="lineCov">        485 :         node[i]-&gt;flag &amp;= ~BNODE_MASK_ROOT;</span>
+<span class="lineNum">     839 </span><span class="lineCov">        485 :         node[i]-&gt;flag &amp;= ~BNODE_MASK_SEQTREE;</span>
+<span class="lineNum">     840 </span>            :         // change root bid
+<span class="lineNum">     841 </span><span class="lineCov">        485 :         btree-&gt;root_bid = new_root_bid;</span>
+<span class="lineNum">     842 </span>            : 
+<span class="lineNum">     843 </span>            :         // move the former node if not dirty
+<span class="lineNum">     844 </span><span class="lineCov">        485 :         if (!btree-&gt;blk_ops-&gt;blk_is_writable(btree-&gt;blk_handle, bid[i])) {</span>
+<span class="lineNum">     845 </span><span class="lineCov">          5 :             addr = btree-&gt;blk_ops-&gt;blk_move(btree-&gt;blk_handle, bid[i], &amp;bid[i]);</span>
+<span class="lineNum">     846 </span><span class="lineCov">          5 :             node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">     847 </span>            :         }else{
+<span class="lineNum">     848 </span><span class="lineCov">        480 :             btree-&gt;blk_ops-&gt;blk_set_dirty(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">     849 </span>            :         }
+<span class="lineNum">     850 </span>            : 
+<span class="lineNum">     851 </span>            :         // insert kv-pairs pointing to their child nodes
+<span class="lineNum">     852 </span>            :         // original (i.e. the first node)
+<span class="lineNum">     853 </span><span class="lineCov">        485 :         btree-&gt;kv_ops-&gt;get_kv(node[i], 0, k, v);</span>
+<span class="lineNum">     854 </span><span class="lineCov">        485 :         _bid = _endian_encode(bid[i]);</span>
+<span class="lineNum">     855 </span><span class="lineCov">        485 :         _btree_add_entry(btree, new_root, k, btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
+<span class="lineNum">     856 </span>            : 
+<span class="lineNum">     857 </span>            :         // the others
+<span class="lineNum">     858 </span><span class="lineCov">        970 :         for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     859 </span>            :             //btree-&gt;kv_ops-&gt;get_kv(new_node[j], 0, k, v);
+<span class="lineNum">     860 </span><span class="lineCov">        485 :             btree-&gt;kv_ops-&gt;get_nth_splitter(new_node[j-1], new_node[j], k);</span>
+<span class="lineNum">     861 </span><span class="lineCov">        485 :             _bid = _endian_encode(new_bid[j]);</span>
+<span class="lineNum">     862 </span>            :             _btree_add_entry(btree, new_root, k,
+<span class="lineNum">     863 </span><span class="lineCov">        485 :                              btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
+<span class="lineNum">     864 </span>            :         }
+<span class="lineNum">     865 </span>            : 
+<span class="lineNum">     866 </span><span class="lineCov">        485 :         return 1;</span>
+<span class="lineNum">     867 </span>            :     } // height growup
+<span class="lineNum">     868 </span>            : 
+<span class="lineNum">     869 </span><span class="lineCov">      53085 :     return 0;</span>
+<a name="870"><span class="lineNum">     870 </span>            : }</a>
+<span class="lineNum">     871 </span>            : 
+<span class="lineNum">     872 </span><span class="lineCov">      31867 : int _btree_move_modified_node(</span>
+<span class="lineNum">     873 </span>            :     struct btree *btree, void *key, struct bnode **node, bid_t *bid,
+<span class="lineNum">     874 </span>            :     idx_t *idx, int i,
+<span class="lineNum">     875 </span>            :     struct list *kv_ins_list, void *k, void *v,
+<span class="lineNum">     876 </span>            :     int8_t *modified, int8_t *minkey_replace, int8_t *ins, int8_t *moved)
+<span class="lineNum">     877 </span>            : {
+<span class="lineNum">     878 </span>            :     void *addr;
+<span class="lineNum">     879 </span>            : 
+<span class="lineNum">     880 </span>            :     // get new bid[i]
+<span class="lineNum">     881 </span><span class="lineCov">      33866 :     addr = btree-&gt;blk_ops-&gt;blk_move(btree-&gt;blk_handle, bid[i], &amp;bid[i]);</span>
+<span class="lineNum">     882 </span>            :     //node[i] = _fetch_bnode(btree, addr, i+1);
+<span class="lineNum">     883 </span><span class="lineCov">      33866 :     moved[i] = 1;</span>
+<span class="lineNum">     884 </span>            : 
+<span class="lineNum">     885 </span><span class="lineCov">      33866 :     if (i+1 == btree-&gt;height)</span>
+<span class="lineNum">     886 </span>            :         // if moved node is root node
+<span class="lineNum">     887 </span><span class="lineCov">       1911 :         btree-&gt;root_bid = bid[i];</span>
+<span class="lineNum">     888 </span>            : 
+<span class="lineNum">     889 </span><span class="lineCov">      33866 :     return 0;</span>
+<span class="lineNum">     890 </span>            : }
+<span class="lineNum">     891 </span>            : 
+<span class="lineNum">     892 </span><span class="lineCov">    8410741 : btree_result btree_insert(struct btree *btree, void *key, void *value)</span>
+<span class="lineNum">     893 </span>            : {
+<span class="lineNum">     894 </span>            :     void *addr;
+<span class="lineNum">     895 </span><span class="lineCov">    8410741 :     size_t nsplitnode = 1;</span>
+<span class="lineNum">     896 </span><span class="lineCov">    8410741 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     897 </span><span class="lineCov">    8410741 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">     898 </span>            :     // index# and block ID for each level
+<span class="lineNum">     899 </span><span class="lineCov">    8410741 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     900 </span><span class="lineCov">    8410741 :     bid_t *bid = alca(bid_t, btree-&gt;height);</span>
+<span class="lineNum">     901 </span>            :     bid_t _bid;
+<span class="lineNum">     902 </span>            :     // flags
+<span class="lineNum">     903 </span><span class="lineCov">    8410741 :     int8_t *modified = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     904 </span><span class="lineCov">    8410741 :     int8_t *moved = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     905 </span><span class="lineCov">    8410741 :     int8_t *ins = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     906 </span><span class="lineCov">    8410741 :     int8_t *minkey_replace = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     907 </span>            :     int8_t height_growup;
+<span class="lineNum">     908 </span>            : 
+<span class="lineNum">     909 </span>            :     // key, value to be inserted
+<span class="lineNum">     910 </span><span class="lineCov">    8410741 :     struct list *kv_ins_list = alca(struct list, btree-&gt;height);</span>
+<span class="lineNum">     911 </span>            :     struct kv_ins_item *kv_item;
+<span class="lineNum">     912 </span>            :     struct list_elem *e;
+<span class="lineNum">     913 </span>            : 
+<span class="lineNum">     914 </span>            :     // index# where kv is inserted
+<span class="lineNum">     915 </span><span class="lineCov">    8410741 :     idx_t *idx_ins = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     916 </span><span class="lineCov">    8410741 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
+<span class="lineNum">     917 </span><span class="lineCov">    8410741 :     int i, j, _is_update = 0;</span>
+<span class="lineNum">     918 </span>            : 
+<span class="lineNum">     919 </span>            :     // initialize flags
+<span class="lineNum">     920 </span><span class="lineCov">   30629875 :     for (i=0;i&lt;btree-&gt;height;++i) {</span>
+<span class="lineNum">     921 </span><span class="lineCov">   22219134 :         moved[i] = modified[i] = ins[i] = minkey_replace[i] = 0;</span>
+<span class="lineNum">     922 </span>            :     }
+<span class="lineNum">     923 </span><span class="lineCov">    8410741 :     height_growup = 0;</span>
+<span class="lineNum">     924 </span>            : 
+<span class="lineNum">     925 </span>            :     // initialize temporary variables
+<span class="lineNum">     926 </span><span class="lineCov">    8410741 :     if (btree-&gt;kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">     927 </span><span class="lineCov">    8410741 :         btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">     928 </span><span class="lineCov">   30629875 :         for (i=0;i&lt;btree-&gt;height;++i){</span>
+<span class="lineNum">     929 </span><span class="lineCov">   22219134 :             list_init(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">     930 </span>            :         }
+<span class="lineNum">     931 </span>            :     }
+<span class="lineNum">     932 </span>            : 
+<span class="lineNum">     933 </span>            :     // copy key-value pair to be inserted into leaf node
+<span class="lineNum">     934 </span><span class="lineCov">    8410741 :     kv_item = _kv_ins_item_create(btree, key, value);</span>
+<span class="lineNum">     935 </span><span class="lineCov">    8410741 :     list_push_back(&amp;kv_ins_list[0], &amp;kv_item-&gt;le);</span>
+<span class="lineNum">     936 </span>            : 
+<span class="lineNum">     937 </span><span class="lineCov">    8410741 :     ins[0] = 1;</span>
+<span class="lineNum">     938 </span>            : 
+<span class="lineNum">     939 </span>            :     // set root node
+<span class="lineNum">     940 </span><span class="lineCov">    8410741 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
+<span class="lineNum">     941 </span>            : 
+<span class="lineNum">     942 </span>            :     // find path from root to leaf
+<span class="lineNum">     943 </span><span class="lineCov">   30629875 :     for (i=btree-&gt;height-1; i&gt;=0; --i){</span>
+<span class="lineNum">     944 </span>            :         // read block using bid
+<span class="lineNum">     945 </span><span class="lineCov">   22219134 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">     946 </span>            :         // fetch node structure from block
+<span class="lineNum">     947 </span><span class="lineCov">   22219134 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">     948 </span>            : 
+<span class="lineNum">     949 </span>            :         // lookup key in current node
+<span class="lineNum">     950 </span><span class="lineCov">   22219134 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
+<span class="lineNum">     951 </span>            : 
+<span class="lineNum">     952 </span><span class="lineCov">   22219134 :         if (i &gt; 0) {</span>
+<span class="lineNum">     953 </span>            :             // index (non-leaf) node
+<span class="lineNum">     954 </span><span class="lineCov">   13808393 :             if (idx[i] == BTREE_IDX_NOT_FOUND)</span>
+<span class="lineNum">     955 </span>            :                 // KEY is smaller than the smallest key in this node ..
+<span class="lineNum">     956 </span>            :                 // just follow the smallest key
+<span class="lineNum">     957 </span><span class="lineCov">        227 :                 idx[i] = 0;</span>
+<span class="lineNum">     958 </span>            : 
+<span class="lineNum">     959 </span>            :             // get bid of child node from value
+<span class="lineNum">     960 </span><span class="lineCov">   13808393 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">     961 </span><span class="lineCov">   13808393 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     962 </span><span class="lineCov">   13808393 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
+<span class="lineNum">     963 </span>            :         }else{
+<span class="lineNum">     964 </span>            :             // leaf node .. do nothing
+<span class="lineNum">     965 </span>            :         }
+<span class="lineNum">     966 </span>            :     }
+<span class="lineNum">     967 </span>            : 
+<span class="lineNum">     968 </span>            :     // cascaded insert from leaf to root
+<span class="lineNum">     969 </span><span class="lineCov">   30629390 :     for (i=0;i&lt;btree-&gt;height;++i){</span>
+<span class="lineNum">     970 </span>            : 
+<span class="lineNum">     971 </span><span class="lineCov">   22219134 :         if (idx[i] != BTREE_IDX_NOT_FOUND)</span>
+<span class="lineNum">     972 </span><span class="lineCov">   22217910 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, NULL);</span>
+<span class="lineNum">     973 </span>            : 
+<span class="lineNum">     974 </span><span class="lineCov">   22219134 :         if (i &gt; 0) {</span>
+<span class="lineNum">     975 </span>            :             // in case of index node
+<span class="lineNum">     976 </span>            :             // when KEY is smaller than smallest key in index node
+<span class="lineNum">     977 </span><span class="lineCov">   13808393 :             if (idx[i] == 0 &amp;&amp; btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &lt; 0) {</span>
+<span class="lineNum">     978 </span>            :                 // change node's smallest key
+<span class="lineNum">     979 </span><span class="lineCov">        227 :                 minkey_replace[i] = 1;</span>
+<span class="lineNum">     980 </span>            :             }
+<span class="lineNum">     981 </span>            : 
+<span class="lineNum">     982 </span>            :             // when child node is moved to new block
+<span class="lineNum">     983 </span><span class="lineCov">   13808393 :             if (moved[i-1]) {</span>
+<span class="lineNum">     984 </span>            :                 // replace the bid (value)
+<span class="lineNum">     985 </span><span class="lineCov">      31955 :                 _bid = _endian_encode(bid[i-1]);</span>
+<span class="lineNum">     986 </span><span class="lineCov">      63910 :                 btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], k,</span>
+<span class="lineNum">     987 </span><span class="lineCov">      95865 :                                       btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
+<span class="lineNum">     988 </span><span class="lineCov">      31955 :                 modified[i] = 1;</span>
+<span class="lineNum">     989 </span>            :             }
+<span class="lineNum">     990 </span>            :         }
+<span class="lineNum">     991 </span>            : 
+<span class="lineNum">     992 </span><span class="lineCov">   22219134 :         if (ins[i] || minkey_replace[i]) {</span>
+<span class="lineNum">     993 </span>            :             // there is a key-value pair to be inserted into this (level of)
+<span class="lineNum">     994 </span>            :             // node check whether btree node space is enough to add new
+<span class="lineNum">     995 </span>            :             // key-value pair or not, OR action is not insertion but update
+<span class="lineNum">     996 </span>            :             // (key_ins exists in current node)
+<span class="lineNum">     997 </span><span class="lineCov">    8464052 :             _is_update = 0;</span>
+<span class="lineNum">     998 </span>            :             size_t nodesize;
+<span class="lineNum">     999 </span><span class="lineCov">    8464052 :             void *new_minkey = (minkey_replace[i])?(key):(NULL);</span>
+<span class="lineNum">    1000 </span>            : 
+<span class="lineNum">    1001 </span><span class="lineCov">    8464052 :             if (i==0) {</span>
+<span class="lineNum">    1002 </span><span class="lineCov">    8410741 :                 e = list_begin(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">    1003 </span><span class="lineCov">    8410741 :                 kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">    1004 </span>            :                 _is_update =
+<span class="lineNum">    1005 </span><span class="lineCov">    8410741 :                     (idx[i] != BTREE_IDX_NOT_FOUND &amp;&amp;</span>
+<span class="lineNum">    1006 </span><span class="lineCov">    8410741 :                      !btree-&gt;kv_ops-&gt;cmp(kv_item-&gt;key, k, btree-&gt;aux));</span>
+<span class="lineNum">    1007 </span>            :             }
+<span class="lineNum">    1008 </span>            : 
+<span class="lineNum">    1009 </span>            :         check_node:;
+<span class="lineNum">    1010 </span>            :             int _size_check =
+<span class="lineNum">    1011 </span><span class="lineCov">   16929472 :                 _bnode_size_check(btree, bid[i], node[i], new_minkey,</span>
+<span class="lineNum">    1012 </span><span class="lineCov">   25394208 :                                   &amp;kv_ins_list[i], &amp;nodesize);</span>
+<span class="lineNum">    1013 </span>            : 
+<span class="lineNum">    1014 </span><span class="lineCov">    8464736 :             if (_size_check || _is_update ) {</span>
+<span class="lineNum">    1015 </span>            :                 //2 enough space
+<span class="lineNum">    1016 </span><span class="lineCov">    8410482 :                 if (ins[i]) {</span>
+<span class="lineNum">    1017 </span>            :                     // insert key/value pair(s)
+<span class="lineNum">    1018 </span>            :                     // insert all kv pairs on list
+<span class="lineNum">    1019 </span><span class="lineCov">    8410256 :                     e = list_begin(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">    1020 </span><span class="lineCov">   25230768 :                     while(e) {</span>
+<span class="lineNum">    1021 </span><span class="lineCov">    8410256 :                         kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">    1022 </span><span class="lineCov">   16820512 :                         idx_ins[i] = _btree_add_entry(btree, node[i],</span>
+<span class="lineNum">    1023 </span><span class="lineCov">   16820512 :                                                  kv_item-&gt;key, kv_item-&gt;value);</span>
+<span class="lineNum">    1024 </span><span class="lineCov">    8410256 :                         e = list_next(e);</span>
+<span class="lineNum">    1025 </span>            :                     }
+<span class="lineNum">    1026 </span>            :                 }
+<span class="lineNum">    1027 </span><span class="lineCov">    8410482 :                 if (minkey_replace[i]) {</span>
+<span class="lineNum">    1028 </span>            :                     // replace the minimum key in the node to KEY
+<span class="lineNum">    1029 </span><span class="lineCov">        227 :                     btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">    1030 </span><span class="lineCov">        227 :                     btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], key, v);</span>
+<span class="lineNum">    1031 </span>            :                 }
+<span class="lineNum">    1032 </span><span class="lineCov">    8410482 :                 modified[i] = 1;</span>
+<span class="lineNum">    1033 </span>            : 
+<span class="lineNum">    1034 </span>            :             }else{
+<span class="lineNum">    1035 </span>            :                 //2 not enough
+<span class="lineNum">    1036 </span>            :                 // first check if the node can be enlarged
+<span class="lineNum">    1037 </span><span class="lineCov">     108508 :                 if (btree-&gt;blk_ops-&gt;blk_enlarge_node &amp;&amp;</span>
+<span class="lineNum">    1038 </span><span class="lineCov">     108372 :                     is_subblock(bid[i])) {</span>
+<span class="lineNum">    1039 </span>            :                     bid_t new_bid;
+<span class="lineNum">    1040 </span>            :                     addr = btree-&gt;blk_ops-&gt;blk_enlarge_node(btree-&gt;blk_handle,
+<span class="lineNum">    1041 </span><span class="lineCov">        684 :                         bid[i], nodesize, &amp;new_bid);</span>
+<span class="lineNum">    1042 </span><span class="lineCov">        684 :                     if (addr) {</span>
+<span class="lineNum">    1043 </span>            :                         // the node can be enlarged .. fetch the enlarged node
+<span class="lineNum">    1044 </span><span class="lineCov">        684 :                         moved[i] = 1;</span>
+<span class="lineNum">    1045 </span><span class="lineCov">        684 :                         bid[i] = new_bid;</span>
+<span class="lineNum">    1046 </span><span class="lineCov">        684 :                         node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">    1047 </span><span class="lineCov">        684 :                         if (i+1 == btree-&gt;height) {</span>
+<span class="lineNum">    1048 </span>            :                             // if moved node is root node
+<span class="lineNum">    1049 </span><span class="lineCov">        684 :                             btree-&gt;root_bid = bid[i];</span>
+<span class="lineNum">    1050 </span>            :                         }
+<span class="lineNum">    1051 </span>            :                         // start over
+<span class="lineNum">    1052 </span>            :                         goto check_node;
+<span class="lineNum">    1053 </span>            :                     }
+<span class="lineNum">    1054 </span>            :                 }
+<span class="lineNum">    1055 </span>            : 
+<span class="lineNum">    1056 </span>            :                 //otherwise, split the node
+<span class="lineNum">    1057 </span>            :                 nsplitnode = _btree_get_nsplitnode(btree, BLK_NOT_FOUND,
+<span class="lineNum">    1058 </span><span class="lineCov">     107140 :                                                    node[i], nodesize);</span>
+<span class="lineNum">    1059 </span>            :                 // force the node split when the node size of new layout is
+<span class="lineNum">    1060 </span>            :                 // larger than the current node size
+<span class="lineNum">    1061 </span><span class="lineCov">      53570 :                 if (nsplitnode == 1) nsplitnode = 2;</span>
+<span class="lineNum">    1062 </span>            : 
+<span class="lineNum">    1063 </span>            :                 height_growup = _btree_split_node(
+<span class="lineNum">    1064 </span>            :                     btree, key, node, bid, idx, i,
+<span class="lineNum">    1065 </span>            :                     kv_ins_list, nsplitnode, k, v,
+<span class="lineNum">    1066 </span><span class="lineCov">      53570 :                     modified, minkey_replace, ins);</span>
+<span class="lineNum">    1067 </span>            :             } // split
+<span class="lineNum">    1068 </span>            :         } // insert
+<span class="lineNum">    1069 </span>            : 
+<span class="lineNum">    1070 </span><span class="lineCov">   22219134 :         if (height_growup) break;</span>
+<span class="lineNum">    1071 </span>            : 
+<span class="lineNum">    1072 </span><span class="lineCov">   22218649 :         if (modified[i]) {</span>
+<span class="lineNum">    1073 </span>            :             //2 when the node is modified
+<span class="lineNum">    1074 </span><span class="lineCov">    8495520 :             if (!btree-&gt;blk_ops-&gt;blk_is_writable(btree-&gt;blk_handle, bid[i])) {</span>
+<span class="lineNum">    1075 </span>            :                 // not writable .. already flushed block -&gt; cannot overwrite,
+<span class="lineNum">    1076 </span>            :                 // we have to move to new block
+<span class="lineNum">    1077 </span>            :                 height_growup = _btree_move_modified_node(
+<span class="lineNum">    1078 </span>            :                     btree, key, node, bid, idx, i,
+<span class="lineNum">    1079 </span>            :                     kv_ins_list, k, v,
+<span class="lineNum">    1080 </span><span class="lineCov">      33866 :                     modified, minkey_replace, ins, moved);</span>
+<span class="lineNum">    1081 </span>            : 
+<span class="lineNum">    1082 </span><span class="lineCov">      33866 :                 if (height_growup) break;</span>
+<span class="lineNum">    1083 </span>            :             }else{
+<span class="lineNum">    1084 </span>            :                 // writable .. just set dirty to write back into storage
+<span class="lineNum">    1085 </span><span class="lineCov">    8461654 :                 btree-&gt;blk_ops-&gt;blk_set_dirty(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">    1086 </span>            :             } // is writable
+<span class="lineNum">    1087 </span>            :         } // is modified
+<span class="lineNum">    1088 </span>            :     } // for loop
+<span class="lineNum">    1089 </span>            : 
+<span class="lineNum">    1090 </span>            :     // release temporary resources
+<span class="lineNum">    1091 </span><span class="lineCov">    8410741 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
+<span class="lineNum">    1092 </span><span class="lineNoCov">          0 :         btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">    1093 </span>            :     }
+<span class="lineNum">    1094 </span><span class="lineCov">    8410741 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">    1095 </span>            : 
+<span class="lineNum">    1096 </span><span class="lineCov">   30629875 :     for (j=0; j &lt; ((height_growup)?(btree-&gt;height-1):(btree-&gt;height)); ++j){</span>
+<span class="lineNum">    1097 </span><span class="lineCov">   22219134 :         e = list_begin(&amp;kv_ins_list[j]);</span>
+<span class="lineNum">    1098 </span><span class="lineCov">   52902094 :         while(e) {</span>
+<span class="lineNum">    1099 </span><span class="lineCov">    8463826 :             kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">    1100 </span><span class="lineCov">    8463826 :             e = list_remove(&amp;kv_ins_list[j], e);</span>
+<span class="lineNum">    1101 </span>            : 
+<span class="lineNum">    1102 </span><span class="lineCov">    8463826 :             if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1103 </span><span class="lineCov">       2051 :                 btree-&gt;kv_ops-&gt;free_kv_var(btree, kv_item-&gt;key, kv_item-&gt;value);</span>
+<span class="lineNum">    1104 </span>            :             }
+<span class="lineNum">    1105 </span><span class="lineCov">    8463826 :             _kv_ins_item_free(kv_item);</span>
+<span class="lineNum">    1106 </span>            :         }
+<span class="lineNum">    1107 </span>            :     }
+<span class="lineNum">    1108 </span>            : 
+<span class="lineNum">    1109 </span><span class="lineCov">    8410741 :     if (_is_update) {</span>
+<span class="lineNum">    1110 </span><span class="lineCov">     481979 :         return BTREE_RESULT_UPDATE;</span>
+<span class="lineNum">    1111 </span>            :     }else{
+<span class="lineNum">    1112 </span><span class="lineCov">    7928762 :         return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1113 </span>            :     }
+<a name="1114"><span class="lineNum">    1114 </span>            : }</a>
+<span class="lineNum">    1115 </span>            : 
+<span class="lineNum">    1116 </span><span class="lineCov">          2 : btree_result btree_remove(struct btree *btree, void *key)</span>
+<span class="lineNum">    1117 </span>            : {
+<span class="lineNum">    1118 </span>            :     void *addr;
+<span class="lineNum">    1119 </span><span class="lineCov">          2 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">    1120 </span><span class="lineCov">          2 :     uint8_t *v= alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">    1121 </span><span class="lineCov">          2 :     uint8_t *kk = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">    1122 </span><span class="lineCov">          2 :     uint8_t *vv = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">    1123 </span>            :     // index# and block ID for each level
+<span class="lineNum">    1124 </span><span class="lineCov">          2 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">    1125 </span><span class="lineCov">          2 :     bid_t *bid= alca(bid_t, btree-&gt;height);</span>
+<span class="lineNum">    1126 </span>            :     bid_t _bid;
+<span class="lineNum">    1127 </span>            :     // flags
+<span class="lineNum">    1128 </span><span class="lineCov">          2 :     int8_t *modified = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">    1129 </span><span class="lineCov">          2 :     int8_t *moved = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">    1130 </span><span class="lineCov">          2 :     int8_t *rmv = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">    1131 </span>            :     // index# of removed key
+<span class="lineNum">    1132 </span><span class="lineCov">          2 :     idx_t *idx_rmv = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">    1133 </span><span class="lineCov">          2 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
+<span class="lineNum">    1134 </span>            :     int i;
+<span class="lineNum">    1135 </span>            : 
+<span class="lineNum">    1136 </span>            :     // initialize flags
+<span class="lineNum">    1137 </span><span class="lineCov">          4 :     for (i=0;i&lt;btree-&gt;height;++i) {</span>
+<span class="lineNum">    1138 </span><span class="lineCov">          2 :         moved[i] = modified[i] = rmv[i] = 0;</span>
+<span class="lineNum">    1139 </span>            :     }
+<span class="lineNum">    1140 </span><span class="lineCov">          2 :     if (btree-&gt;kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">    1141 </span><span class="lineCov">          2 :         btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">    1142 </span><span class="lineCov">          2 :         btree-&gt;kv_ops-&gt;init_kv_var(btree, kk, vv);</span>
+<span class="lineNum">    1143 </span>            :     }
+<span class="lineNum">    1144 </span>            : 
+<span class="lineNum">    1145 </span><span class="lineCov">          2 :     rmv[0] = 1;</span>
+<span class="lineNum">    1146 </span>            : 
+<span class="lineNum">    1147 </span>            :     // set root
+<span class="lineNum">    1148 </span><span class="lineCov">          2 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
+<span class="lineNum">    1149 </span>            : 
+<span class="lineNum">    1150 </span>            :     // find path from root to leaf
+<span class="lineNum">    1151 </span><span class="lineCov">          4 :     for (i=btree-&gt;height-1; i&gt;=0; --i) {</span>
+<span class="lineNum">    1152 </span>            :         // read block using bid
+<span class="lineNum">    1153 </span><span class="lineCov">          2 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">    1154 </span>            :         // fetch node structure from block
+<span class="lineNum">    1155 </span><span class="lineCov">          2 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">    1156 </span>            : 
+<span class="lineNum">    1157 </span>            :         // lookup key in current node
+<span class="lineNum">    1158 </span><span class="lineCov">          2 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
+<span class="lineNum">    1159 </span>            : 
+<span class="lineNum">    1160 </span><span class="lineCov">          2 :         if (idx[i] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">    1161 </span>            :             // not found
+<span class="lineNum">    1162 </span><span class="lineNoCov">          0 :             if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
+<span class="lineNum">    1163 </span><span class="lineNoCov">          0 :                 btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">    1164 </span><span class="lineNoCov">          0 :             if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1165 </span><span class="lineNoCov">          0 :                 btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">    1166 </span><span class="lineNoCov">          0 :                 btree-&gt;kv_ops-&gt;free_kv_var(btree, kk, vv);</span>
+<span class="lineNum">    1167 </span>            :             }
+<span class="lineNum">    1168 </span><span class="lineNoCov">          0 :             return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1169 </span>            :         }
+<span class="lineNum">    1170 </span>            : 
+<span class="lineNum">    1171 </span><span class="lineCov">          2 :         btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">    1172 </span>            : 
+<span class="lineNum">    1173 </span><span class="lineCov">          2 :         if (i&gt;0) {</span>
+<span class="lineNum">    1174 </span>            :             // index (non-leaf) node
+<span class="lineNum">    1175 </span>            :             // get bid of child node from value
+<span class="lineNum">    1176 </span><span class="lineNoCov">          0 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1177 </span><span class="lineNoCov">          0 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
+<span class="lineNum">    1178 </span>            :         }else{
+<span class="lineNum">    1179 </span>            :             // leaf node
+<span class="lineNum">    1180 </span>            :         }
+<span class="lineNum">    1181 </span>            :     }
+<span class="lineNum">    1182 </span>            : 
+<span class="lineNum">    1183 </span>            :     // cascaded remove from leaf to root
+<span class="lineNum">    1184 </span><span class="lineCov">          4 :     for (i=0;i&lt;btree-&gt;height;++i){</span>
+<span class="lineNum">    1185 </span>            :         // in case of index node
+<span class="lineNum">    1186 </span><span class="lineCov">          2 :         if (i &gt; 0) {</span>
+<span class="lineNum">    1187 </span><span class="lineNoCov">          0 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">    1188 </span>            : 
+<span class="lineNum">    1189 </span>            :             // when child node's smallest key is changed due to remove
+<span class="lineNum">    1190 </span><span class="lineNoCov">          0 :               if (node[i-1]-&gt;nentry &gt; 0) {</span>
+<span class="lineNum">    1191 </span><span class="lineNoCov">          0 :                 btree-&gt;kv_ops-&gt;get_kv(node[i-1], 0, kk, vv);</span>
+<span class="lineNum">    1192 </span><span class="lineNoCov">          0 :                 if (btree-&gt;kv_ops-&gt;cmp(kk, k, btree-&gt;aux)) {</span>
+<span class="lineNum">    1193 </span>            :                     // change current node's corresponding key
+<span class="lineNum">    1194 </span><span class="lineNoCov">          0 :                     btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], kk, v);</span>
+<span class="lineNum">    1195 </span>            :                     //memcpy(k, kk, btree-&gt;ksize);
+<span class="lineNum">    1196 </span><span class="lineNoCov">          0 :                     btree-&gt;kv_ops-&gt;set_key(btree, k, kk);</span>
+<span class="lineNum">    1197 </span><span class="lineNoCov">          0 :                     modified[i] = 1;</span>
+<span class="lineNum">    1198 </span>            :                 }
+<span class="lineNum">    1199 </span>            :             }
+<span class="lineNum">    1200 </span>            : 
+<span class="lineNum">    1201 </span>            :             // when child node is moved to new block
+<span class="lineNum">    1202 </span><span class="lineNoCov">          0 :             if (moved[i-1]) {</span>
+<span class="lineNum">    1203 </span>            :                 // replace the bid (value)
+<span class="lineNum">    1204 </span><span class="lineNoCov">          0 :                 _bid = _endian_encode(bid[i-1]);</span>
+<span class="lineNum">    1205 </span><span class="lineNoCov">          0 :                 btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], k,</span>
+<span class="lineNum">    1206 </span><span class="lineNoCov">          0 :                                       btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
+<span class="lineNum">    1207 </span><span class="lineNoCov">          0 :                 modified[i] = 1;</span>
+<span class="lineNum">    1208 </span>            :             }
+<span class="lineNum">    1209 </span>            :         }
+<span class="lineNum">    1210 </span>            : 
+<span class="lineNum">    1211 </span><span class="lineCov">          2 :         if (rmv[i]) {</span>
+<span class="lineNum">    1212 </span>            :             // there is a key-value pair to be removed
+<span class="lineNum">    1213 </span><span class="lineCov">          2 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">    1214 </span><span class="lineCov">          2 :             idx_rmv[i] = _btree_remove_entry(btree, node[i], k);</span>
+<span class="lineNum">    1215 </span><span class="lineCov">          2 :             modified[i] = 1;</span>
+<span class="lineNum">    1216 </span>            : 
+<span class="lineNum">    1217 </span>            :             /*
+<span class="lineNum">    1218 </span>            :             remove the node when
+<span class="lineNum">    1219 </span>            :             1. non-root node has no kv-pair or
+<span class="lineNum">    1220 </span>            :             2. root node has less or equal than one kv-pair
+<span class="lineNum">    1221 </span>            :             */
+<span class="lineNum">    1222 </span><span class="lineCov">          4 :             if (((node[i]-&gt;nentry &lt; 1 &amp;&amp; i+1 &lt; btree-&gt;height) ||</span>
+<span class="lineNum">    1223 </span><span class="lineCov">          2 :                 (node[i]-&gt;nentry &lt;= 1 &amp;&amp; i+1 == btree-&gt;height)) &amp;&amp;</span>
+<span class="lineNum">    1224 </span>            :                 btree-&gt;height &gt; 1) {
+<span class="lineNum">    1225 </span>            :                 // remove the node
+<span class="lineNum">    1226 </span><span class="lineNoCov">          0 :                 btree-&gt;blk_ops-&gt;blk_remove(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">    1227 </span><span class="lineNoCov">          0 :                 if (i+1 &lt; btree-&gt;height) {</span>
+<span class="lineNum">    1228 </span>            :                     // if non-root node
+<span class="lineNum">    1229 </span><span class="lineNoCov">          0 :                     rmv[i+1] = 1;</span>
+<span class="lineNum">    1230 </span>            :                 }else{
+<span class="lineNum">    1231 </span>            :                     // if root node
+<span class="lineNum">    1232 </span><span class="lineNoCov">          0 :                     btree-&gt;height--;</span>
+<span class="lineNum">    1233 </span><span class="lineNoCov">          0 :                     btree-&gt;kv_ops-&gt;get_kv(node[i], 0, k, v);</span>
+<span class="lineNum">    1234 </span><span class="lineNoCov">          0 :                     btree-&gt;root_bid = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1235 </span><span class="lineNoCov">          0 :                     btree-&gt;root_bid = _endian_decode(btree-&gt;root_bid);</span>
+<span class="lineNum">    1236 </span>            :                 }
+<span class="lineNum">    1237 </span>            :             }
+<span class="lineNum">    1238 </span>            :         }
+<span class="lineNum">    1239 </span>            : 
+<span class="lineNum">    1240 </span><span class="lineCov">          2 :         if (modified[i]) {</span>
+<span class="lineNum">    1241 </span>            :             // when node is modified
+<span class="lineNum">    1242 </span><span class="lineCov">          2 :             if (!btree-&gt;blk_ops-&gt;blk_is_writable(btree-&gt;blk_handle, bid[i])) {</span>
+<span class="lineNum">    1243 </span>            :                 // already flushed block -&gt; cannot overwrite, so
+<span class="lineNum">    1244 </span>            :                 // we have to move to new block
+<span class="lineNum">    1245 </span>            :                 // get new bid[i]
+<span class="lineNum">    1246 </span><span class="lineNoCov">          0 :                 addr = btree-&gt;blk_ops-&gt;blk_move(btree-&gt;blk_handle, bid[i],</span>
+<span class="lineNum">    1247 </span><span class="lineNoCov">          0 :                                                 &amp;bid[i]);</span>
+<span class="lineNum">    1248 </span><span class="lineNoCov">          0 :                 node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">    1249 </span><span class="lineNoCov">          0 :                 moved[i] = 1;</span>
+<span class="lineNum">    1250 </span>            : 
+<span class="lineNum">    1251 </span><span class="lineNoCov">          0 :                 if (i+1 == btree-&gt;height)</span>
+<span class="lineNum">    1252 </span>            :                     // if moved node is root node
+<span class="lineNum">    1253 </span><span class="lineNoCov">          0 :                     btree-&gt;root_bid = bid[i];</span>
+<span class="lineNum">    1254 </span>            : 
+<span class="lineNum">    1255 </span>            :             }else{
+<span class="lineNum">    1256 </span><span class="lineCov">          2 :                 btree-&gt;blk_ops-&gt;blk_set_dirty(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">    1257 </span>            :             }
+<span class="lineNum">    1258 </span>            : 
+<span class="lineNum">    1259 </span>            :         }
+<span class="lineNum">    1260 </span>            :     }
+<span class="lineNum">    1261 </span>            : 
+<span class="lineNum">    1262 </span><span class="lineCov">          2 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
+<span class="lineNum">    1263 </span><span class="lineNoCov">          0 :         btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">    1264 </span>            :     }
+<span class="lineNum">    1265 </span><span class="lineCov">          2 :     if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1266 </span><span class="lineCov">          1 :         btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">    1267 </span><span class="lineCov">          1 :         btree-&gt;kv_ops-&gt;free_kv_var(btree, kk, vv);</span>
+<span class="lineNum">    1268 </span>            :     }
+<span class="lineNum">    1269 </span><span class="lineCov">          2 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="1270"><span class="lineNum">    1270 </span>            : }</a>
+<span class="lineNum">    1271 </span>            : 
+<span class="lineNum">    1272 </span><span class="lineNoCov">          0 : btree_result btree_operation_end(struct btree *btree)</span>
+<span class="lineNum">    1273 </span>            : {
+<span class="lineNum">    1274 </span><span class="lineNoCov">          0 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
+<span class="lineNum">    1275 </span><span class="lineNoCov">          0 :         btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
+<span class="lineNum">    1276 </span>            :     }
+<span class="lineNum">    1277 </span><span class="lineNoCov">          0 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="1278"><span class="lineNum">    1278 </span>            : }</a>
+<span class="lineNum">    1279 </span>            : 
+<span class="lineNum">    1280 </span><span class="lineCov">        148 : btree_result btree_iterator_init(struct btree *btree,</span>
+<span class="lineNum">    1281 </span>            :                                  struct btree_iterator *it, void *initial_key)
+<span class="lineNum">    1282 </span>            : {
+<span class="lineNum">    1283 </span>            :     int i;
+<span class="lineNum">    1284 </span>            : 
+<span class="lineNum">    1285 </span><span class="lineCov">        148 :     it-&gt;btree = *btree;</span>
+<span class="lineNum">    1286 </span><span class="lineCov">        148 :     it-&gt;curkey = (void *)mempool_alloc(btree-&gt;ksize);</span>
+<span class="lineNum">    1287 </span><span class="lineCov">        148 :     if (btree-&gt;kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">    1288 </span><span class="lineCov">        148 :         btree-&gt;kv_ops-&gt;init_kv_var(btree, it-&gt;curkey, NULL);</span>
+<span class="lineNum">    1289 </span>            :     }
+<span class="lineNum">    1290 </span><span class="lineCov">        148 :     if (initial_key) {</span>
+<span class="lineNum">    1291 </span>            :         // set initial key if exists
+<span class="lineNum">    1292 </span>            :         //memcpy(it-&gt;curkey, initial_key, btree-&gt;ksize);
+<span class="lineNum">    1293 </span><span class="lineCov">         96 :         btree-&gt;kv_ops-&gt;set_key(btree, it-&gt;curkey, initial_key);</span>
+<span class="lineNum">    1294 </span>            :     }else{
+<span class="lineNum">    1295 </span>            :         // NULL initial key .. set minimum key (start from leftmost key)
+<span class="lineNum">    1296 </span>            :         // replaced by kv_ops-&gt;init_kv_var
+<span class="lineNum">    1297 </span>            :         //memset(it-&gt;curkey, 0, btree-&gt;ksize);
+<span class="lineNum">    1298 </span>            :     }
+<span class="lineNum">    1299 </span><span class="lineCov">        148 :     it-&gt;bid = (bid_t*)mempool_alloc(sizeof(bid_t) * btree-&gt;height);</span>
+<span class="lineNum">    1300 </span><span class="lineCov">        148 :     it-&gt;idx = (idx_t*)mempool_alloc(sizeof(idx_t) * btree-&gt;height);</span>
+<span class="lineNum">    1301 </span>            :     it-&gt;node = (struct bnode **)mempool_alloc(sizeof(struct bnode *)
+<span class="lineNum">    1302 </span><span class="lineCov">        148 :                                                               * btree-&gt;height);</span>
+<span class="lineNum">    1303 </span><span class="lineCov">        148 :     it-&gt;addr = (void**)mempool_alloc(sizeof(void*) * btree-&gt;height);</span>
+<span class="lineNum">    1304 </span>            : 
+<span class="lineNum">    1305 </span><span class="lineCov">        389 :     for (i=0;i&lt;btree-&gt;height;++i){</span>
+<span class="lineNum">    1306 </span><span class="lineCov">        241 :         it-&gt;bid[i] = BTREE_BLK_NOT_FOUND;</span>
+<span class="lineNum">    1307 </span><span class="lineCov">        241 :         it-&gt;idx[i] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">    1308 </span><span class="lineCov">        241 :         it-&gt;node[i] = NULL;</span>
+<span class="lineNum">    1309 </span><span class="lineCov">        241 :         it-&gt;addr[i] = NULL;</span>
+<span class="lineNum">    1310 </span>            :     }
+<span class="lineNum">    1311 </span><span class="lineCov">        148 :     it-&gt;bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
+<span class="lineNum">    1312 </span><span class="lineCov">        148 :     it-&gt;flags = 0;</span>
+<span class="lineNum">    1313 </span>            : 
+<span class="lineNum">    1314 </span><span class="lineCov">        148 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="1315"><span class="lineNum">    1315 </span>            : }</a>
+<span class="lineNum">    1316 </span>            : 
+<span class="lineNum">    1317 </span><span class="lineCov">        148 : btree_result btree_iterator_free(struct btree_iterator *it)</span>
+<span class="lineNum">    1318 </span>            : {
+<span class="lineNum">    1319 </span>            :     int i;
+<span class="lineNum">    1320 </span><span class="lineCov">        148 :     if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1321 </span><span class="lineCov">         22 :         it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, it-&gt;curkey, NULL);</span>
+<span class="lineNum">    1322 </span>            :     }
+<span class="lineNum">    1323 </span><span class="lineCov">        148 :     mempool_free(it-&gt;curkey);</span>
+<span class="lineNum">    1324 </span><span class="lineCov">        148 :     mempool_free(it-&gt;bid);</span>
+<span class="lineNum">    1325 </span><span class="lineCov">        148 :     mempool_free(it-&gt;idx);</span>
+<span class="lineNum">    1326 </span><span class="lineCov">        389 :     for (i=0;i&lt;it-&gt;btree.height;++i){</span>
+<span class="lineNum">    1327 </span><span class="lineCov">        241 :         if (it-&gt;node[i]) mempool_free(it-&gt;addr[i]);</span>
+<span class="lineNum">    1328 </span>            :     }
+<span class="lineNum">    1329 </span><span class="lineCov">        148 :     mempool_free(it-&gt;node);</span>
+<span class="lineNum">    1330 </span><span class="lineCov">        148 :     mempool_free(it-&gt;addr);</span>
+<span class="lineNum">    1331 </span><span class="lineCov">        148 :     return BTREE_RESULT_SUCCESS;</span>
+<a name="1332"><span class="lineNum">    1332 </span>            : }</a>
+<span class="lineNum">    1333 </span>            : 
+<span class="lineNum">    1334 </span><span class="lineCov">        242 : btree_result _btree_prev(struct btree_iterator *it, void *key_buf,</span>
+<span class="lineNum">    1335 </span>            :                          void *value_buf, int depth)
+<span class="lineNum">    1336 </span>            : {
+<span class="lineNum">    1337 </span>            :     struct btree *btree;
+<span class="lineNum">    1338 </span><span class="lineCov">        242 :     btree = &amp;it-&gt;btree;</span>
+<span class="lineNum">    1339 </span>            :     int i;
+<span class="lineNum">    1340 </span><span class="lineCov">        242 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">    1341 </span><span class="lineCov">        242 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">    1342 </span>            :     void *addr;
+<span class="lineNum">    1343 </span>            :     struct bnode *node;
+<span class="lineNum">    1344 </span>            :     btree_result r;
+<span class="lineNum">    1345 </span>            : 
+<span class="lineNum">    1346 </span><span class="lineCov">        242 :     if (it-&gt;btree.kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">    1347 </span><span class="lineCov">        242 :         it-&gt;btree.kv_ops-&gt;init_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1348 </span>            :     }
+<span class="lineNum">    1349 </span>            : 
+<span class="lineNum">    1350 </span><span class="lineCov">        242 :     if (it-&gt;node[depth] == NULL){</span>
+<span class="lineNum">    1351 </span>            :         size_t blksize;
+<span class="lineNum">    1352 </span><span class="lineCov">         25 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, it-&gt;bid[depth]);</span>
+<span class="lineNum">    1353 </span><span class="lineCov">         25 :         it-&gt;addr[depth] = (void *)mempool_alloc(btree-&gt;blksize);</span>
+<span class="lineNum">    1354 </span>            :         blksize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle,
+<span class="lineNum">    1355 </span><span class="lineCov">         25 :                                                it-&gt;bid[depth]);</span>
+<span class="lineNum">    1356 </span><span class="lineCov">         25 :         memcpy(it-&gt;addr[depth], addr, blksize);</span>
+<span class="lineNum">    1357 </span><span class="lineCov">         25 :         it-&gt;node[depth] = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
+<span class="lineNum">    1358 </span>            :     }
+<span class="lineNum">    1359 </span><span class="lineCov">        242 :     node = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
+<span class="lineNum">    1360 </span>            :     //assert(node-&gt;level == depth+1);
+<span class="lineNum">    1361 </span>            : 
+<span class="lineNum">    1362 </span><span class="lineCov">        242 :     if (node-&gt;nentry &lt;= 0) {</span>
+<span class="lineNum">    1363 </span><span class="lineNoCov">          0 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1364 </span><span class="lineNoCov">          0 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1365 </span>            :         }
+<span class="lineNum">    1366 </span><span class="lineNoCov">          0 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1367 </span><span class="lineNoCov">          0 :         it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1368 </span><span class="lineNoCov">          0 :         it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1369 </span><span class="lineNoCov">          0 :         return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1370 </span>            :     }
+<span class="lineNum">    1371 </span>            : 
+<span class="lineNum">    1372 </span><span class="lineCov">        242 :     if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">    1373 </span>            :         // curkey: lastly returned key
+<span class="lineNum">    1374 </span><span class="lineCov">         25 :         it-&gt;idx[depth] = _btree_find_entry(btree, node, it-&gt;curkey);</span>
+<span class="lineNum">    1375 </span><span class="lineCov">         25 :         if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">    1376 </span><span class="lineCov">          3 :             it-&gt;idx[depth] = 0;</span>
+<span class="lineNum">    1377 </span>            :            // it-&gt;idx[depth] = node-&gt;nentry - 1;
+<span class="lineNum">    1378 </span>            :         }
+<span class="lineNum">    1379 </span><span class="lineCov">         25 :         btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], key_buf, value_buf);</span>
+<span class="lineNum">    1380 </span><span class="lineCov">         25 :         if (btree-&gt;kv_ops-&gt;cmp(it-&gt;curkey, key_buf, btree-&gt;aux) &lt; 0 &amp;&amp;</span>
+<span class="lineNum">    1381 </span>            :             depth == 0) {
+<span class="lineNum">    1382 </span>            :             // in leaf node, prev key must be smaller than current key
+<span class="lineNum">    1383 </span><span class="lineCov">          2 :             it-&gt;idx[depth] = it-&gt;idx[depth] ? it-&gt;idx[depth] - 1</span>
+<span class="lineNum">    1384 </span><span class="lineCov">          2 :                                             : BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">    1385 </span>            :         } // else return the value at idx[depth] at this turn
+<span class="lineNum">    1386 </span>            :     }
+<span class="lineNum">    1387 </span>            : 
+<span class="lineNum">    1388 </span><span class="lineCov">        242 :     if (BTREE_ITR_IS_FWD(it) &amp;&amp; depth ==0) {</span>
+<span class="lineNum">    1389 </span><span class="lineCov">          7 :         if (it-&gt;idx[depth] &gt;= 2) {</span>
+<span class="lineNum">    1390 </span><span class="lineCov">          5 :             it-&gt;idx[depth] -= 2;</span>
+<span class="lineNum">    1391 </span>            :         } else {
+<span class="lineNum">    1392 </span>            :             // out-of-bounds
+<span class="lineNum">    1393 </span><span class="lineCov">          2 :             it-&gt;idx[depth] = node-&gt;nentry; // ending condition</span>
+<span class="lineNum">    1394 </span>            :             // we have to reset flag because _btree_prev will recursively
+<span class="lineNum">    1395 </span>            :             // visit the left leaf node.
+<span class="lineNum">    1396 </span><span class="lineCov">          2 :             BTREE_ITR_SET_NONE(it);</span>
+<span class="lineNum">    1397 </span>            :         }
+<span class="lineNum">    1398 </span>            :     }
+<span class="lineNum">    1399 </span>            : 
+<span class="lineNum">    1400 </span><span class="lineCov">        242 :     if (it-&gt;idx[depth] &gt;= node-&gt;nentry) { // reused nentry for ending iteration</span>
+<span class="lineNum">    1401 </span>            :         // out of bound .. go up to parent node
+<span class="lineNum">    1402 </span><span class="lineCov">         22 :         it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND; // reset for btree_next</span>
+<span class="lineNum">    1403 </span><span class="lineCov">         22 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1404 </span><span class="lineCov">         22 :         it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1405 </span><span class="lineCov">         22 :         it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1406 </span>            : 
+<span class="lineNum">    1407 </span><span class="lineCov">         22 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1408 </span><span class="lineNoCov">          0 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1409 </span>            :         }
+<span class="lineNum">    1410 </span><span class="lineCov">         22 :         return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1411 </span>            :     }
+<span class="lineNum">    1412 </span>            : 
+<span class="lineNum">    1413 </span><span class="lineCov">        220 :     if (depth &gt; 0) {</span>
+<span class="lineNum">    1414 </span>            :         // index node
+<span class="lineNum">    1415 </span><span class="lineCov">         72 :         if (it-&gt;node[depth-1] == NULL) {</span>
+<span class="lineNum">    1416 </span><span class="lineCov">          3 :             btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
+<span class="lineNum">    1417 </span><span class="lineCov">          3 :             it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1418 </span><span class="lineCov">          3 :             it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
+<span class="lineNum">    1419 </span>            :         }
+<span class="lineNum">    1420 </span><span class="lineCov">         72 :         r = _btree_prev(it, key_buf, value_buf, depth-1);</span>
+<span class="lineNum">    1421 </span>            : 
+<span class="lineNum">    1422 </span><span class="lineCov">         72 :         if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1423 </span>            :             // move index to left
+<span class="lineNum">    1424 </span><span class="lineCov">         18 :             it-&gt;idx[depth] = it-&gt;idx[depth] ? it-&gt;idx[depth] - 1</span>
+<span class="lineNum">    1425 </span><span class="lineCov">         18 :                                             : node-&gt;nentry; // ending condition</span>
+<span class="lineNum">    1426 </span>            : 
+<span class="lineNum">    1427 </span><span class="lineCov">         11 :             if (it-&gt;idx[depth] &gt;= node-&gt;nentry){</span>
+<span class="lineNum">    1428 </span>            :                 // out of bound .. go up to parent node
+<span class="lineNum">    1429 </span><span class="lineCov">          4 :                 it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">    1430 </span><span class="lineCov">          4 :                 if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1431 </span><span class="lineCov">          4 :                 it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1432 </span><span class="lineCov">          4 :                 it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1433 </span>            : 
+<span class="lineNum">    1434 </span><span class="lineCov">          4 :                 if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1435 </span><span class="lineNoCov">          0 :                     it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1436 </span>            :                 }
+<span class="lineNum">    1437 </span><span class="lineCov">          4 :                 return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1438 </span>            :             }else{
+<span class="lineNum">    1439 </span><span class="lineCov">          7 :                 btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
+<span class="lineNum">    1440 </span><span class="lineCov">          7 :                 it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1441 </span><span class="lineCov">          7 :                 it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
+<span class="lineNum">    1442 </span>            :                 // reset child index
+<span class="lineNum">    1443 </span><span class="lineCov">         14 :                 for (i=depth-1; i&gt;=0; --i) {</span>
+<span class="lineNum">    1444 </span><span class="lineCov">          7 :                     it-&gt;idx[i] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">    1445 </span><span class="lineCov">          7 :                     if (it-&gt;node[i] != NULL) mempool_free(it-&gt;addr[i]);</span>
+<span class="lineNum">    1446 </span><span class="lineCov">          7 :                     it-&gt;node[i] = NULL;</span>
+<span class="lineNum">    1447 </span><span class="lineCov">          7 :                     it-&gt;addr[i] = NULL;</span>
+<span class="lineNum">    1448 </span>            :                 }
+<span class="lineNum">    1449 </span>            :                 // retry
+<span class="lineNum">    1450 </span><span class="lineCov">          7 :                 r = _btree_prev(it, key_buf, value_buf, depth-1);</span>
+<span class="lineNum">    1451 </span>            :             }
+<span class="lineNum">    1452 </span>            :         }
+<span class="lineNum">    1453 </span><span class="lineCov">         68 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1454 </span><span class="lineNoCov">          0 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1455 </span>            :         }
+<span class="lineNum">    1456 </span><span class="lineCov">         68 :         return r;</span>
+<span class="lineNum">    1457 </span>            :     }else{
+<span class="lineNum">    1458 </span>            :         // leaf node
+<span class="lineNum">    1459 </span><span class="lineCov">        148 :         btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], key_buf, value_buf);</span>
+<span class="lineNum">    1460 </span>            :         //memcpy(it-&gt;curkey, key_buf, btree-&gt;ksize);
+<span class="lineNum">    1461 </span><span class="lineCov">        148 :         btree-&gt;kv_ops-&gt;set_key(btree, it-&gt;curkey, key_buf);</span>
+<span class="lineNum">    1462 </span><span class="lineCov">        275 :         it-&gt;idx[depth] = it-&gt;idx[depth] ? it-&gt;idx[depth] - 1</span>
+<span class="lineNum">    1463 </span><span class="lineCov">        275 :                                         : node-&gt;nentry; // condition for ending</span>
+<span class="lineNum">    1464 </span><span class="lineCov">        148 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1465 </span><span class="lineNoCov">          0 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1466 </span>            :         }
+<span class="lineNum">    1467 </span><span class="lineCov">        148 :         return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1468 </span>            :     }
+<a name="1469"><span class="lineNum">    1469 </span>            : }</a>
+<span class="lineNum">    1470 </span>            : 
+<span class="lineNum">    1471 </span><span class="lineCov">        163 : btree_result btree_prev(struct btree_iterator *it, void *key_buf,</span>
+<span class="lineNum">    1472 </span>            :                         void *value_buf)
+<span class="lineNum">    1473 </span>            : {
+<span class="lineNum">    1474 </span><span class="lineCov">        163 :     btree_result br = _btree_prev(it, key_buf, value_buf, it-&gt;btree.height-1);</span>
+<span class="lineNum">    1475 </span><span class="lineCov">        163 :     if (br == BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1476 </span><span class="lineCov">        148 :         BTREE_ITR_SET_REV(it);</span>
+<span class="lineNum">    1477 </span>            :     } else {
+<span class="lineNum">    1478 </span><span class="lineCov">         15 :         BTREE_ITR_SET_NONE(it);</span>
+<span class="lineNum">    1479 </span>            :     }
+<span class="lineNum">    1480 </span><span class="lineCov">        163 :     return br;</span>
+<a name="1481"><span class="lineNum">    1481 </span>            : }</a>
+<span class="lineNum">    1482 </span>            : 
+<span class="lineNum">    1483 </span><span class="lineCov">    6122739 : btree_result _btree_next(struct btree_iterator *it, void *key_buf,</span>
+<span class="lineNum">    1484 </span>            :                          void *value_buf, int depth)
+<span class="lineNum">    1485 </span>            : {
+<span class="lineNum">    1486 </span>            :     struct btree *btree;
+<span class="lineNum">    1487 </span><span class="lineCov">    6122739 :     btree = &amp;it-&gt;btree;</span>
+<span class="lineNum">    1488 </span>            :     int i;
+<span class="lineNum">    1489 </span><span class="lineCov">    6122739 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">    1490 </span><span class="lineCov">    6122739 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">    1491 </span>            :     void *addr;
+<span class="lineNum">    1492 </span>            :     struct bnode *node;
+<span class="lineNum">    1493 </span>            :     btree_result r;
+<span class="lineNum">    1494 </span>            : 
+<span class="lineNum">    1495 </span><span class="lineCov">    6122739 :     if (it-&gt;btree.kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">    1496 </span><span class="lineCov">    6122818 :         it-&gt;btree.kv_ops-&gt;init_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1497 </span>            :     }
+<span class="lineNum">    1498 </span>            : 
+<span class="lineNum">    1499 </span><span class="lineCov">    6123018 :     if (it-&gt;node[depth] == NULL){</span>
+<span class="lineNum">    1500 </span>            :         size_t blksize;
+<span class="lineNum">    1501 </span><span class="lineCov">      12913 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, it-&gt;bid[depth]);</span>
+<span class="lineNum">    1502 </span><span class="lineCov">      12913 :         it-&gt;addr[depth] = (void *)mempool_alloc(btree-&gt;blksize);</span>
+<span class="lineNum">    1503 </span>            :         blksize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle,
+<span class="lineNum">    1504 </span><span class="lineCov">      12913 :                                                it-&gt;bid[depth]);</span>
+<span class="lineNum">    1505 </span><span class="lineCov">      12913 :         memcpy(it-&gt;addr[depth], addr, blksize);</span>
+<span class="lineNum">    1506 </span><span class="lineCov">      12913 :         it-&gt;node[depth] = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
+<span class="lineNum">    1507 </span>            :     }
+<span class="lineNum">    1508 </span><span class="lineCov">    6123018 :     node = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
+<span class="lineNum">    1509 </span>            :     //assert(node-&gt;level == depth+1);
+<span class="lineNum">    1510 </span>            : 
+<span class="lineNum">    1511 </span><span class="lineCov">    6123164 :     if (node-&gt;nentry &lt;= 0) {</span>
+<span class="lineNum">    1512 </span><span class="lineCov">       1001 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) it-&gt;btree.kv_ops-&gt;free_kv_var(</span>
+<span class="lineNum">    1513 </span><span class="lineCov">       1001 :                                                              &amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1514 </span><span class="lineCov">       1001 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1515 </span><span class="lineCov">       1001 :         it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1516 </span><span class="lineCov">       1001 :         it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1517 </span><span class="lineCov">       1001 :         return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1518 </span>            :     }
+<span class="lineNum">    1519 </span>            : 
+<span class="lineNum">    1520 </span><span class="lineCov">    6122163 :     if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">    1521 </span>            :         // curkey: lastly returned key
+<span class="lineNum">    1522 </span><span class="lineCov">        223 :         it-&gt;idx[depth] = _btree_find_entry(btree, node, it-&gt;curkey);</span>
+<span class="lineNum">    1523 </span><span class="lineCov">        223 :         if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">    1524 </span><span class="lineCov">        143 :             it-&gt;idx[depth] = 0;</span>
+<span class="lineNum">    1525 </span>            :         }
+<span class="lineNum">    1526 </span><span class="lineCov">        223 :         btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], key_buf, value_buf);</span>
+<span class="lineNum">    1527 </span><span class="lineCov">        223 :         if (btree-&gt;kv_ops-&gt;cmp(it-&gt;curkey, key_buf, btree-&gt;aux) &gt; 0 &amp;&amp;</span>
+<span class="lineNum">    1528 </span>            :             depth == 0) {
+<span class="lineNum">    1529 </span>            :             // in leaf node, next key must be larger than previous key
+<span class="lineNum">    1530 </span>            :             // (i.e. it-&gt;curkey)
+<span class="lineNum">    1531 </span><span class="lineCov">          4 :             it-&gt;idx[depth]++;</span>
+<span class="lineNum">    1532 </span>            :         }
+<span class="lineNum">    1533 </span>            :     }
+<span class="lineNum">    1534 </span>            : 
+<span class="lineNum">    1535 </span><span class="lineCov">    6122163 :     if (BTREE_ITR_IS_REV(it) &amp;&amp; depth == 0) {</span>
+<span class="lineNum">    1536 </span><span class="lineCov">          7 :         if (it-&gt;idx[depth] &gt;= node-&gt;nentry) {</span>
+<span class="lineNum">    1537 </span>            :             // 'idx' becomes out-of-bounds by previous btree_prev() call.
+<span class="lineNum">    1538 </span>            :             // this means that the last returned entry was the smallest entry.
+<span class="lineNum">    1539 </span>            :             // set idx to the second smallest entry.
+<span class="lineNum">    1540 </span><span class="lineCov">          3 :             it-&gt;idx[depth] = 1;</span>
+<span class="lineNum">    1541 </span>            :         } else {
+<span class="lineNum">    1542 </span><span class="lineCov">          4 :             it-&gt;idx[depth] += 2;</span>
+<span class="lineNum">    1543 </span>            :         }
+<span class="lineNum">    1544 </span>            :     }
+<span class="lineNum">    1545 </span>            : 
+<span class="lineNum">    1546 </span><span class="lineCov">    6122163 :     if (it-&gt;idx[depth] &gt;= node-&gt;nentry) {</span>
+<span class="lineNum">    1547 </span>            :         // out of bound .. go up to parent node
+<span class="lineNum">    1548 </span><span class="lineCov">      11761 :         it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND; // reset for btree_prev</span>
+<span class="lineNum">    1549 </span><span class="lineCov">      11761 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1550 </span><span class="lineCov">      11761 :         it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1551 </span><span class="lineCov">      11761 :         it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1552 </span>            : 
+<span class="lineNum">    1553 </span><span class="lineCov">      11761 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1554 </span><span class="lineCov">         56 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1555 </span>            :         }
+<span class="lineNum">    1556 </span><span class="lineCov">      11761 :         return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1557 </span>            :     }
+<span class="lineNum">    1558 </span>            : 
+<span class="lineNum">    1559 </span><span class="lineCov">    6110402 :     if (depth &gt; 0) {</span>
+<span class="lineNum">    1560 </span>            :         // index node
+<span class="lineNum">    1561 </span><span class="lineCov">    4064954 :         if (it-&gt;node[depth-1] == NULL) {</span>
+<span class="lineNum">    1562 </span><span class="lineCov">        149 :             btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
+<span class="lineNum">    1563 </span><span class="lineCov">        149 :             it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1564 </span><span class="lineCov">        149 :             it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
+<span class="lineNum">    1565 </span>            :         }
+<span class="lineNum">    1566 </span><span class="lineCov">    4064954 :         r = _btree_next(it, key_buf, value_buf, depth-1);</span>
+<span class="lineNum">    1567 </span>            : 
+<span class="lineNum">    1568 </span><span class="lineCov">    4064979 :         if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1569 </span>            :             // move index to right
+<span class="lineNum">    1570 </span><span class="lineCov">      11774 :             it-&gt;idx[depth]++;</span>
+<span class="lineNum">    1571 </span>            : 
+<span class="lineNum">    1572 </span><span class="lineCov">      11774 :             if (it-&gt;idx[depth] &gt;= node-&gt;nentry){</span>
+<span class="lineNum">    1573 </span>            :                 // out of bound .. go up to parent node
+<span class="lineNum">    1574 </span><span class="lineCov">        144 :                 it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">    1575 </span><span class="lineCov">        144 :                 if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1576 </span><span class="lineCov">        144 :                 it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1577 </span><span class="lineCov">        144 :                 it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1578 </span>            : 
+<span class="lineNum">    1579 </span><span class="lineCov">        144 :                 if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1580 </span><span class="lineCov">          5 :                     it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1581 </span>            :                 }
+<span class="lineNum">    1582 </span><span class="lineCov">        144 :                 return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1583 </span>            :             }else{
+<span class="lineNum">    1584 </span><span class="lineCov">      11630 :                 btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
+<span class="lineNum">    1585 </span><span class="lineCov">      11630 :                 it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1586 </span><span class="lineCov">      11630 :                 it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
+<span class="lineNum">    1587 </span>            :                 // reset child index
+<span class="lineNum">    1588 </span><span class="lineCov">      23319 :                 for (i=depth-1; i&gt;=0; --i) {</span>
+<span class="lineNum">    1589 </span><span class="lineCov">      11689 :                     it-&gt;idx[i] = 0;</span>
+<span class="lineNum">    1590 </span><span class="lineCov">      11689 :                     if (it-&gt;node[i] != NULL) mempool_free(it-&gt;addr[i]);</span>
+<span class="lineNum">    1591 </span><span class="lineCov">      11689 :                     it-&gt;node[i] = NULL;</span>
+<span class="lineNum">    1592 </span><span class="lineCov">      11689 :                     it-&gt;addr[i] = NULL;</span>
+<span class="lineNum">    1593 </span>            :                 }
+<span class="lineNum">    1594 </span>            :                 // retry
+<span class="lineNum">    1595 </span><span class="lineCov">      11630 :                 r = _btree_next(it, key_buf, value_buf, depth-1);</span>
+<span class="lineNum">    1596 </span>            :             }
+<span class="lineNum">    1597 </span>            :         }
+<span class="lineNum">    1598 </span><span class="lineCov">    4064835 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1599 </span><span class="lineCov">       3022 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1600 </span>            :         }
+<span class="lineNum">    1601 </span><span class="lineCov">    4064856 :         return r;</span>
+<span class="lineNum">    1602 </span>            :     }else{
+<span class="lineNum">    1603 </span>            :         // leaf node
+<span class="lineNum">    1604 </span><span class="lineCov">    2045448 :         btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], key_buf, value_buf);</span>
+<span class="lineNum">    1605 </span>            :         //memcpy(it-&gt;curkey, key_buf, btree-&gt;ksize);
+<span class="lineNum">    1606 </span><span class="lineCov">    2045458 :         btree-&gt;kv_ops-&gt;set_key(btree, it-&gt;curkey, key_buf);</span>
+<span class="lineNum">    1607 </span><span class="lineCov">    2045464 :         it-&gt;idx[depth]++;</span>
+<span class="lineNum">    1608 </span><span class="lineCov">    2045464 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1609 </span><span class="lineCov">       3051 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1610 </span>            :         }
+<span class="lineNum">    1611 </span><span class="lineCov">    2045468 :         return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1612 </span>            :     }
+<a name="1613"><span class="lineNum">    1613 </span>            : }</a>
+<span class="lineNum">    1614 </span>            : 
+<span class="lineNum">    1615 </span><span class="lineCov">    2046656 : btree_result btree_next(struct btree_iterator *it, void *key_buf,</span>
+<span class="lineNum">    1616 </span>            :                         void *value_buf)
+<span class="lineNum">    1617 </span>            : {
+<span class="lineNum">    1618 </span><span class="lineCov">    2046656 :     btree_result br = _btree_next(it, key_buf, value_buf, it-&gt;btree.height-1);</span>
+<span class="lineNum">    1619 </span><span class="lineCov">    2046594 :     if (br == BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1620 </span><span class="lineCov">    2045462 :         BTREE_ITR_SET_FWD(it);</span>
+<span class="lineNum">    1621 </span>            :     } else {
+<span class="lineNum">    1622 </span><span class="lineCov">       1132 :         BTREE_ITR_SET_NONE(it);</span>
+<span class="lineNum">    1623 </span>            :     }
+<span class="lineNum">    1624 </span><span class="lineCov">    2046594 :     return br;</span>
+<span class="lineNum">    1625 </span><span class="lineCov">    8572900 : }</span>
+<span class="lineNum">    1626 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.11</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
