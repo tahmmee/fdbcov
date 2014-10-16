@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-10-15</td>
+            <td class="headerValue">2014-10-16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">30</td>
@@ -49,9 +49,9 @@
             <td></td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">339</td>
+            <td class="headerCovTableEntry">338</td>
             <td class="headerCovTableEntry">426</td>
-            <td class="headerCovTableEntryMed">79.6 %</td>
+            <td class="headerCovTableEntryMed">79.3 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -106,64 +106,64 @@
 <span class="lineNum">      35 </span>                :            :     #define _metasize_align(size) (size)
 <a name="36"><span class="lineNum">      36 </span>                :            : #endif</a>
 <span class="lineNum">      37 </span>                :            : 
-<span class="lineNum">      38 </span>                :<span class="lineCov">   56915223 : INLINE int is_subblock(bid_t subbid)</span>
+<span class="lineNum">      38 </span>                :<span class="lineCov">   56847623 : INLINE int is_subblock(bid_t subbid)</span>
 <span class="lineNum">      39 </span>                :            : {
 <span class="lineNum">      40 </span>                :            :     uint8_t flag;
-<span class="lineNum">      41 </span>                :<span class="lineCov">   56915223 :     flag = (subbid &gt;&gt; (8 * (sizeof(bid_t)-2))) &amp; 0x00ff;</span>
-<span class="lineNum">      42 </span>                :<span class="lineCov">   56915223 :     return flag;</span>
+<span class="lineNum">      41 </span>                :<span class="lineCov">   56847623 :     flag = (subbid &gt;&gt; (8 * (sizeof(bid_t)-2))) &amp; 0x00ff;</span>
+<span class="lineNum">      42 </span>                :<span class="lineCov">   56847623 :     return flag;</span>
 <a name="43"><span class="lineNum">      43 </span>                :            : }</a>
 <span class="lineNum">      44 </span>                :            : 
-<span class="lineNum">      45 </span>                :<span class="lineCov">   89653927 : INLINE struct bnode *_fetch_bnode(struct btree *btree, void *addr, uint16_t level)</span>
+<span class="lineNum">      45 </span>                :<span class="lineCov">   89582005 : INLINE struct bnode *_fetch_bnode(struct btree *btree, void *addr, uint16_t level)</span>
 <span class="lineNum">      46 </span>                :            : {
-<span class="lineNum">      47 </span>                :<span class="lineCov">   89653927 :     struct bnode *node = NULL;</span>
+<span class="lineNum">      47 </span>                :<span class="lineCov">   89582005 :     struct bnode *node = NULL;</span>
 <span class="lineNum">      48 </span>                :            : 
-<span class="lineNum">      49 </span>                :<span class="lineCov">   89653927 :     node = (struct bnode *)addr;</span>
+<span class="lineNum">      49 </span>                :<span class="lineCov">   89582005 :     node = (struct bnode *)addr;</span>
 <span class="lineNum">      50 </span>                :            : 
-<span class="lineNum">      51 </span>        [<span class="branchCov" title="Branch 0 was taken 60665801 times"> + </span><span class="branchCov" title="Branch 1 was taken 28988126 times"> + </span>]:<span class="lineCov">   89653927 :     if (!(node-&gt;flag &amp; BNODE_MASK_METADATA)) {</span>
+<span class="lineNum">      51 </span>        [<span class="branchCov" title="Branch 0 was taken 60626561 times"> + </span><span class="branchCov" title="Branch 1 was taken 28955444 times"> + </span>]:<span class="lineCov">   89582005 :     if (!(node-&gt;flag &amp; BNODE_MASK_METADATA)) {</span>
 <span class="lineNum">      52 </span>                :            :         // no metadata
-<span class="lineNum">      53 </span>                :<span class="lineCov">   60665801 :         node-&gt;data = (uint8_t *)addr + sizeof(struct bnode);</span>
+<span class="lineNum">      53 </span>                :<span class="lineCov">   60626561 :         node-&gt;data = (uint8_t *)addr + sizeof(struct bnode);</span>
 <span class="lineNum">      54 </span>                :            :     } else {
 <span class="lineNum">      55 </span>                :            :         // metadata
 <span class="lineNum">      56 </span>                :            :         metasize_t metasize;
-<span class="lineNum">      57 </span>                :<span class="lineCov">   28988126 :         memcpy(&amp;metasize, (uint8_t *)addr + sizeof(struct bnode), sizeof(metasize_t));</span>
-<span class="lineNum">      58 </span>                :<span class="lineCov">   28988126 :         metasize = _endian_decode(metasize);</span>
+<span class="lineNum">      57 </span>                :<span class="lineCov">   28955444 :         memcpy(&amp;metasize, (uint8_t *)addr + sizeof(struct bnode), sizeof(metasize_t));</span>
+<span class="lineNum">      58 </span>                :<span class="lineCov">   28955444 :         metasize = _endian_decode(metasize);</span>
 <span class="lineNum">      59 </span>                :            :         node-&gt;data = (uint8_t *)addr + sizeof(struct bnode) + sizeof(metasize_t) +
-<span class="lineNum">      60 </span>                :<span class="lineCov">   28988126 :                      _metasize_align(metasize);</span>
+<span class="lineNum">      60 </span>                :<span class="lineCov">   28955444 :                      _metasize_align(metasize);</span>
 <span class="lineNum">      61 </span>                :            :     }
-<span class="lineNum">      62 </span>                :<span class="lineCov">   89653927 :     return node;</span>
+<span class="lineNum">      62 </span>                :<span class="lineCov">   89582005 :     return node;</span>
 <a name="63"><span class="lineNum">      63 </span>                :            : }</a>
 <span class="lineNum">      64 </span>                :            : 
-<span class="lineNum">      65 </span>                :<span class="lineCov">   35388260 : struct bnode ** btree_get_bnode_array(void *addr, size_t *nnode_out)</span>
+<span class="lineNum">      65 </span>                :<span class="lineCov">   35351307 : struct bnode ** btree_get_bnode_array(void *addr, size_t *nnode_out)</span>
 <span class="lineNum">      66 </span>                :            : {
 <span class="lineNum">      67 </span>                :            :     // original b+tree always has only a single node per block
 <span class="lineNum">      68 </span>                :            :     struct bnode **ret;
-<span class="lineNum">      69 </span>                :<span class="lineCov">   35388260 :     *nnode_out = 1;</span>
-<span class="lineNum">      70 </span>                :<span class="lineCov">   35388260 :     ret = (struct bnode **)malloc(sizeof(struct bnode*) * (*nnode_out));</span>
-<span class="lineNum">      71 </span>                :<span class="lineCov">   35388260 :     ret[0] = _fetch_bnode(NULL, addr, 0);</span>
+<span class="lineNum">      69 </span>                :<span class="lineCov">   35351307 :     *nnode_out = 1;</span>
+<span class="lineNum">      70 </span>                :<span class="lineCov">   35351307 :     ret = (struct bnode **)malloc(sizeof(struct bnode*) * (*nnode_out));</span>
+<span class="lineNum">      71 </span>                :<span class="lineCov">   35351307 :     ret[0] = _fetch_bnode(NULL, addr, 0);</span>
 <span class="lineNum">      72 </span>                :            : 
-<span class="lineNum">      73 </span>                :<span class="lineCov">   35394745 :     return ret;</span>
+<span class="lineNum">      73 </span>                :<span class="lineCov">   35358403 :     return ret;</span>
 <a name="74"><span class="lineNum">      74 </span>                :            : }</a>
 <span class="lineNum">      75 </span>                :            : 
-<span class="lineNum">      76 </span>                :<span class="lineCov">    8143511 : INLINE int _bnode_size(</span>
+<span class="lineNum">      76 </span>                :<span class="lineCov">    8135641 : INLINE int _bnode_size(</span>
 <span class="lineNum">      77 </span>                :            :     struct btree *btree, struct bnode *node, void *new_minkey, void *key_arr, void *value_arr, size_t len)
 <span class="lineNum">      78 </span>                :            : {
-<span class="lineNum">      79 </span>                :<span class="lineCov">    8143511 :     int nodesize = 0;</span>
+<span class="lineNum">      79 </span>                :<span class="lineCov">    8135641 :     int nodesize = 0;</span>
 <span class="lineNum">      80 </span>                :            : 
-<span class="lineNum">      81 </span>        [<span class="branchCov" title="Branch 0 was taken 28886 times"> + </span><span class="branchCov" title="Branch 1 was taken 8114625 times"> + </span>]:<span class="lineCov">    8143511 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">      81 </span>        [<span class="branchCov" title="Branch 0 was taken 28895 times"> + </span><span class="branchCov" title="Branch 1 was taken 8106746 times"> + </span>]:<span class="lineCov">    8135641 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
 <span class="lineNum">      82 </span>                :            :         metasize_t size;
-<span class="lineNum">      83 </span>                :<span class="lineCov">      28886 :         memcpy(&amp;size, (uint8_t *)node + sizeof(struct bnode), sizeof(metasize_t));</span>
-<span class="lineNum">      84 </span>                :<span class="lineCov">      28886 :         size = _endian_decode(size);</span>
+<span class="lineNum">      83 </span>                :<span class="lineCov">      28895 :         memcpy(&amp;size, (uint8_t *)node + sizeof(struct bnode), sizeof(metasize_t));</span>
+<span class="lineNum">      84 </span>                :<span class="lineCov">      28895 :         size = _endian_decode(size);</span>
 <span class="lineNum">      85 </span>                :            :         nodesize =
 <span class="lineNum">      86 </span>                :            :             sizeof(struct bnode) +
-<span class="lineNum">      87 </span>                :<span class="lineCov">      28886 :             btree-&gt;kv_ops-&gt;get_data_size(node, new_minkey, key_arr, value_arr, len) +</span>
-<span class="lineNum">      88 </span>                :<span class="lineCov">      28886 :             _metasize_align(size) + sizeof(metasize_t);</span>
+<span class="lineNum">      87 </span>                :<span class="lineCov">      28895 :             btree-&gt;kv_ops-&gt;get_data_size(node, new_minkey, key_arr, value_arr, len) +</span>
+<span class="lineNum">      88 </span>                :<span class="lineCov">      28895 :             _metasize_align(size) + sizeof(metasize_t);</span>
 <span class="lineNum">      89 </span>                :            :     }else{
 <span class="lineNum">      90 </span>                :            :         nodesize =
 <span class="lineNum">      91 </span>                :            :             sizeof(struct bnode) +
-<span class="lineNum">      92 </span>                :<span class="lineCov">    8114625 :             btree-&gt;kv_ops-&gt;get_data_size(node, new_minkey, key_arr, value_arr, len);</span>
+<span class="lineNum">      92 </span>                :<span class="lineCov">    8106746 :             btree-&gt;kv_ops-&gt;get_data_size(node, new_minkey, key_arr, value_arr, len);</span>
 <span class="lineNum">      93 </span>                :            :     }
 <span class="lineNum">      94 </span>                :            : 
-<span class="lineNum">      95 </span>                :<span class="lineCov">    8143515 :     return nodesize;</span>
+<span class="lineNum">      95 </span>                :<span class="lineCov">    8135643 :     return nodesize;</span>
 <span class="lineNum">      96 </span>                :            : }
 <span class="lineNum">      97 </span>                :            : 
 <span class="lineNum">      98 </span>                :            : struct kv_ins_item {
@@ -172,31 +172,31 @@
 <span class="lineNum">     101 </span>                :            :     struct list_elem le;
 <a name="102"><span class="lineNum">     102 </span>                :            : };</a>
 <span class="lineNum">     103 </span>                :            : 
-<span class="lineNum">     104 </span>                :<span class="lineCov">    8142601 : INLINE struct kv_ins_item * _kv_ins_item_create(</span>
+<span class="lineNum">     104 </span>                :<span class="lineCov">    8134702 : INLINE struct kv_ins_item * _kv_ins_item_create(</span>
 <span class="lineNum">     105 </span>                :            :     struct btree *btree, void *key, void *value)
 <span class="lineNum">     106 </span>                :            : {
 <span class="lineNum">     107 </span>                :            :     struct kv_ins_item *item;
-<span class="lineNum">     108 </span>                :<span class="lineCov">    8142601 :     item = (struct kv_ins_item*)malloc(sizeof(struct kv_ins_item));</span>
-<span class="lineNum">     109 </span>                :<span class="lineCov">    8142601 :     item-&gt;key = (void *)malloc(btree-&gt;ksize);</span>
-<span class="lineNum">     110 </span>                :<span class="lineCov">    8142601 :     item-&gt;value = (void *)malloc(btree-&gt;vsize);</span>
+<span class="lineNum">     108 </span>                :<span class="lineCov">    8134702 :     item = (struct kv_ins_item*)malloc(sizeof(struct kv_ins_item));</span>
+<span class="lineNum">     109 </span>                :<span class="lineCov">    8134702 :     item-&gt;key = (void *)malloc(btree-&gt;ksize);</span>
+<span class="lineNum">     110 </span>                :<span class="lineCov">    8134702 :     item-&gt;value = (void *)malloc(btree-&gt;vsize);</span>
 <span class="lineNum">     111 </span>                :            : 
-<span class="lineNum">     112 </span>                :<span class="lineCov">    8142601 :     btree-&gt;kv_ops-&gt;init_kv_var(btree, item-&gt;key, item-&gt;value);</span>
-<span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 8091784 times"> + </span><span class="branchCov" title="Branch 1 was taken 50858 times"> + </span>]:<span class="lineCov">    8142642 :     if (key) {</span>
-<span class="lineNum">     114 </span>                :<span class="lineCov">    8091784 :         btree-&gt;kv_ops-&gt;set_key(btree, item-&gt;key, key);</span>
+<span class="lineNum">     112 </span>                :<span class="lineCov">    8134702 :     btree-&gt;kv_ops-&gt;init_kv_var(btree, item-&gt;key, item-&gt;value);</span>
+<span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 8083911 times"> + </span><span class="branchCov" title="Branch 1 was taken 50831 times"> + </span>]:<span class="lineCov">    8134742 :     if (key) {</span>
+<span class="lineNum">     114 </span>                :<span class="lineCov">    8083911 :         btree-&gt;kv_ops-&gt;set_key(btree, item-&gt;key, key);</span>
 <span class="lineNum">     115 </span>                :            :     }
-<span class="lineNum">     116 </span>        [<span class="branchCov" title="Branch 0 was taken 8142638 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8142638 :     if (value) {</span>
-<span class="lineNum">     117 </span>                :<span class="lineCov">    8142638 :         btree-&gt;kv_ops-&gt;set_value(btree, item-&gt;value, value);</span>
+<span class="lineNum">     116 </span>        [<span class="branchCov" title="Branch 0 was taken 8134738 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8134738 :     if (value) {</span>
+<span class="lineNum">     117 </span>                :<span class="lineCov">    8134738 :         btree-&gt;kv_ops-&gt;set_value(btree, item-&gt;value, value);</span>
 <span class="lineNum">     118 </span>                :            :     }
-<span class="lineNum">     119 </span>                :<span class="lineCov">    8142631 :     return item;</span>
+<span class="lineNum">     119 </span>                :<span class="lineCov">    8134739 :     return item;</span>
 <a name="120"><span class="lineNum">     120 </span>                :            : }</a>
 <span class="lineNum">     121 </span>                :            : 
-<span class="lineNum">     122 </span>                :<span class="lineCov">    8142587 : INLINE void _kv_ins_item_free(struct kv_ins_item *item){</span>
-<span class="lineNum">     123 </span>                :<span class="lineCov">    8142587 :     free(item-&gt;key);</span>
-<span class="lineNum">     124 </span>                :<span class="lineCov">    8142587 :     free(item-&gt;value);</span>
-<span class="lineNum">     125 </span>                :<span class="lineCov">    8142587 :     free(item);</span>
-<a name="126"><span class="lineNum">     126 </span>                :<span class="lineCov">    8142587 : }</span></a>
+<span class="lineNum">     122 </span>                :<span class="lineCov">    8134676 : INLINE void _kv_ins_item_free(struct kv_ins_item *item){</span>
+<span class="lineNum">     123 </span>                :<span class="lineCov">    8134676 :     free(item-&gt;key);</span>
+<span class="lineNum">     124 </span>                :<span class="lineCov">    8134676 :     free(item-&gt;value);</span>
+<span class="lineNum">     125 </span>                :<span class="lineCov">    8134676 :     free(item);</span>
+<a name="126"><span class="lineNum">     126 </span>                :<span class="lineCov">    8134676 : }</span></a>
 <span class="lineNum">     127 </span>                :            : 
-<span class="lineNum">     128 </span>                :<span class="lineCov">    8143513 : INLINE int _bnode_size_check(</span>
+<span class="lineNum">     128 </span>                :<span class="lineCov">    8135651 : INLINE int _bnode_size_check(</span>
 <span class="lineNum">     129 </span>                :            :     struct btree *btree, bid_t bid, struct bnode *node,
 <span class="lineNum">     130 </span>                :            :     void *new_minkey, struct list *kv_ins_list, size_t *size_out)
 <span class="lineNum">     131 </span>                :            : {
@@ -206,21 +206,21 @@
 <span class="lineNum">     135 </span>                :            :     struct list_elem *e;
 <span class="lineNum">     136 </span>                :            :     struct kv_ins_item *item;
 <span class="lineNum">     137 </span>                :            : 
-<span class="lineNum">     138 </span>                :<span class="lineCov">    8143513 :     nodesize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     138 </span>                :<span class="lineCov">    8135651 :     nodesize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle, bid);</span>
 <span class="lineNum">     139 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     140 </span>                :<span class="lineCov">    8143514 :     nodesize -= BLK_MARKER_SIZE;</span>
+<span class="lineNum">     140 </span>                :<span class="lineCov">    8135645 :     nodesize -= BLK_MARKER_SIZE;</span>
 <span class="lineNum">     141 </span>                :            : #endif
 <span class="lineNum">     142 </span>                :            : 
-<span class="lineNum">     143 </span>                :<span class="lineCov">    8143514 :     nitem = 0;</span>
-<span class="lineNum">     144 </span>        [<span class="branchCov" title="Branch 0 was taken 8143513 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">    8143514 :     if (kv_ins_list) {</span>
-<span class="lineNum">     145 </span>                :<span class="lineCov">    8143513 :         e = list_begin(kv_ins_list);</span>
-<span class="lineNum">     146 </span>        [<span class="branchCov" title="Branch 0 was taken 8143303 times"> + </span><span class="branchCov" title="Branch 1 was taken 8143511 times"> + </span>]:<span class="lineCov">   16286814 :         while(e){</span>
-<span class="lineNum">     147 </span>                :<span class="lineCov">    8143303 :             nitem++;</span>
-<span class="lineNum">     148 </span>                :<span class="lineCov">    8143303 :             e = list_next(e);</span>
+<span class="lineNum">     143 </span>                :<span class="lineCov">    8135645 :     nitem = 0;</span>
+<span class="lineNum">     144 </span>        [<span class="branchCov" title="Branch 0 was taken 8135646 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8135645 :     if (kv_ins_list) {</span>
+<span class="lineNum">     145 </span>                :<span class="lineCov">    8135646 :         e = list_begin(kv_ins_list);</span>
+<span class="lineNum">     146 </span>        [<span class="branchCov" title="Branch 0 was taken 8135423 times"> + </span><span class="branchCov" title="Branch 1 was taken 8135642 times"> + </span>]:<span class="lineCov">   16271065 :         while(e){</span>
+<span class="lineNum">     147 </span>                :<span class="lineCov">    8135423 :             nitem++;</span>
+<span class="lineNum">     148 </span>                :<span class="lineCov">    8135423 :             e = list_next(e);</span>
 <span class="lineNum">     149 </span>                :            :         }
 <span class="lineNum">     150 </span>                :            :     }
 <span class="lineNum">     151 </span>                :            : 
-<span class="lineNum">     152 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8143512 times"> + </span>]:<span class="lineCov">    8143512 :     if (nitem &gt; 1) {</span>
+<span class="lineNum">     152 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8135641 times"> + </span>]:<span class="lineCov">    8135641 :     if (nitem &gt; 1) {</span>
 <span class="lineNum">     153 </span>                :            :         int i;
 <span class="lineNum">     154 </span>                :            :         void *key_arr, *value_arr;
 <span class="lineNum">     155 </span>                :            : 
@@ -240,34 +240,34 @@
 <span class="lineNum">     169 </span>                :            : 
 <span class="lineNum">     170 </span>                :<span class="lineNoCov">          0 :         free(key_arr);</span>
 <span class="lineNum">     171 </span>                :<span class="lineNoCov">          0 :         free(value_arr);</span>
-<span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 8143303 times"> + </span><span class="branchCov" title="Branch 1 was taken 209 times"> + </span>]:<span class="lineCov">    8143512 :     }else if (nitem == 1) {</span>
-<span class="lineNum">     173 </span>                :<span class="lineCov">    8143303 :         e = list_begin(kv_ins_list);</span>
-<span class="lineNum">     174 </span>                :<span class="lineCov">    8143299 :         item = _get_entry(e, struct kv_ins_item, le);</span>
-<span class="lineNum">     175 </span>                :<span class="lineCov">    8143299 :         cursize = _bnode_size(btree, node, new_minkey, item-&gt;key, item-&gt;value, 1);</span>
-<span class="lineNum">     176 </span>        [<span class="branchCov" title="Branch 0 was taken 209 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        209 :     }else if (nitem == 0) {</span>
-<span class="lineNum">     177 </span>                :<span class="lineCov">        209 :         cursize = _bnode_size(btree, node, new_minkey, NULL, NULL, 0);</span>
+<span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 8135423 times"> + </span><span class="branchCov" title="Branch 1 was taken 218 times"> + </span>]:<span class="lineCov">    8135641 :     }else if (nitem == 1) {</span>
+<span class="lineNum">     173 </span>                :<span class="lineCov">    8135423 :         e = list_begin(kv_ins_list);</span>
+<span class="lineNum">     174 </span>                :<span class="lineCov">    8135420 :         item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">     175 </span>                :<span class="lineCov">    8135420 :         cursize = _bnode_size(btree, node, new_minkey, item-&gt;key, item-&gt;value, 1);</span>
+<span class="lineNum">     176 </span>        [<span class="branchCov" title="Branch 0 was taken 218 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        218 :     }else if (nitem == 0) {</span>
+<span class="lineNum">     177 </span>                :<span class="lineCov">        218 :         cursize = _bnode_size(btree, node, new_minkey, NULL, NULL, 0);</span>
 <span class="lineNum">     178 </span>                :            :     }
 <span class="lineNum">     179 </span>                :            : 
-<span class="lineNum">     180 </span>                :<span class="lineCov">    8143510 :     *size_out = cursize;</span>
-<span class="lineNum">     181 </span>                :<span class="lineCov">    8143510 :     return ( cursize &lt;= nodesize );</span>
+<span class="lineNum">     180 </span>                :<span class="lineCov">    8135641 :     *size_out = cursize;</span>
+<span class="lineNum">     181 </span>                :<span class="lineCov">    8135641 :     return ( cursize &lt;= nodesize );</span>
 <a name="182"><span class="lineNum">     182 </span>                :            : }</a>
 <span class="lineNum">     183 </span>                :            : 
-<span class="lineNum">     184 </span>                :<span class="lineCov">      52391 : INLINE struct bnode * _btree_init_node(</span>
+<span class="lineNum">     184 </span>                :<span class="lineCov">      52363 : INLINE struct bnode * _btree_init_node(</span>
 <span class="lineNum">     185 </span>                :            :     struct btree *btree, bid_t bid, void *addr, bnode_flag_t flag, uint16_t level, struct btree_meta *meta)
 <span class="lineNum">     186 </span>                :            : {
 <span class="lineNum">     187 </span>                :            :     struct bnode *node;
 <span class="lineNum">     188 </span>                :            :     void *node_addr;
 <span class="lineNum">     189 </span>                :            :     metasize_t _size;
 <span class="lineNum">     190 </span>                :            : 
-<span class="lineNum">     191 </span>                :<span class="lineCov">      52391 :     node_addr = addr;</span>
+<span class="lineNum">     191 </span>                :<span class="lineCov">      52363 :     node_addr = addr;</span>
 <span class="lineNum">     192 </span>                :            : 
-<span class="lineNum">     193 </span>                :<span class="lineCov">      52391 :     node = (struct bnode *)node_addr;</span>
-<span class="lineNum">     194 </span>                :<span class="lineCov">      52391 :     node-&gt;kvsize = btree-&gt;ksize&lt;&lt;4 | btree-&gt;vsize;</span>
-<span class="lineNum">     195 </span>                :<span class="lineCov">      52391 :     node-&gt;nentry = 0;</span>
-<span class="lineNum">     196 </span>                :<span class="lineCov">      52391 :     node-&gt;level = level;</span>
-<span class="lineNum">     197 </span>                :<span class="lineCov">      52391 :     node-&gt;flag = flag;</span>
+<span class="lineNum">     193 </span>                :<span class="lineCov">      52363 :     node = (struct bnode *)node_addr;</span>
+<span class="lineNum">     194 </span>                :<span class="lineCov">      52363 :     node-&gt;kvsize = btree-&gt;ksize&lt;&lt;4 | btree-&gt;vsize;</span>
+<span class="lineNum">     195 </span>                :<span class="lineCov">      52363 :     node-&gt;nentry = 0;</span>
+<span class="lineNum">     196 </span>                :<span class="lineCov">      52363 :     node-&gt;level = level;</span>
+<span class="lineNum">     197 </span>                :<span class="lineCov">      52363 :     node-&gt;flag = flag;</span>
 <span class="lineNum">     198 </span>                :            : 
-<span class="lineNum">     199 </span>[<span class="branchCov" title="Branch 0 was taken 794 times"> + </span><span class="branchCov" title="Branch 1 was taken 51597 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 794 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      52391 :     if ((flag &amp; BNODE_MASK_METADATA) &amp;&amp; meta) {</span>
+<span class="lineNum">     199 </span>[<span class="branchCov" title="Branch 0 was taken 794 times"> + </span><span class="branchCov" title="Branch 1 was taken 51569 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 794 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      52363 :     if ((flag &amp; BNODE_MASK_METADATA) &amp;&amp; meta) {</span>
 <span class="lineNum">     200 </span>                :<span class="lineCov">        794 :         _size = _endian_encode(meta-&gt;size);</span>
 <span class="lineNum">     201 </span>                :<span class="lineCov">        794 :         memcpy((uint8_t *)node_addr + sizeof(struct bnode), &amp;_size, sizeof(metasize_t));</span>
 <span class="lineNum">     202 </span>                :<span class="lineCov">        794 :         memcpy((uint8_t *)node_addr + sizeof(struct bnode) + sizeof(metasize_t),</span>
@@ -275,58 +275,58 @@
 <span class="lineNum">     204 </span>                :            :         node-&gt;data = (uint8_t *)node_addr + sizeof(struct bnode) + sizeof(metasize_t) +
 <span class="lineNum">     205 </span>                :<span class="lineCov">        794 :                      _metasize_align(meta-&gt;size);</span>
 <span class="lineNum">     206 </span>                :            :     }else{
-<span class="lineNum">     207 </span>                :<span class="lineCov">      51597 :         node-&gt;data = (uint8_t *)node_addr + sizeof(struct bnode);</span>
+<span class="lineNum">     207 </span>                :<span class="lineCov">      51569 :         node-&gt;data = (uint8_t *)node_addr + sizeof(struct bnode);</span>
 <span class="lineNum">     208 </span>                :            :     }
 <span class="lineNum">     209 </span>                :            : 
-<span class="lineNum">     210 </span>                :<span class="lineCov">      52391 :     return node;</span>
+<span class="lineNum">     210 </span>                :<span class="lineCov">      52363 :     return node;</span>
 <a name="211"><span class="lineNum">     211 </span>                :            : }</a>
 <span class="lineNum">     212 </span>                :            : 
-<span class="lineNum">     213 </span>                :<span class="lineCov">      51352 : INLINE size_t _btree_get_nsplitnode(struct btree *btree, bid_t bid, struct bnode *node, size_t size)</span>
+<span class="lineNum">     213 </span>                :<span class="lineCov">      51324 : INLINE size_t _btree_get_nsplitnode(struct btree *btree, bid_t bid, struct bnode *node, size_t size)</span>
 <span class="lineNum">     214 </span>                :            : {
 <span class="lineNum">     215 </span>                :            :     size_t headersize, dataspace;
 <span class="lineNum">     216 </span>                :            :     size_t nodesize;
-<span class="lineNum">     217 </span>                :<span class="lineCov">      51352 :     size_t nnode = 0;</span>
+<span class="lineNum">     217 </span>                :<span class="lineCov">      51324 :     size_t nnode = 0;</span>
 <span class="lineNum">     218 </span>                :            : 
-<span class="lineNum">     219 </span>                :<span class="lineCov">      51352 :     nodesize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle, bid);</span>
+<span class="lineNum">     219 </span>                :<span class="lineCov">      51324 :     nodesize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle, bid);</span>
 <span class="lineNum">     220 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     221 </span>                :<span class="lineCov">      51352 :     nodesize -= BLK_MARKER_SIZE;</span>
+<span class="lineNum">     221 </span>                :<span class="lineCov">      51324 :     nodesize -= BLK_MARKER_SIZE;</span>
 <span class="lineNum">     222 </span>                :            : #endif
 <span class="lineNum">     223 </span>                :            : 
-<span class="lineNum">     224 </span>        [<span class="branchCov" title="Branch 0 was taken 386 times"> + </span><span class="branchCov" title="Branch 1 was taken 50966 times"> + </span>]:<span class="lineCov">      51352 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">     224 </span>        [<span class="branchCov" title="Branch 0 was taken 386 times"> + </span><span class="branchCov" title="Branch 1 was taken 50938 times"> + </span>]:<span class="lineCov">      51324 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
 <span class="lineNum">     225 </span>                :            :         metasize_t size;
 <span class="lineNum">     226 </span>                :<span class="lineCov">        386 :         memcpy(&amp;size, (uint8_t *)node + sizeof(struct bnode), sizeof(metasize_t));</span>
 <span class="lineNum">     227 </span>                :<span class="lineCov">        386 :         size = _endian_decode(size);</span>
 <span class="lineNum">     228 </span>                :<span class="lineCov">        386 :         headersize = sizeof(struct bnode) + _metasize_align(size) + sizeof(metasize_t);</span>
 <span class="lineNum">     229 </span>                :            :     }else{
-<span class="lineNum">     230 </span>                :<span class="lineCov">      50966 :         headersize = sizeof(struct bnode);</span>
+<span class="lineNum">     230 </span>                :<span class="lineCov">      50938 :         headersize = sizeof(struct bnode);</span>
 <span class="lineNum">     231 </span>                :            :     }
 <span class="lineNum">     232 </span>                :            : 
-<span class="lineNum">     233 </span>                :<span class="lineCov">      51352 :     dataspace = nodesize - headersize;</span>
+<span class="lineNum">     233 </span>                :<span class="lineCov">      51324 :     dataspace = nodesize - headersize;</span>
 <span class="lineNum">     234 </span>                :            :     // round up
-<span class="lineNum">     235 </span>                :<span class="lineCov">      51352 :     nnode = ((size - headersize) + (dataspace-1)) / dataspace;</span>
+<span class="lineNum">     235 </span>                :<span class="lineCov">      51324 :     nnode = ((size - headersize) + (dataspace-1)) / dataspace;</span>
 <span class="lineNum">     236 </span>                :            : 
-<span class="lineNum">     237 </span>                :<span class="lineCov">      51352 :     return nnode;</span>
+<span class="lineNum">     237 </span>                :<span class="lineCov">      51324 :     return nnode;</span>
 <a name="238"><span class="lineNum">     238 </span>                :            : }</a>
 <span class="lineNum">     239 </span>                :            : 
-<span class="lineNum">     240 </span>                :<span class="lineCov">    5811623 : metasize_t btree_read_meta(struct btree *btree, void *buf)</span>
+<span class="lineNum">     240 </span>                :<span class="lineCov">    5802797 : metasize_t btree_read_meta(struct btree *btree, void *buf)</span>
 <span class="lineNum">     241 </span>                :            : {
 <span class="lineNum">     242 </span>                :            :     void *addr;
 <span class="lineNum">     243 </span>                :            :     void *ptr;
 <span class="lineNum">     244 </span>                :            :     metasize_t size;
 <span class="lineNum">     245 </span>                :            :     struct bnode *node;
 <span class="lineNum">     246 </span>                :            : 
-<span class="lineNum">     247 </span>                :<span class="lineCov">    5811623 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
-<span class="lineNum">     248 </span>                :<span class="lineCov">    5811655 :     node = _fetch_bnode(btree, addr, btree-&gt;height);</span>
-<span class="lineNum">     249 </span>        [<span class="branchCov" title="Branch 0 was taken 5811494 times"> + </span><span class="branchCov" title="Branch 1 was taken 107 times"> + </span>]:<span class="lineCov">    5811601 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
-<span class="lineNum">     250 </span>                :<span class="lineCov">    5811494 :         ptr = ((uint8_t *)node) + sizeof(struct bnode);</span>
-<span class="lineNum">     251 </span>                :<span class="lineCov">    5811494 :         memcpy(&amp;size, (uint8_t *)ptr, sizeof(metasize_t));</span>
-<span class="lineNum">     252 </span>                :<span class="lineCov">    5811494 :         size = _endian_decode(size);</span>
-<span class="lineNum">     253 </span>                :<span class="lineCov">    5811494 :         memcpy(buf, (uint8_t *)ptr + sizeof(metasize_t), size);</span>
+<span class="lineNum">     247 </span>                :<span class="lineCov">    5802797 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     248 </span>                :<span class="lineCov">    5803493 :     node = _fetch_bnode(btree, addr, btree-&gt;height);</span>
+<span class="lineNum">     249 </span>        [<span class="branchCov" title="Branch 0 was taken 5803346 times"> + </span><span class="branchCov" title="Branch 1 was taken 107 times"> + </span>]:<span class="lineCov">    5803453 :     if (node-&gt;flag &amp; BNODE_MASK_METADATA) {</span>
+<span class="lineNum">     250 </span>                :<span class="lineCov">    5803346 :         ptr = ((uint8_t *)node) + sizeof(struct bnode);</span>
+<span class="lineNum">     251 </span>                :<span class="lineCov">    5803346 :         memcpy(&amp;size, (uint8_t *)ptr, sizeof(metasize_t));</span>
+<span class="lineNum">     252 </span>                :<span class="lineCov">    5803346 :         size = _endian_decode(size);</span>
+<span class="lineNum">     253 </span>                :<span class="lineCov">    5803346 :         memcpy(buf, (uint8_t *)ptr + sizeof(metasize_t), size);</span>
 <span class="lineNum">     254 </span>                :            :     } else {
 <span class="lineNum">     255 </span>                :<span class="lineCov">        107 :         size = 0;</span>
 <span class="lineNum">     256 </span>                :            :     }
 <span class="lineNum">     257 </span>                :            : 
-<span class="lineNum">     258 </span>                :<span class="lineCov">    5811601 :     return size;</span>
+<span class="lineNum">     258 </span>                :<span class="lineCov">    5803453 :     return size;</span>
 <a name="259"><span class="lineNum">     259 </span>                :            : }</a>
 <span class="lineNum">     260 </span>                :            : 
 <span class="lineNum">     261 </span>                :<span class="lineCov">        497 : void btree_update_meta(struct btree *btree, struct btree_meta *meta)</span>
@@ -394,7 +394,7 @@
 <span class="lineNum">     323 </span>                :            :     }
 <a name="324"><span class="lineNum">     324 </span>                :<span class="lineCov">        497 : }</span></a>
 <span class="lineNum">     325 </span>                :            : 
-<span class="lineNum">     326 </span>                :<span class="lineCov">    5807437 : btree_result btree_init_from_bid(struct btree *btree, void *blk_handle,</span>
+<span class="lineNum">     326 </span>                :<span class="lineCov">    5799789 : btree_result btree_init_from_bid(struct btree *btree, void *blk_handle,</span>
 <span class="lineNum">     327 </span>                :            :                                  struct btree_blk_ops *blk_ops,
 <span class="lineNum">     328 </span>                :            :                                  struct btree_kv_ops *kv_ops,
 <span class="lineNum">     329 </span>                :            :                                  uint32_t nodesize, bid_t root_bid)
@@ -402,20 +402,20 @@
 <span class="lineNum">     331 </span>                :            :     void *addr;
 <span class="lineNum">     332 </span>                :            :     struct bnode *root;
 <span class="lineNum">     333 </span>                :            : 
-<span class="lineNum">     334 </span>                :<span class="lineCov">    5807437 :     btree-&gt;blk_ops = blk_ops;</span>
-<span class="lineNum">     335 </span>                :<span class="lineCov">    5807437 :     btree-&gt;blk_handle = blk_handle;</span>
-<span class="lineNum">     336 </span>                :<span class="lineCov">    5807437 :     btree-&gt;kv_ops = kv_ops;</span>
-<span class="lineNum">     337 </span>                :<span class="lineCov">    5807437 :     btree-&gt;blksize = nodesize;</span>
-<span class="lineNum">     338 </span>                :<span class="lineCov">    5807437 :     btree-&gt;root_bid = root_bid;</span>
+<span class="lineNum">     334 </span>                :<span class="lineCov">    5799789 :     btree-&gt;blk_ops = blk_ops;</span>
+<span class="lineNum">     335 </span>                :<span class="lineCov">    5799789 :     btree-&gt;blk_handle = blk_handle;</span>
+<span class="lineNum">     336 </span>                :<span class="lineCov">    5799789 :     btree-&gt;kv_ops = kv_ops;</span>
+<span class="lineNum">     337 </span>                :<span class="lineCov">    5799789 :     btree-&gt;blksize = nodesize;</span>
+<span class="lineNum">     338 </span>                :<span class="lineCov">    5799789 :     btree-&gt;root_bid = root_bid;</span>
 <span class="lineNum">     339 </span>                :            : 
-<span class="lineNum">     340 </span>                :<span class="lineCov">    5807437 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
-<span class="lineNum">     341 </span>                :<span class="lineCov">    5811454 :     root = _fetch_bnode(btree, addr, 0);</span>
+<span class="lineNum">     340 </span>                :<span class="lineCov">    5799789 :     addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, btree-&gt;root_bid);</span>
+<span class="lineNum">     341 </span>                :<span class="lineCov">    5803273 :     root = _fetch_bnode(btree, addr, 0);</span>
 <span class="lineNum">     342 </span>                :            : 
-<span class="lineNum">     343 </span>                :<span class="lineCov">    5811436 :     btree-&gt;root_flag = root-&gt;flag;</span>
-<span class="lineNum">     344 </span>                :<span class="lineCov">    5811436 :     btree-&gt;height = root-&gt;level;</span>
-<span class="lineNum">     345 </span>                :<span class="lineCov">    5811436 :     _get_kvsize(root-&gt;kvsize, btree-&gt;ksize, btree-&gt;vsize);</span>
+<span class="lineNum">     343 </span>                :<span class="lineCov">    5803267 :     btree-&gt;root_flag = root-&gt;flag;</span>
+<span class="lineNum">     344 </span>                :<span class="lineCov">    5803267 :     btree-&gt;height = root-&gt;level;</span>
+<span class="lineNum">     345 </span>                :<span class="lineCov">    5803267 :     _get_kvsize(root-&gt;kvsize, btree-&gt;ksize, btree-&gt;vsize);</span>
 <span class="lineNum">     346 </span>                :            : 
-<span class="lineNum">     347 </span>                :<span class="lineCov">    5811436 :     return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">     347 </span>                :<span class="lineCov">    5803267 :     return BTREE_RESULT_SUCCESS;</span>
 <a name="348"><span class="lineNum">     348 </span>                :            : }</a>
 <span class="lineNum">     349 </span>                :            : 
 <span class="lineNum">     350 </span>                :<span class="lineCov">        547 : btree_result btree_init(</span>
@@ -482,50 +482,50 @@
 <span class="lineNum">     411 </span>                :            : largest key equal or smaller than KEY: 4
 <a name="412"><span class="lineNum">     412 </span>                :            : return: 1 (index# of the key '4')</a>
 <span class="lineNum">     413 </span>                :            : */
-<span class="lineNum">     414 </span>                :<span class="lineCov">   45332785 : idx_t _btree_find_entry(struct btree *btree, struct bnode *node, void *key)</span>
+<span class="lineNum">     414 </span>                :<span class="lineCov">   45300198 : idx_t _btree_find_entry(struct btree *btree, struct bnode *node, void *key)</span>
 <span class="lineNum">     415 </span>                :            : {
 <span class="lineNum">     416 </span>                :            :     idx_t start, end, middle, temp;
-<span class="lineNum">     417 </span>                :<span class="lineCov">   45332785 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     417 </span>                :<span class="lineCov">   45300198 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
 <span class="lineNum">     418 </span>                :            :     int cmp;
 <span class="lineNum">     419 </span>                :            :     #ifdef __BIT_CMP
-<span class="lineNum">     420 </span>                :<span class="lineCov">   45332785 :         idx_t *_map1[3] = {&amp;end, &amp;start, &amp;start};</span>
-<span class="lineNum">     421 </span>                :<span class="lineCov">   45332785 :         idx_t *_map2[3] = {&amp;temp, &amp;end, &amp;temp};</span>
+<span class="lineNum">     420 </span>                :<span class="lineCov">   45300198 :         idx_t *_map1[3] = {&amp;end, &amp;start, &amp;start};</span>
+<span class="lineNum">     421 </span>                :<span class="lineCov">   45300198 :         idx_t *_map2[3] = {&amp;temp, &amp;end, &amp;temp};</span>
 <span class="lineNum">     422 </span>                :            :     #endif
 <span class="lineNum">     423 </span>                :            : 
-<span class="lineNum">     424 </span>        [<span class="branchCov" title="Branch 0 was taken 45344316 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   45332785 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     424 </span>        [<span class="branchCov" title="Branch 0 was taken 45304412 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   45300198 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, NULL);</span>
 <span class="lineNum">     425 </span>                :            : 
-<span class="lineNum">     426 </span>                :<span class="lineCov">   45338748 :     start = middle = 0;</span>
-<span class="lineNum">     427 </span>                :<span class="lineCov">   45338748 :     end = node-&gt;nentry;</span>
+<span class="lineNum">     426 </span>                :<span class="lineCov">   45301599 :     start = middle = 0;</span>
+<span class="lineNum">     427 </span>                :<span class="lineCov">   45301599 :     end = node-&gt;nentry;</span>
 <span class="lineNum">     428 </span>                :            : 
-<span class="lineNum">     429 </span>        [<span class="branchCov" title="Branch 0 was taken 45336136 times"> + </span><span class="branchCov" title="Branch 1 was taken 2612 times"> + </span>]:<span class="lineCov">   45338748 :     if (end &gt; 0) {</span>
+<span class="lineNum">     429 </span>        [<span class="branchCov" title="Branch 0 was taken 45298987 times"> + </span><span class="branchCov" title="Branch 1 was taken 2612 times"> + </span>]:<span class="lineCov">   45301599 :     if (end &gt; 0) {</span>
 <span class="lineNum">     430 </span>                :            :         // compare with smallest key
-<span class="lineNum">     431 </span>                :<span class="lineCov">   45336136 :         btree-&gt;kv_ops-&gt;get_kv(node, 0, k, NULL);</span>
+<span class="lineNum">     431 </span>                :<span class="lineCov">   45298987 :         btree-&gt;kv_ops-&gt;get_kv(node, 0, k, NULL);</span>
 <span class="lineNum">     432 </span>                :            :         // smaller than smallest key
-<span class="lineNum">     433 </span>        [<span class="branchCov" title="Branch 1 was taken 2211 times"> + </span><span class="branchCov" title="Branch 2 was taken 45324245 times"> + </span>]:<span class="lineCov">   45333517 :         if (btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &lt; 0) {</span>
-<span class="lineNum">     434 </span>        [<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchCov" title="Branch 1 was taken 2180 times"> + </span>]:<span class="lineCov">       2211 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
-<span class="lineNum">     435 </span>                :<span class="lineCov">       2211 :             return BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">     433 </span>        [<span class="branchCov" title="Branch 1 was taken 2189 times"> + </span><span class="branchCov" title="Branch 2 was taken 45278226 times"> + </span>]:<span class="lineCov">   45296449 :         if (btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &lt; 0) {</span>
+<span class="lineNum">     434 </span>        [<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchCov" title="Branch 1 was taken 2158 times"> + </span>]:<span class="lineCov">       2189 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     435 </span>                :<span class="lineCov">       2189 :             return BTREE_IDX_NOT_FOUND;</span>
 <span class="lineNum">     436 </span>                :            :         }
 <span class="lineNum">     437 </span>                :            : 
 <span class="lineNum">     438 </span>                :            :         // compare with largest key
-<span class="lineNum">     439 </span>                :<span class="lineCov">   45324245 :         btree-&gt;kv_ops-&gt;get_kv(node, end-1, k, NULL);</span>
+<span class="lineNum">     439 </span>                :<span class="lineCov">   45278226 :         btree-&gt;kv_ops-&gt;get_kv(node, end-1, k, NULL);</span>
 <span class="lineNum">     440 </span>                :            :         // larger than largest key
-<span class="lineNum">     441 </span>        [<span class="branchCov" title="Branch 1 was taken 17726121 times"> + </span><span class="branchCov" title="Branch 2 was taken 27617409 times"> + </span>]:<span class="lineCov">   45332981 :         if (btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &gt;= 0) {</span>
-<span class="lineNum">     442 </span>        [<span class="branchCov" title="Branch 0 was taken 9762 times"> + </span><span class="branchCov" title="Branch 1 was taken 17716359 times"> + </span>]:<span class="lineCov">   17726121 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
-<span class="lineNum">     443 </span>                :<span class="lineCov">   17726189 :             return end-1;</span>
+<span class="lineNum">     441 </span>        [<span class="branchCov" title="Branch 1 was taken 17732431 times"> + </span><span class="branchCov" title="Branch 2 was taken 27596922 times"> + </span>]:<span class="lineCov">   45289232 :         if (btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &gt;= 0) {</span>
+<span class="lineNum">     442 </span>        [<span class="branchCov" title="Branch 0 was taken 9762 times"> + </span><span class="branchCov" title="Branch 1 was taken 17722669 times"> + </span>]:<span class="lineCov">   17732431 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     443 </span>                :<span class="lineCov">   17732439 :             return end-1;</span>
 <span class="lineNum">     444 </span>                :            :         }
 <span class="lineNum">     445 </span>                :            : 
 <span class="lineNum">     446 </span>                :            :         // binary search
-<span class="lineNum">     447 </span>        [<span class="branchCov" title="Branch 0 was taken 176966734 times"> + </span><span class="branchCov" title="Branch 1 was taken 27618612 times"> + </span>]:<span class="lineCov">  204585346 :         while(start+1 &lt; end) {</span>
-<span class="lineNum">     448 </span>                :<span class="lineCov">  176966734 :             middle = (start + end) &gt;&gt; 1;</span>
+<span class="lineNum">     447 </span>        [<span class="branchCov" title="Branch 0 was taken 176691572 times"> + </span><span class="branchCov" title="Branch 1 was taken 27576670 times"> + </span>]:<span class="lineCov">  204268242 :         while(start+1 &lt; end) {</span>
+<span class="lineNum">     448 </span>                :<span class="lineCov">  176691572 :             middle = (start + end) &gt;&gt; 1;</span>
 <span class="lineNum">     449 </span>                :            : 
 <span class="lineNum">     450 </span>                :            :             // get key at middle
-<span class="lineNum">     451 </span>                :<span class="lineCov">  176966734 :             btree-&gt;kv_ops-&gt;get_kv(node, middle, k, NULL);</span>
-<span class="lineNum">     452 </span>                :<span class="lineCov">  176957286 :             cmp = btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux);</span>
+<span class="lineNum">     451 </span>                :<span class="lineCov">  176691572 :             btree-&gt;kv_ops-&gt;get_kv(node, middle, k, NULL);</span>
+<span class="lineNum">     452 </span>                :<span class="lineCov">  176676096 :             cmp = btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux);</span>
 <span class="lineNum">     453 </span>                :            : 
 <span class="lineNum">     454 </span>                :            :             #ifdef __BIT_CMP
-<span class="lineNum">     455 </span>                :<span class="lineCov">  176967937 :                 cmp = _MAP(cmp) + 1;</span>
-<span class="lineNum">     456 </span>                :<span class="lineCov">  176967937 :                 *_map1[cmp] = middle;</span>
-<span class="lineNum">     457 </span>                :<span class="lineCov">  176967937 :                 *_map2[cmp] = 0;</span>
+<span class="lineNum">     455 </span>                :<span class="lineCov">  176671320 :                 cmp = _MAP(cmp) + 1;</span>
+<span class="lineNum">     456 </span>                :<span class="lineCov">  176671320 :                 *_map1[cmp] = middle;</span>
+<span class="lineNum">     457 </span>                :<span class="lineCov">  176671320 :                 *_map2[cmp] = 0;</span>
 <span class="lineNum">     458 </span>                :            :             #else
 <span class="lineNum">     459 </span>                :            :                 if (cmp &lt; 0) end = middle;
 <span class="lineNum">     460 </span>                :            :                 else if (cmp &gt; 0) start = middle;
@@ -535,40 +535,40 @@
 <span class="lineNum">     464 </span>                :            :                 }
 <span class="lineNum">     465 </span>                :            :             #endif
 <span class="lineNum">     466 </span>                :            :         }
-<span class="lineNum">     467 </span>        [<span class="branchCov" title="Branch 0 was taken 3709 times"> + </span><span class="branchCov" title="Branch 1 was taken 27614903 times"> + </span>]:<span class="lineCov">   27618612 :         if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
-<span class="lineNum">     468 </span>                :<span class="lineCov">   27622960 :         return start;</span>
+<span class="lineNum">     467 </span>        [<span class="branchCov" title="Branch 0 was taken 3709 times"> + </span><span class="branchCov" title="Branch 1 was taken 27572961 times"> + </span>]:<span class="lineCov">   27576670 :         if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     468 </span>                :<span class="lineCov">   27577064 :         return start;</span>
 <span class="lineNum">     469 </span>                :            :     }
 <span class="lineNum">     470 </span>                :            : 
 <span class="lineNum">     471 </span>        [<span class="branchCov" title="Branch 0 was taken 2010 times"> + </span><span class="branchCov" title="Branch 1 was taken 602 times"> + </span>]:<span class="lineCov">       2612 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
-<span class="lineNum">     472 </span>                :<span class="lineCov">   45353972 :     return BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">     472 </span>                :<span class="lineCov">   45314304 :     return BTREE_IDX_NOT_FOUND;</span>
 <a name="473"><span class="lineNum">     473 </span>                :            : }</a>
 <span class="lineNum">     474 </span>                :            : 
-<span class="lineNum">     475 </span>                :<span class="lineCov">    8143579 : idx_t _btree_add_entry(struct btree *btree, struct bnode *node, void *key, void *value)</span>
+<span class="lineNum">     475 </span>                :<span class="lineCov">    8135703 : idx_t _btree_add_entry(struct btree *btree, struct bnode *node, void *key, void *value)</span>
 <span class="lineNum">     476 </span>                :            : {
 <span class="lineNum">     477 </span>                :            :     idx_t idx, idx_insert;
 <span class="lineNum">     478 </span>                :            :     void *ptr;
-<span class="lineNum">     479 </span>                :<span class="lineCov">    8143579 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     479 </span>                :<span class="lineCov">    8135703 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
 <span class="lineNum">     480 </span>                :            : 
-<span class="lineNum">     481 </span>        [<span class="branchCov" title="Branch 0 was taken 8143580 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8143579 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     481 </span>        [<span class="branchCov" title="Branch 0 was taken 8135703 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8135703 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, NULL);</span>
 <span class="lineNum">     482 </span>                :            : 
-<span class="lineNum">     483 </span>        [<span class="branchCov" title="Branch 0 was taken 8142563 times"> + </span><span class="branchCov" title="Branch 1 was taken 1012 times"> + </span>]:<span class="lineCov">    8143575 :     if (node-&gt;nentry &gt; 0) {</span>
-<span class="lineNum">     484 </span>                :<span class="lineCov">    8142563 :         idx = _btree_find_entry(btree, node, key);</span>
+<span class="lineNum">     483 </span>        [<span class="branchCov" title="Branch 0 was taken 8134687 times"> + </span><span class="branchCov" title="Branch 1 was taken 1012 times"> + </span>]:<span class="lineCov">    8135699 :     if (node-&gt;nentry &gt; 0) {</span>
+<span class="lineNum">     484 </span>                :<span class="lineCov">    8134687 :         idx = _btree_find_entry(btree, node, key);</span>
 <span class="lineNum">     485 </span>                :            : 
-<span class="lineNum">     486 </span>        [<span class="branchCov" title="Branch 0 was taken 750 times"> + </span><span class="branchCov" title="Branch 1 was taken 8141846 times"> + </span>]:<span class="lineCov">    8142596 :         if (idx == BTREE_IDX_NOT_FOUND) idx_insert = 0;</span>
+<span class="lineNum">     486 </span>        [<span class="branchCov" title="Branch 0 was taken 730 times"> + </span><span class="branchCov" title="Branch 1 was taken 8133973 times"> + </span>]:<span class="lineCov">    8134703 :         if (idx == BTREE_IDX_NOT_FOUND) idx_insert = 0;</span>
 <span class="lineNum">     487 </span>                :            :         else {
-<span class="lineNum">     488 </span>                :<span class="lineCov">    8141846 :             btree-&gt;kv_ops-&gt;get_kv(node, idx, k, NULL);</span>
-<span class="lineNum">     489 </span>        [<span class="branchCov" title="Branch 1 was taken 525889 times"> + </span><span class="branchCov" title="Branch 2 was taken 7615955 times"> + </span>]:<span class="lineCov">    8141850 :             if (!btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux)) {</span>
+<span class="lineNum">     488 </span>                :<span class="lineCov">    8133973 :             btree-&gt;kv_ops-&gt;get_kv(node, idx, k, NULL);</span>
+<span class="lineNum">     489 </span>        [<span class="branchCov" title="Branch 1 was taken 521021 times"> + </span><span class="branchCov" title="Branch 2 was taken 7612947 times"> + </span>]:<span class="lineCov">    8133973 :             if (!btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux)) {</span>
 <span class="lineNum">     490 </span>                :            :                 // if same key already exists -&gt; update its value
-<span class="lineNum">     491 </span>                :<span class="lineCov">     525889 :                 btree-&gt;kv_ops-&gt;set_kv(node, idx, key, value);</span>
-<span class="lineNum">     492 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 525888 times"> + </span>]:<span class="lineCov">     525889 :                 if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
-<span class="lineNum">     493 </span>                :<span class="lineCov">     525889 :                 return idx;</span>
+<span class="lineNum">     491 </span>                :<span class="lineCov">     521021 :                 btree-&gt;kv_ops-&gt;set_kv(node, idx, key, value);</span>
+<span class="lineNum">     492 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 521020 times"> + </span>]:<span class="lineCov">     521021 :                 if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     493 </span>                :<span class="lineCov">     521021 :                 return idx;</span>
 <span class="lineNum">     494 </span>                :            :             }else{
-<span class="lineNum">     495 </span>                :<span class="lineCov">    7615955 :                 idx_insert = idx+1;</span>
+<span class="lineNum">     495 </span>                :<span class="lineCov">    7612947 :                 idx_insert = idx+1;</span>
 <span class="lineNum">     496 </span>                :            :             }
 <span class="lineNum">     497 </span>                :            :         }
 <span class="lineNum">     498 </span>                :            : 
-<span class="lineNum">     499 </span>        [<span class="branchCov" title="Branch 0 was taken 3656689 times"> + </span><span class="branchCov" title="Branch 1 was taken 3960016 times"> + </span>]:<span class="lineCov">    7616705 :         if (idx_insert &lt; node-&gt;nentry) {</span>
-<span class="lineNum">     500 </span>                :<span class="lineCov">    3656689 :             ptr = node-&gt;data;</span>
+<span class="lineNum">     499 </span>        [<span class="branchCov" title="Branch 0 was taken 3654825 times"> + </span><span class="branchCov" title="Branch 1 was taken 3958852 times"> + </span>]:<span class="lineCov">    7613677 :         if (idx_insert &lt; node-&gt;nentry) {</span>
+<span class="lineNum">     500 </span>                :<span class="lineCov">    3654825 :             ptr = node-&gt;data;</span>
 <span class="lineNum">     501 </span>                :            : 
 <span class="lineNum">     502 </span>                :            :             /*
 <span class="lineNum">     503 </span>                :            :             shift [idx+1, nentry) key-value pairs to right
@@ -577,9 +577,9 @@
 <span class="lineNum">     506 </span>                :            :             [2 4 6 8] -&gt; [2 4 _ 6 8]
 <span class="lineNum">     507 </span>                :            :             return 2
 <span class="lineNum">     508 </span>                :            :             */
-<span class="lineNum">     509 </span>                :<span class="lineCov">    3656689 :             btree-&gt;kv_ops-&gt;ins_kv(node, idx_insert, key, value);</span>
+<span class="lineNum">     509 </span>                :<span class="lineCov">    3654825 :             btree-&gt;kv_ops-&gt;ins_kv(node, idx_insert, key, value);</span>
 <span class="lineNum">     510 </span>                :            :         }else{
-<span class="lineNum">     511 </span>                :<span class="lineCov">    3960016 :             btree-&gt;kv_ops-&gt;set_kv(node, idx_insert, key, value);</span>
+<span class="lineNum">     511 </span>                :<span class="lineCov">    3958852 :             btree-&gt;kv_ops-&gt;set_kv(node, idx_insert, key, value);</span>
 <span class="lineNum">     512 </span>                :            :         }
 <span class="lineNum">     513 </span>                :            : 
 <span class="lineNum">     514 </span>                :            :     }else{
@@ -589,10 +589,10 @@
 <span class="lineNum">     518 </span>                :            :     }
 <span class="lineNum">     519 </span>                :            : 
 <span class="lineNum">     520 </span>                :            :     // add at idx_insert
-<span class="lineNum">     521 </span>                :<span class="lineCov">    7617701 :     node-&gt;nentry++;</span>
+<span class="lineNum">     521 </span>                :<span class="lineCov">    7614667 :     node-&gt;nentry++;</span>
 <span class="lineNum">     522 </span>                :            : 
-<span class="lineNum">     523 </span>        [<span class="branchCov" title="Branch 0 was taken 2058 times"> + </span><span class="branchCov" title="Branch 1 was taken 7615643 times"> + </span>]:<span class="lineCov">    7617701 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
-<span class="lineNum">     524 </span>                :<span class="lineCov">    8143590 :     return idx_insert;</span>
+<span class="lineNum">     523 </span>        [<span class="branchCov" title="Branch 0 was taken 2058 times"> + </span><span class="branchCov" title="Branch 1 was taken 7612609 times"> + </span>]:<span class="lineCov">    7614667 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, NULL);</span>
+<span class="lineNum">     524 </span>                :<span class="lineCov">    8135688 :     return idx_insert;</span>
 <a name="525"><span class="lineNum">     525 </span>                :            : }</a>
 <span class="lineNum">     526 </span>                :            : 
 <span class="lineNum">     527 </span>                :<span class="lineCov">          2 : idx_t _btree_remove_entry(struct btree *btree, struct bnode *node, void *key)</span>
@@ -727,155 +727,155 @@
 <span class="lineNum">     656 </span>                :<span class="lineCov">          5 :     return BTREE_RESULT_SUCCESS;</span>
 <a name="657"><span class="lineNum">     657 </span>                :            : }</a>
 <span class="lineNum">     658 </span>                :            : 
-<span class="lineNum">     659 </span>                :<span class="lineCov">    6013978 : btree_result btree_find(struct btree *btree, void *key, void *value_buf)</span>
+<span class="lineNum">     659 </span>                :<span class="lineCov">    6006064 : btree_result btree_find(struct btree *btree, void *key, void *value_buf)</span>
 <span class="lineNum">     660 </span>                :            : {
 <span class="lineNum">     661 </span>                :            :     void *addr;
-<span class="lineNum">     662 </span>                :<span class="lineCov">    6013978 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
-<span class="lineNum">     663 </span>                :<span class="lineCov">    6013978 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
-<span class="lineNum">     664 </span>                :<span class="lineCov">    6013978 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
-<span class="lineNum">     665 </span>                :<span class="lineCov">    6013978 :     bid_t *bid = alca(bid_t, btree-&gt;height);</span>
-<span class="lineNum">     666 </span>                :<span class="lineCov">    6013978 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
+<span class="lineNum">     662 </span>                :<span class="lineCov">    6006064 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     663 </span>                :<span class="lineCov">    6006064 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">     664 </span>                :<span class="lineCov">    6006064 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     665 </span>                :<span class="lineCov">    6006064 :     bid_t *bid = alca(bid_t, btree-&gt;height);</span>
+<span class="lineNum">     666 </span>                :<span class="lineCov">    6006064 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
 <span class="lineNum">     667 </span>                :            :     int i;
 <span class="lineNum">     668 </span>                :            : 
-<span class="lineNum">     669 </span>        [<span class="branchCov" title="Branch 0 was taken 6014351 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    6013978 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">     669 </span>        [<span class="branchCov" title="Branch 0 was taken 6006126 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    6006064 :     if (btree-&gt;kv_ops-&gt;init_kv_var) btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
 <span class="lineNum">     670 </span>                :            : 
 <span class="lineNum">     671 </span>                :            :     // set root
-<span class="lineNum">     672 </span>                :<span class="lineCov">    6012498 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
+<span class="lineNum">     672 </span>                :<span class="lineCov">    6007701 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
 <span class="lineNum">     673 </span>                :            : 
-<span class="lineNum">     674 </span>        [<span class="branchCov" title="Branch 0 was taken 15895030 times"> + </span><span class="branchCov" title="Branch 1 was taken 2474209 times"> + </span>]:<span class="lineCov">   18369239 :     for (i=btree-&gt;height-1; i&gt;=0; --i) {</span>
+<span class="lineNum">     674 </span>        [<span class="branchCov" title="Branch 0 was taken 15881307 times"> + </span><span class="branchCov" title="Branch 1 was taken 2465512 times"> + </span>]:<span class="lineCov">   18346819 :     for (i=btree-&gt;height-1; i&gt;=0; --i) {</span>
 <span class="lineNum">     675 </span>                :            :         // read block using bid
-<span class="lineNum">     676 </span>                :<span class="lineCov">   15895030 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">     676 </span>                :<span class="lineCov">   15881307 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
 <span class="lineNum">     677 </span>                :            :         // fetch node structure from block
-<span class="lineNum">     678 </span>                :<span class="lineCov">   15901933 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">     678 </span>                :<span class="lineCov">   15883461 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
 <span class="lineNum">     679 </span>                :            : 
 <span class="lineNum">     680 </span>                :            :         // lookup key in current node
-<span class="lineNum">     681 </span>                :<span class="lineCov">   15889135 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
+<span class="lineNum">     681 </span>                :<span class="lineCov">   15872166 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
 <span class="lineNum">     682 </span>                :            : 
-<span class="lineNum">     683 </span>        [<span class="branchCov" title="Branch 0 was taken 2496 times"> + </span><span class="branchCov" title="Branch 1 was taken 15892139 times"> + </span>]:<span class="lineCov">   15894635 :         if (idx[i] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">     683 </span>        [<span class="branchCov" title="Branch 0 was taken 2487 times"> + </span><span class="branchCov" title="Branch 1 was taken 15879380 times"> + </span>]:<span class="lineCov">   15881867 :         if (idx[i] == BTREE_IDX_NOT_FOUND) {</span>
 <span class="lineNum">     684 </span>                :            :             // not found .. return NULL
-<span class="lineNum">     685 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2496 times"> + </span>]:<span class="lineCov">       2496 :             if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
+<span class="lineNum">     685 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2487 times"> + </span>]:<span class="lineCov">       2487 :             if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
 <span class="lineNum">     686 </span>                :<span class="lineNoCov">          0 :                 btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
-<span class="lineNum">     687 </span>        [<span class="branchCov" title="Branch 0 was taken 2004 times"> + </span><span class="branchCov" title="Branch 1 was taken 492 times"> + </span>]:<span class="lineCov">       2496 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
-<span class="lineNum">     688 </span>                :<span class="lineCov">       2496 :             return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">     687 </span>        [<span class="branchCov" title="Branch 0 was taken 2004 times"> + </span><span class="branchCov" title="Branch 1 was taken 483 times"> + </span>]:<span class="lineCov">       2487 :             if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">     688 </span>                :<span class="lineCov">       2487 :             return BTREE_RESULT_FAIL;</span>
 <span class="lineNum">     689 </span>                :            :         }
 <span class="lineNum">     690 </span>                :            : 
-<span class="lineNum">     691 </span>                :<span class="lineCov">   15892139 :         btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">     691 </span>                :<span class="lineCov">   15879380 :         btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
 <span class="lineNum">     692 </span>                :            : 
-<span class="lineNum">     693 </span>        [<span class="branchCov" title="Branch 0 was taken 9890332 times"> + </span><span class="branchCov" title="Branch 1 was taken 6010835 times"> + </span>]:<span class="lineCov">   15901167 :         if (i&gt;0) {</span>
+<span class="lineNum">     693 </span>        [<span class="branchCov" title="Branch 0 was taken 9880784 times"> + </span><span class="branchCov" title="Branch 1 was taken 6002491 times"> + </span>]:<span class="lineCov">   15883275 :         if (i&gt;0) {</span>
 <span class="lineNum">     694 </span>                :            :             // index (non-leaf) node
 <span class="lineNum">     695 </span>                :            :             // get bid of child node from value
-<span class="lineNum">     696 </span>                :<span class="lineCov">    9890332 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
-<span class="lineNum">     697 </span>                :<span class="lineCov">    9890006 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
+<span class="lineNum">     696 </span>                :<span class="lineCov">    9880784 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     697 </span>                :<span class="lineCov">    9880172 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
 <span class="lineNum">     698 </span>                :            :         }else{
 <span class="lineNum">     699 </span>                :            :             // leaf node
 <span class="lineNum">     700 </span>                :            :             // return (address of) value if KEY == k
-<span class="lineNum">     701 </span>        [<span class="branchCov" title="Branch 1 was taken 2474213 times"> + </span><span class="branchCov" title="Branch 2 was taken 3536172 times"> + </span>]:<span class="lineCov">    6010835 :             if (!btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux)) {</span>
-<span class="lineNum">     702 </span>                :<span class="lineCov">    2474213 :                 btree-&gt;kv_ops-&gt;set_value(btree, value_buf, v);</span>
+<span class="lineNum">     701 </span>        [<span class="branchCov" title="Branch 1 was taken 2465234 times"> + </span><span class="branchCov" title="Branch 2 was taken 3536778 times"> + </span>]:<span class="lineCov">    6002491 :             if (!btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux)) {</span>
+<span class="lineNum">     702 </span>                :<span class="lineCov">    2465234 :                 btree-&gt;kv_ops-&gt;set_value(btree, value_buf, v);</span>
 <span class="lineNum">     703 </span>                :            :             }else{
-<span class="lineNum">     704 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3536172 times"> + </span>]:<span class="lineCov">    3536172 :                 if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
+<span class="lineNum">     704 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3536778 times"> + </span>]:<span class="lineCov">    3536778 :                 if (btree-&gt;blk_ops-&gt;blk_operation_end)</span>
 <span class="lineNum">     705 </span>                :<span class="lineNoCov">          0 :                     btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
-<span class="lineNum">     706 </span>        [<span class="branchCov" title="Branch 0 was taken 2020 times"> + </span><span class="branchCov" title="Branch 1 was taken 3534153 times"> + </span>]:<span class="lineCov">    3536173 :                 if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">     706 </span>        [<span class="branchCov" title="Branch 0 was taken 2020 times"> + </span><span class="branchCov" title="Branch 1 was taken 3534758 times"> + </span>]:<span class="lineCov">    3536778 :                 if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
 <span class="lineNum">     707 </span>                :<span class="lineCov">       2020 :                     btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
 <span class="lineNum">     708 </span>                :            :                 }
-<span class="lineNum">     709 </span>                :<span class="lineCov">    3536173 :                 return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">     709 </span>                :<span class="lineCov">    3536778 :                 return BTREE_RESULT_FAIL;</span>
 <span class="lineNum">     710 </span>                :            :             }
 <span class="lineNum">     711 </span>                :            :         }
 <span class="lineNum">     712 </span>                :            :     }
-<span class="lineNum">     713 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2474209 times"> + </span>]:<span class="lineCov">    2474209 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
+<span class="lineNum">     713 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2465512 times"> + </span>]:<span class="lineCov">    2465512 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
 <span class="lineNum">     714 </span>                :<span class="lineNoCov">          0 :         btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
 <span class="lineNum">     715 </span>                :            :     }
-<span class="lineNum">     716 </span>        [<span class="branchCov" title="Branch 0 was taken 2010 times"> + </span><span class="branchCov" title="Branch 1 was taken 2472189 times"> + </span>]:<span class="lineCov">    2474199 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
-<span class="lineNum">     717 </span>                :<span class="lineCov">    6012868 :     return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">     716 </span>        [<span class="branchCov" title="Branch 0 was taken 2010 times"> + </span><span class="branchCov" title="Branch 1 was taken 2463439 times"> + </span>]:<span class="lineCov">    2465449 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">     717 </span>                :<span class="lineCov">    6004714 :     return BTREE_RESULT_SUCCESS;</span>
 <a name="718"><span class="lineNum">     718 </span>                :            : }</a>
 <span class="lineNum">     719 </span>                :            : 
-<span class="lineNum">     720 </span>                :<span class="lineCov">      51352 : int _btree_split_node(</span>
+<span class="lineNum">     720 </span>                :<span class="lineCov">      51324 : int _btree_split_node(</span>
 <span class="lineNum">     721 </span>                :            :     struct btree *btree, void *key, struct bnode **node, bid_t *bid, idx_t *idx, int i,
 <span class="lineNum">     722 </span>                :            :     struct list *kv_ins_list, size_t nsplitnode, void *k, void *v,
 <span class="lineNum">     723 </span>                :            :     int8_t *modified, int8_t *minkey_replace, int8_t *ins)
 <span class="lineNum">     724 </span>                :            : {
 <span class="lineNum">     725 </span>                :            :     void *addr;
-<span class="lineNum">     726 </span>                :<span class="lineCov">      51352 :     size_t nnode = nsplitnode;</span>
-<span class="lineNum">     727 </span>                :<span class="lineCov">      51352 :     int j, *nentry = alca(int, nnode);</span>
+<span class="lineNum">     726 </span>                :<span class="lineCov">      51324 :     size_t nnode = nsplitnode;</span>
+<span class="lineNum">     727 </span>                :<span class="lineCov">      51324 :     int j, *nentry = alca(int, nnode);</span>
 <span class="lineNum">     728 </span>                :            :     bid_t _bid;
-<span class="lineNum">     729 </span>                :<span class="lineCov">      51352 :     bid_t *new_bid = alca(bid_t, nnode);</span>
-<span class="lineNum">     730 </span>                :<span class="lineCov">      51352 :     idx_t *split_idx = alca(idx_t, nnode+1);</span>
-<span class="lineNum">     731 </span>                :<span class="lineCov">      51352 :     idx_t *idx_ins = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     729 </span>                :<span class="lineCov">      51324 :     bid_t *new_bid = alca(bid_t, nnode);</span>
+<span class="lineNum">     730 </span>                :<span class="lineCov">      51324 :     idx_t *split_idx = alca(idx_t, nnode+1);</span>
+<span class="lineNum">     731 </span>                :<span class="lineCov">      51324 :     idx_t *idx_ins = alca(idx_t, btree-&gt;height);</span>
 <span class="lineNum">     732 </span>                :            :     struct list_elem *e;
-<span class="lineNum">     733 </span>                :<span class="lineCov">      51352 :     struct bnode **new_node = alca(struct bnode *, nnode);</span>
+<span class="lineNum">     733 </span>                :<span class="lineCov">      51324 :     struct bnode **new_node = alca(struct bnode *, nnode);</span>
 <span class="lineNum">     734 </span>                :            :     struct kv_ins_item *kv_item;
 <span class="lineNum">     735 </span>                :            : 
 <span class="lineNum">     736 </span>                :            :     // allocate new block(s)
-<span class="lineNum">     737 </span>                :<span class="lineCov">      51352 :     new_node[0] = node[i];</span>
-<span class="lineNum">     738 </span>        [<span class="branchCov" title="Branch 0 was taken 51352 times"> + </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">     102704 :     for (j=1;j&lt;nnode;++j){</span>
-<span class="lineNum">     739 </span>                :<span class="lineCov">      51352 :         addr = btree-&gt;blk_ops-&gt;blk_alloc(btree-&gt;blk_handle, &amp;new_bid[j]);</span>
-<span class="lineNum">     740 </span>                :<span class="lineCov">     102704 :         new_node[j] = _btree_init_node(btree, new_bid[j], addr, 0x0,</span>
-<span class="lineNum">     741 </span>                :<span class="lineCov">      51352 :                                        node[i]-&gt;level, NULL);</span>
+<span class="lineNum">     737 </span>                :<span class="lineCov">      51324 :     new_node[0] = node[i];</span>
+<span class="lineNum">     738 </span>        [<span class="branchCov" title="Branch 0 was taken 51324 times"> + </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">     102648 :     for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     739 </span>                :<span class="lineCov">      51324 :         addr = btree-&gt;blk_ops-&gt;blk_alloc(btree-&gt;blk_handle, &amp;new_bid[j]);</span>
+<span class="lineNum">     740 </span>                :<span class="lineCov">     102648 :         new_node[j] = _btree_init_node(btree, new_bid[j], addr, 0x0,</span>
+<span class="lineNum">     741 </span>                :<span class="lineCov">      51324 :                                        node[i]-&gt;level, NULL);</span>
 <span class="lineNum">     742 </span>                :            :     }
 <span class="lineNum">     743 </span>                :            : 
 <span class="lineNum">     744 </span>                :            :     // calculate # entry
-<span class="lineNum">     745 </span>        [<span class="branchCov" title="Branch 0 was taken 154056 times"> + </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">     205408 :     for (j=0;j&lt;nnode+1;++j){</span>
-<span class="lineNum">     746 </span>                :<span class="lineCov">     154056 :         btree-&gt;kv_ops-&gt;get_nth_idx(node[i], j, nnode, &amp;split_idx[j]);</span>
-<span class="lineNum">     747 </span>        [<span class="branchCov" title="Branch 0 was taken 102704 times"> + </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">     154056 :         if (j&gt;0) {</span>
-<span class="lineNum">     748 </span>                :<span class="lineCov">     102704 :             nentry[j-1] = split_idx[j] - split_idx[j-1];</span>
+<span class="lineNum">     745 </span>        [<span class="branchCov" title="Branch 0 was taken 153972 times"> + </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">     205296 :     for (j=0;j&lt;nnode+1;++j){</span>
+<span class="lineNum">     746 </span>                :<span class="lineCov">     153972 :         btree-&gt;kv_ops-&gt;get_nth_idx(node[i], j, nnode, &amp;split_idx[j]);</span>
+<span class="lineNum">     747 </span>        [<span class="branchCov" title="Branch 0 was taken 102648 times"> + </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">     153972 :         if (j&gt;0) {</span>
+<span class="lineNum">     748 </span>                :<span class="lineCov">     102648 :             nentry[j-1] = split_idx[j] - split_idx[j-1];</span>
 <span class="lineNum">     749 </span>                :            :         }
 <span class="lineNum">     750 </span>                :            :     }
 <span class="lineNum">     751 </span>                :            : 
 <span class="lineNum">     752 </span>                :            :     // copy kv-pairs to new node(s)
-<span class="lineNum">     753 </span>        [<span class="branchCov" title="Branch 0 was taken 51352 times"> + </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">     102704 :     for (j=1;j&lt;nnode;++j){</span>
-<span class="lineNum">     754 </span>                :<span class="lineCov">     154056 :         btree-&gt;kv_ops-&gt;copy_kv(new_node[j], node[i], 0, split_idx[j],</span>
-<span class="lineNum">     755 </span>                :<span class="lineCov">      51352 :                                nentry[j]);</span>
+<span class="lineNum">     753 </span>        [<span class="branchCov" title="Branch 0 was taken 51324 times"> + </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">     102648 :     for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     754 </span>                :<span class="lineCov">     153972 :         btree-&gt;kv_ops-&gt;copy_kv(new_node[j], node[i], 0, split_idx[j],</span>
+<span class="lineNum">     755 </span>                :<span class="lineCov">      51324 :                                nentry[j]);</span>
 <span class="lineNum">     756 </span>                :            :     }
-<span class="lineNum">     757 </span>                :<span class="lineCov">      51352 :     j = 0;</span>
-<span class="lineNum">     758 </span>                :<span class="lineCov">      51352 :     btree-&gt;kv_ops-&gt;copy_kv(new_node[j], node[i], 0, split_idx[j], nentry[j]);</span>
+<span class="lineNum">     757 </span>                :<span class="lineCov">      51324 :     j = 0;</span>
+<span class="lineNum">     758 </span>                :<span class="lineCov">      51324 :     btree-&gt;kv_ops-&gt;copy_kv(new_node[j], node[i], 0, split_idx[j], nentry[j]);</span>
 <span class="lineNum">     759 </span>                :            : 
 <span class="lineNum">     760 </span>                :            :     // header
-<span class="lineNum">     761 </span>        [<span class="branchCov" title="Branch 0 was taken 102704 times"> + </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">     154056 :     for (j=0;j&lt;nnode;++j){</span>
-<span class="lineNum">     762 </span>                :<span class="lineCov">     102704 :         new_node[j]-&gt;nentry = nentry[j];</span>
+<span class="lineNum">     761 </span>        [<span class="branchCov" title="Branch 0 was taken 102648 times"> + </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">     153972 :     for (j=0;j&lt;nnode;++j){</span>
+<span class="lineNum">     762 </span>                :<span class="lineCov">     102648 :         new_node[j]-&gt;nentry = nentry[j];</span>
 <span class="lineNum">     763 </span>                :            :     }
-<span class="lineNum">     764 </span>                :<span class="lineCov">      51352 :     modified[i] = 1;</span>
+<span class="lineNum">     764 </span>                :<span class="lineCov">      51324 :     modified[i] = 1;</span>
 <span class="lineNum">     765 </span>                :            : 
-<span class="lineNum">     766 </span>        [<span class="branchCov" title="Branch 0 was taken 51352 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      51352 :     if (ins[i]) {</span>
+<span class="lineNum">     766 </span>        [<span class="branchCov" title="Branch 0 was taken 51324 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      51324 :     if (ins[i]) {</span>
 <span class="lineNum">     767 </span>                :            :         // insert kv-pair(s) to appropriate node
-<span class="lineNum">     768 </span>                :<span class="lineCov">      51352 :         e = list_begin(&amp;kv_ins_list[i]);</span>
-<span class="lineNum">     769 </span>        [<span class="branchCov" title="Branch 0 was taken 51352 times"> + </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">     102704 :         while(e) {</span>
-<span class="lineNum">     770 </span>                :<span class="lineCov">      51352 :             kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">     768 </span>                :<span class="lineCov">      51324 :         e = list_begin(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">     769 </span>        [<span class="branchCov" title="Branch 0 was taken 51324 times"> + </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">     102648 :         while(e) {</span>
+<span class="lineNum">     770 </span>                :<span class="lineCov">      51324 :             kv_item = _get_entry(e, struct kv_ins_item, le);</span>
 <span class="lineNum">     771 </span>                :            : 
-<span class="lineNum">     772 </span>                :<span class="lineCov">      51352 :             idx_ins[i] = BTREE_IDX_NOT_FOUND;</span>
-<span class="lineNum">     773 </span>        [<span class="branchCov" title="Branch 0 was taken 51352 times"> + </span><span class="branchCov" title="Branch 1 was taken 41820 times"> + </span>]:<span class="lineCov">      93172 :             for (j=1;j&lt;nnode;++j){</span>
-<span class="lineNum">     774 </span>                :<span class="lineCov">      51352 :                 btree-&gt;kv_ops-&gt;get_kv(new_node[j], 0, k, v);</span>
-<span class="lineNum">     775 </span>        [<span class="branchCov" title="Branch 1 was taken 9532 times"> + </span><span class="branchCov" title="Branch 2 was taken 41820 times"> + </span>]:<span class="lineCov">      51352 :                 if (btree-&gt;kv_ops-&gt;cmp(kv_item-&gt;key, k, btree-&gt;aux) &lt; 0) {</span>
-<span class="lineNum">     776 </span>                :<span class="lineCov">       9532 :                     idx_ins[i] =</span>
-<span class="lineNum">     777 </span>                :<span class="lineCov">       9532 :                         _btree_add_entry(btree, new_node[j-1], kv_item-&gt;key,</span>
-<span class="lineNum">     778 </span>                :<span class="lineCov">       9532 :                                          kv_item-&gt;value);</span>
-<span class="lineNum">     779 </span>                :<span class="lineCov">       9532 :                     break;</span>
+<span class="lineNum">     772 </span>                :<span class="lineCov">      51324 :             idx_ins[i] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">     773 </span>        [<span class="branchCov" title="Branch 0 was taken 51324 times"> + </span><span class="branchCov" title="Branch 1 was taken 41822 times"> + </span>]:<span class="lineCov">      93146 :             for (j=1;j&lt;nnode;++j){</span>
+<span class="lineNum">     774 </span>                :<span class="lineCov">      51324 :                 btree-&gt;kv_ops-&gt;get_kv(new_node[j], 0, k, v);</span>
+<span class="lineNum">     775 </span>        [<span class="branchCov" title="Branch 1 was taken 9502 times"> + </span><span class="branchCov" title="Branch 2 was taken 41822 times"> + </span>]:<span class="lineCov">      51324 :                 if (btree-&gt;kv_ops-&gt;cmp(kv_item-&gt;key, k, btree-&gt;aux) &lt; 0) {</span>
+<span class="lineNum">     776 </span>                :<span class="lineCov">       9502 :                     idx_ins[i] =</span>
+<span class="lineNum">     777 </span>                :<span class="lineCov">       9502 :                         _btree_add_entry(btree, new_node[j-1], kv_item-&gt;key,</span>
+<span class="lineNum">     778 </span>                :<span class="lineCov">       9502 :                                          kv_item-&gt;value);</span>
+<span class="lineNum">     779 </span>                :<span class="lineCov">       9502 :                     break;</span>
 <span class="lineNum">     780 </span>                :            :                 }
 <span class="lineNum">     781 </span>                :            :             }
-<span class="lineNum">     782 </span>        [<span class="branchCov" title="Branch 0 was taken 41820 times"> + </span><span class="branchCov" title="Branch 1 was taken 9532 times"> + </span>]:<span class="lineCov">      51352 :             if (idx_ins[i] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">     782 </span>        [<span class="branchCov" title="Branch 0 was taken 41822 times"> + </span><span class="branchCov" title="Branch 1 was taken 9502 times"> + </span>]:<span class="lineCov">      51324 :             if (idx_ins[i] == BTREE_IDX_NOT_FOUND) {</span>
 <span class="lineNum">     783 </span>                :            :                 // insert into the last split node
-<span class="lineNum">     784 </span>                :<span class="lineCov">      41820 :                 idx_ins[i] =</span>
-<span class="lineNum">     785 </span>                :<span class="lineCov">      41820 :                     _btree_add_entry(btree, new_node[nnode-1], kv_item-&gt;key,</span>
-<span class="lineNum">     786 </span>                :<span class="lineCov">      41820 :                                      kv_item-&gt;value);</span>
+<span class="lineNum">     784 </span>                :<span class="lineCov">      41822 :                 idx_ins[i] =</span>
+<span class="lineNum">     785 </span>                :<span class="lineCov">      41822 :                     _btree_add_entry(btree, new_node[nnode-1], kv_item-&gt;key,</span>
+<span class="lineNum">     786 </span>                :<span class="lineCov">      41822 :                                      kv_item-&gt;value);</span>
 <span class="lineNum">     787 </span>                :            :             }
-<span class="lineNum">     788 </span>                :<span class="lineCov">      51352 :             e = list_next(e);</span>
+<span class="lineNum">     788 </span>                :<span class="lineCov">      51324 :             e = list_next(e);</span>
 <span class="lineNum">     789 </span>                :            :         }
 <span class="lineNum">     790 </span>                :            :     }
-<span class="lineNum">     791 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">      51352 :     if (minkey_replace[i]){</span>
+<span class="lineNum">     791 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">      51324 :     if (minkey_replace[i]){</span>
 <span class="lineNum">     792 </span>                :            :         // replace the minimum key in the (first split) node to KEY
 <span class="lineNum">     793 </span>                :<span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;get_kv(new_node[0], idx[i], k, v);</span>
 <span class="lineNum">     794 </span>                :<span class="lineNoCov">          0 :         btree-&gt;kv_ops-&gt;set_kv(new_node[0], idx[i], key, v);</span>
 <span class="lineNum">     795 </span>                :            :     }
 <span class="lineNum">     796 </span>                :            : 
-<span class="lineNum">     797 </span>        [<span class="branchCov" title="Branch 0 was taken 50859 times"> + </span><span class="branchCov" title="Branch 1 was taken 493 times"> + </span>]:<span class="lineCov">      51352 :     if (i+1 &lt; btree-&gt;height) {</span>
+<span class="lineNum">     797 </span>        [<span class="branchCov" title="Branch 0 was taken 50831 times"> + </span><span class="branchCov" title="Branch 1 was taken 493 times"> + </span>]:<span class="lineCov">      51324 :     if (i+1 &lt; btree-&gt;height) {</span>
 <span class="lineNum">     798 </span>                :            :         // non-root node
 <span class="lineNum">     799 </span>                :            :         // reserve kv-pair (i.e. splitters) to be inserted into parent node
-<span class="lineNum">     800 </span>        [<span class="branchCov" title="Branch 0 was taken 50859 times"> + </span><span class="branchCov" title="Branch 1 was taken 50859 times"> + </span>]:<span class="lineCov">     101718 :         for (j=1; j&lt;nnode; ++j){</span>
-<span class="lineNum">     801 </span>                :<span class="lineCov">      50859 :             _bid = _endian_encode(new_bid[j]);</span>
-<span class="lineNum">     802 </span>                :<span class="lineCov">      50859 :             kv_item = _kv_ins_item_create(btree, NULL, (void *)&amp;_bid);</span>
-<span class="lineNum">     803 </span>                :<span class="lineCov">     101718 :             btree-&gt;kv_ops-&gt;get_nth_splitter(new_node[j-1], new_node[j],</span>
-<span class="lineNum">     804 </span>                :<span class="lineCov">      50859 :                                             kv_item-&gt;key);</span>
-<span class="lineNum">     805 </span>                :<span class="lineCov">      50859 :             list_push_back(&amp;kv_ins_list[i+1], &amp;kv_item-&gt;le);</span>
+<span class="lineNum">     800 </span>        [<span class="branchCov" title="Branch 0 was taken 50831 times"> + </span><span class="branchCov" title="Branch 1 was taken 50831 times"> + </span>]:<span class="lineCov">     101662 :         for (j=1; j&lt;nnode; ++j){</span>
+<span class="lineNum">     801 </span>                :<span class="lineCov">      50831 :             _bid = _endian_encode(new_bid[j]);</span>
+<span class="lineNum">     802 </span>                :<span class="lineCov">      50831 :             kv_item = _kv_ins_item_create(btree, NULL, (void *)&amp;_bid);</span>
+<span class="lineNum">     803 </span>                :<span class="lineCov">     101662 :             btree-&gt;kv_ops-&gt;get_nth_splitter(new_node[j-1], new_node[j],</span>
+<span class="lineNum">     804 </span>                :<span class="lineCov">      50831 :                                             kv_item-&gt;key);</span>
+<span class="lineNum">     805 </span>                :<span class="lineCov">      50831 :             list_push_back(&amp;kv_ins_list[i+1], &amp;kv_item-&gt;le);</span>
 <span class="lineNum">     806 </span>                :            :         }
-<span class="lineNum">     807 </span>                :<span class="lineCov">      50859 :         ins[i+1] = 1;</span>
+<span class="lineNum">     807 </span>                :<span class="lineCov">      50831 :         ins[i+1] = 1;</span>
 <span class="lineNum">     808 </span>                :            : 
 <span class="lineNum">     809 </span>                :            :     }else{
 <span class="lineNum">     810 </span>                :            :         //2 root node -&gt; height grow up
@@ -934,13 +934,13 @@
 <span class="lineNum">     863 </span>                :<span class="lineCov">        493 :                              btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
 <span class="lineNum">     864 </span>                :            :         }
 <span class="lineNum">     865 </span>                :            : 
-<span class="lineNum">     866 </span>                :<span class="lineCov">      51352 :         return 1;</span>
+<span class="lineNum">     866 </span>                :<span class="lineCov">      51324 :         return 1;</span>
 <span class="lineNum">     867 </span>                :            :     } // height growup
 <span class="lineNum">     868 </span>                :            : 
-<span class="lineNum">     869 </span>                :<span class="lineCov">      50859 :     return 0;</span>
+<span class="lineNum">     869 </span>                :<span class="lineCov">      50831 :     return 0;</span>
 <a name="870"><span class="lineNum">     870 </span>                :            : }</a>
 <span class="lineNum">     871 </span>                :            : 
-<span class="lineNum">     872 </span>                :<span class="lineCov">      38230 : int _btree_move_modified_node(</span>
+<span class="lineNum">     872 </span>                :<span class="lineCov">      38180 : int _btree_move_modified_node(</span>
 <span class="lineNum">     873 </span>                :            :     struct btree *btree, void *key, struct bnode **node, bid_t *bid,
 <span class="lineNum">     874 </span>                :            :     idx_t *idx, int i,
 <span class="lineNum">     875 </span>                :            :     struct list *kv_ins_list, void *k, void *v,
@@ -949,166 +949,166 @@
 <span class="lineNum">     878 </span>                :            :     void *addr;
 <span class="lineNum">     879 </span>                :            : 
 <span class="lineNum">     880 </span>                :            :     // get new bid[i]
-<span class="lineNum">     881 </span>                :<span class="lineCov">      38230 :     addr = btree-&gt;blk_ops-&gt;blk_move(btree-&gt;blk_handle, bid[i], &amp;bid[i]);</span>
+<span class="lineNum">     881 </span>                :<span class="lineCov">      38180 :     addr = btree-&gt;blk_ops-&gt;blk_move(btree-&gt;blk_handle, bid[i], &amp;bid[i]);</span>
 <span class="lineNum">     882 </span>                :            :     //node[i] = _fetch_bnode(btree, addr, i+1);
-<span class="lineNum">     883 </span>                :<span class="lineCov">      38230 :     moved[i] = 1;</span>
+<span class="lineNum">     883 </span>                :<span class="lineCov">      38180 :     moved[i] = 1;</span>
 <span class="lineNum">     884 </span>                :            : 
-<span class="lineNum">     885 </span>        [<span class="branchCov" title="Branch 0 was taken 1949 times"> + </span><span class="branchCov" title="Branch 1 was taken 36281 times"> + </span>]:<span class="lineCov">      38230 :     if (i+1 == btree-&gt;height)</span>
+<span class="lineNum">     885 </span>        [<span class="branchCov" title="Branch 0 was taken 1947 times"> + </span><span class="branchCov" title="Branch 1 was taken 36233 times"> + </span>]:<span class="lineCov">      38180 :     if (i+1 == btree-&gt;height)</span>
 <span class="lineNum">     886 </span>                :            :         // if moved node is root node
-<span class="lineNum">     887 </span>                :<span class="lineCov">       1949 :         btree-&gt;root_bid = bid[i];</span>
+<span class="lineNum">     887 </span>                :<span class="lineCov">       1947 :         btree-&gt;root_bid = bid[i];</span>
 <span class="lineNum">     888 </span>                :            : 
-<span class="lineNum">     889 </span>                :<span class="lineCov">      38230 :     return 0;</span>
+<span class="lineNum">     889 </span>                :<span class="lineCov">      38180 :     return 0;</span>
 <a name="890"><span class="lineNum">     890 </span>                :            : }</a>
 <span class="lineNum">     891 </span>                :            : 
-<span class="lineNum">     892 </span>                :<span class="lineCov">    8091780 : btree_result btree_insert(struct btree *btree, void *key, void *value)</span>
+<span class="lineNum">     892 </span>                :<span class="lineCov">    8083906 : btree_result btree_insert(struct btree *btree, void *key, void *value)</span>
 <span class="lineNum">     893 </span>                :            : {
 <span class="lineNum">     894 </span>                :            :     void *addr;
-<span class="lineNum">     895 </span>                :<span class="lineCov">    8091780 :     size_t nsplitnode = 1;</span>
-<span class="lineNum">     896 </span>                :<span class="lineCov">    8091780 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
-<span class="lineNum">     897 </span>                :<span class="lineCov">    8091780 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">     895 </span>                :<span class="lineCov">    8083906 :     size_t nsplitnode = 1;</span>
+<span class="lineNum">     896 </span>                :<span class="lineCov">    8083906 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">     897 </span>                :<span class="lineCov">    8083906 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
 <span class="lineNum">     898 </span>                :            :     // index# and block ID for each level
-<span class="lineNum">     899 </span>                :<span class="lineCov">    8091780 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
-<span class="lineNum">     900 </span>                :<span class="lineCov">    8091780 :     bid_t *bid = alca(bid_t, btree-&gt;height);</span>
+<span class="lineNum">     899 </span>                :<span class="lineCov">    8083906 :     idx_t *idx = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     900 </span>                :<span class="lineCov">    8083906 :     bid_t *bid = alca(bid_t, btree-&gt;height);</span>
 <span class="lineNum">     901 </span>                :            :     bid_t _bid;
 <span class="lineNum">     902 </span>                :            :     // flags
-<span class="lineNum">     903 </span>                :<span class="lineCov">    8091780 :     int8_t *modified = alca(int8_t, btree-&gt;height);</span>
-<span class="lineNum">     904 </span>                :<span class="lineCov">    8091780 :     int8_t *moved = alca(int8_t, btree-&gt;height);</span>
-<span class="lineNum">     905 </span>                :<span class="lineCov">    8091780 :     int8_t *ins = alca(int8_t, btree-&gt;height);</span>
-<span class="lineNum">     906 </span>                :<span class="lineCov">    8091780 :     int8_t *minkey_replace = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     903 </span>                :<span class="lineCov">    8083906 :     int8_t *modified = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     904 </span>                :<span class="lineCov">    8083906 :     int8_t *moved = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     905 </span>                :<span class="lineCov">    8083906 :     int8_t *ins = alca(int8_t, btree-&gt;height);</span>
+<span class="lineNum">     906 </span>                :<span class="lineCov">    8083906 :     int8_t *minkey_replace = alca(int8_t, btree-&gt;height);</span>
 <span class="lineNum">     907 </span>                :            :     int8_t height_growup;
 <span class="lineNum">     908 </span>                :            : 
 <span class="lineNum">     909 </span>                :            :     // key, value to be inserted
-<span class="lineNum">     910 </span>                :<span class="lineCov">    8091780 :     struct list *kv_ins_list = alca(struct list, btree-&gt;height);</span>
+<span class="lineNum">     910 </span>                :<span class="lineCov">    8083906 :     struct list *kv_ins_list = alca(struct list, btree-&gt;height);</span>
 <span class="lineNum">     911 </span>                :            :     struct kv_ins_item *kv_item;
 <span class="lineNum">     912 </span>                :            :     struct list_elem *e;
 <span class="lineNum">     913 </span>                :            : 
 <span class="lineNum">     914 </span>                :            :     // index# where kv is inserted
-<span class="lineNum">     915 </span>                :<span class="lineCov">    8091780 :     idx_t *idx_ins = alca(idx_t, btree-&gt;height);</span>
-<span class="lineNum">     916 </span>                :<span class="lineCov">    8091780 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
-<span class="lineNum">     917 </span>                :<span class="lineCov">    8091780 :     int i, j, _is_update = 0;</span>
+<span class="lineNum">     915 </span>                :<span class="lineCov">    8083906 :     idx_t *idx_ins = alca(idx_t, btree-&gt;height);</span>
+<span class="lineNum">     916 </span>                :<span class="lineCov">    8083906 :     struct bnode **node = alca(struct bnode *, btree-&gt;height);</span>
+<span class="lineNum">     917 </span>                :<span class="lineCov">    8083906 :     int i, j, _is_update = 0;</span>
 <span class="lineNum">     918 </span>                :            : 
 <span class="lineNum">     919 </span>                :            :     // initialize flags
-<span class="lineNum">     920 </span>        [<span class="branchCov" title="Branch 0 was taken 21313816 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091780 times"> + </span>]:<span class="lineCov">   29405596 :     for (i=0;i&lt;btree-&gt;height;++i) {</span>
-<span class="lineNum">     921 </span>                :<span class="lineCov">   21313816 :         moved[i] = modified[i] = ins[i] = minkey_replace[i] = 0;</span>
+<span class="lineNum">     920 </span>        [<span class="branchCov" title="Branch 0 was taken 21297834 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083906 times"> + </span>]:<span class="lineCov">   29381740 :     for (i=0;i&lt;btree-&gt;height;++i) {</span>
+<span class="lineNum">     921 </span>                :<span class="lineCov">   21297834 :         moved[i] = modified[i] = ins[i] = minkey_replace[i] = 0;</span>
 <span class="lineNum">     922 </span>                :            :     }
-<span class="lineNum">     923 </span>                :<span class="lineCov">    8091780 :     height_growup = 0;</span>
+<span class="lineNum">     923 </span>                :<span class="lineCov">    8083906 :     height_growup = 0;</span>
 <span class="lineNum">     924 </span>                :            : 
 <span class="lineNum">     925 </span>                :            :     // initialize temporary variables
-<span class="lineNum">     926 </span>        [<span class="branchCov" title="Branch 0 was taken 8091780 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8091780 :     if (btree-&gt;kv_ops-&gt;init_kv_var) {</span>
-<span class="lineNum">     927 </span>                :<span class="lineCov">    8091780 :         btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
-<span class="lineNum">     928 </span>        [<span class="branchCov" title="Branch 0 was taken 21313763 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091756 times"> + </span>]:<span class="lineCov">   29405519 :         for (i=0;i&lt;btree-&gt;height;++i){</span>
-<span class="lineNum">     929 </span>                :<span class="lineCov">   21313763 :             list_init(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">     926 </span>        [<span class="branchCov" title="Branch 0 was taken 8083907 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8083906 :     if (btree-&gt;kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">     927 </span>                :<span class="lineCov">    8083907 :         btree-&gt;kv_ops-&gt;init_kv_var(btree, k, v);</span>
+<span class="lineNum">     928 </span>        [<span class="branchCov" title="Branch 0 was taken 21297773 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083878 times"> + </span>]:<span class="lineCov">   29381651 :         for (i=0;i&lt;btree-&gt;height;++i){</span>
+<span class="lineNum">     929 </span>                :<span class="lineCov">   21297773 :             list_init(&amp;kv_ins_list[i]);</span>
 <span class="lineNum">     930 </span>                :            :         }
 <span class="lineNum">     931 </span>                :            :     }
 <span class="lineNum">     932 </span>                :            : 
 <span class="lineNum">     933 </span>                :            :     // copy key-value pair to be inserted into leaf node
-<span class="lineNum">     934 </span>                :<span class="lineCov">    8091756 :     kv_item = _kv_ins_item_create(btree, key, value);</span>
-<span class="lineNum">     935 </span>                :<span class="lineCov">    8091774 :     list_push_back(&amp;kv_ins_list[0], &amp;kv_item-&gt;le);</span>
+<span class="lineNum">     934 </span>                :<span class="lineCov">    8083877 :     kv_item = _kv_ins_item_create(btree, key, value);</span>
+<span class="lineNum">     935 </span>                :<span class="lineCov">    8083906 :     list_push_back(&amp;kv_ins_list[0], &amp;kv_item-&gt;le);</span>
 <span class="lineNum">     936 </span>                :            : 
-<span class="lineNum">     937 </span>                :<span class="lineCov">    8091787 :     ins[0] = 1;</span>
+<span class="lineNum">     937 </span>                :<span class="lineCov">    8083890 :     ins[0] = 1;</span>
 <span class="lineNum">     938 </span>                :            : 
 <span class="lineNum">     939 </span>                :            :     // set root node
-<span class="lineNum">     940 </span>                :<span class="lineCov">    8091787 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
+<span class="lineNum">     940 </span>                :<span class="lineCov">    8083890 :     bid[btree-&gt;height-1] = btree-&gt;root_bid;</span>
 <span class="lineNum">     941 </span>                :            : 
 <span class="lineNum">     942 </span>                :            :     // find path from root to leaf
-<span class="lineNum">     943 </span>        [<span class="branchCov" title="Branch 0 was taken 21313721 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091745 times"> + </span>]:<span class="lineCov">   29405466 :     for (i=btree-&gt;height-1; i&gt;=0; --i){</span>
+<span class="lineNum">     943 </span>        [<span class="branchCov" title="Branch 0 was taken 21297743 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083893 times"> + </span>]:<span class="lineCov">   29381636 :     for (i=btree-&gt;height-1; i&gt;=0; --i){</span>
 <span class="lineNum">     944 </span>                :            :         // read block using bid
-<span class="lineNum">     945 </span>                :<span class="lineCov">   21313721 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">     945 </span>                :<span class="lineCov">   21297743 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, bid[i]);</span>
 <span class="lineNum">     946 </span>                :            :         // fetch node structure from block
-<span class="lineNum">     947 </span>                :<span class="lineCov">   21313682 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
+<span class="lineNum">     947 </span>                :<span class="lineCov">   21297717 :         node[i] = _fetch_bnode(btree, addr, i+1);</span>
 <span class="lineNum">     948 </span>                :            : 
 <span class="lineNum">     949 </span>                :            :         // lookup key in current node
-<span class="lineNum">     950 </span>                :<span class="lineCov">   21313665 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
+<span class="lineNum">     950 </span>                :<span class="lineCov">   21297696 :         idx[i] = _btree_find_entry(btree, node[i], key);</span>
 <span class="lineNum">     951 </span>                :            : 
-<span class="lineNum">     952 </span>        [<span class="branchCov" title="Branch 0 was taken 13222037 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091644 times"> + </span>]:<span class="lineCov">   21313681 :         if (i &gt; 0) {</span>
+<span class="lineNum">     952 </span>        [<span class="branchCov" title="Branch 0 was taken 13213931 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083819 times"> + </span>]:<span class="lineCov">   21297750 :         if (i &gt; 0) {</span>
 <span class="lineNum">     953 </span>                :            :             // index (non-leaf) node
-<span class="lineNum">     954 </span>        [<span class="branchCov" title="Branch 0 was taken 211 times"> + </span><span class="branchCov" title="Branch 1 was taken 13221826 times"> + </span>]:<span class="lineCov">   13222037 :             if (idx[i] == BTREE_IDX_NOT_FOUND)</span>
+<span class="lineNum">     954 </span>        [<span class="branchCov" title="Branch 0 was taken 218 times"> + </span><span class="branchCov" title="Branch 1 was taken 13213713 times"> + </span>]:<span class="lineCov">   13213931 :             if (idx[i] == BTREE_IDX_NOT_FOUND)</span>
 <span class="lineNum">     955 </span>                :            :                 // KEY is smaller than the smallest key in this node ..
 <span class="lineNum">     956 </span>                :            :                 // just follow the smallest key
-<span class="lineNum">     957 </span>                :<span class="lineCov">        211 :                 idx[i] = 0;</span>
+<span class="lineNum">     957 </span>                :<span class="lineCov">        218 :                 idx[i] = 0;</span>
 <span class="lineNum">     958 </span>                :            : 
 <span class="lineNum">     959 </span>                :            :             // get bid of child node from value
-<span class="lineNum">     960 </span>                :<span class="lineCov">   13222037 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
-<span class="lineNum">     961 </span>                :<span class="lineCov">   13222036 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
-<span class="lineNum">     962 </span>                :<span class="lineCov">   13222035 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
+<span class="lineNum">     960 </span>                :<span class="lineCov">   13213931 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">     961 </span>                :<span class="lineCov">   13213926 :             bid[i-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     962 </span>                :<span class="lineCov">   13213927 :             bid[i-1] = _endian_decode(bid[i-1]);</span>
 <span class="lineNum">     963 </span>                :            :         }else{
 <span class="lineNum">     964 </span>                :            :             // leaf node .. do nothing
 <span class="lineNum">     965 </span>                :            :         }
 <span class="lineNum">     966 </span>                :            :     }
 <span class="lineNum">     967 </span>                :            : 
 <span class="lineNum">     968 </span>                :            :     // cascaded insert from leaf to root
-<span class="lineNum">     969 </span>        [<span class="branchCov" title="Branch 0 was taken 21313758 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091160 times"> + </span>]:<span class="lineCov">   29404918 :     for (i=0;i&lt;btree-&gt;height;++i){</span>
+<span class="lineNum">     969 </span>        [<span class="branchCov" title="Branch 0 was taken 21297774 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083225 times"> + </span>]:<span class="lineCov">   29380999 :     for (i=0;i&lt;btree-&gt;height;++i){</span>
 <span class="lineNum">     970 </span>                :            : 
-<span class="lineNum">     971 </span>        [<span class="branchCov" title="Branch 0 was taken 21312500 times"> + </span><span class="branchCov" title="Branch 1 was taken 1258 times"> + </span>]:<span class="lineCov">   21313758 :         if (idx[i] != BTREE_IDX_NOT_FOUND)</span>
-<span class="lineNum">     972 </span>                :<span class="lineCov">   21312500 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, NULL);</span>
+<span class="lineNum">     971 </span>        [<span class="branchCov" title="Branch 0 was taken 21296516 times"> + </span><span class="branchCov" title="Branch 1 was taken 1258 times"> + </span>]:<span class="lineCov">   21297774 :         if (idx[i] != BTREE_IDX_NOT_FOUND)</span>
+<span class="lineNum">     972 </span>                :<span class="lineCov">   21296516 :             btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, NULL);</span>
 <span class="lineNum">     973 </span>                :            : 
-<span class="lineNum">     974 </span>        [<span class="branchCov" title="Branch 0 was taken 13222041 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091661 times"> + </span>]:<span class="lineCov">   21313702 :         if (i &gt; 0) {</span>
+<span class="lineNum">     974 </span>        [<span class="branchCov" title="Branch 0 was taken 13213906 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083815 times"> + </span>]:<span class="lineCov">   21297721 :         if (i &gt; 0) {</span>
 <span class="lineNum">     975 </span>                :            :             // in case of index node
 <span class="lineNum">     976 </span>                :            :             // when KEY is smaller than smallest key in index node
-<span class="lineNum">     977 </span>[<span class="branchCov" title="Branch 0 was taken 1014192 times"> + </span><span class="branchCov" title="Branch 1 was taken 12207849 times"> + </span>][<span class="branchCov" title="Branch 3 was taken 211 times"> + </span><span class="branchCov" title="Branch 4 was taken 1013981 times"> + </span>]:<span class="lineCov">   13222041 :             if (idx[i] == 0 &amp;&amp; btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &lt; 0) {</span>
-<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 5 was taken 211 times"> + </span><span class="branchCov" title="Branch 6 was taken 13221830 times"> + </span>]
+<span class="lineNum">     977 </span>[<span class="branchCov" title="Branch 0 was taken 1015300 times"> + </span><span class="branchCov" title="Branch 1 was taken 12198606 times"> + </span>][<span class="branchCov" title="Branch 3 was taken 218 times"> + </span><span class="branchCov" title="Branch 4 was taken 1015082 times"> + </span>]:<span class="lineCov">   13213906 :             if (idx[i] == 0 &amp;&amp; btree-&gt;kv_ops-&gt;cmp(key, k, btree-&gt;aux) &lt; 0) {</span>
+<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 5 was taken 218 times"> + </span><span class="branchCov" title="Branch 6 was taken 13213688 times"> + </span>]
 <span class="lineNum">     978 </span>                :            :                 // change node's smallest key
-<span class="lineNum">     979 </span>                :<span class="lineCov">        211 :                 minkey_replace[i] = 1;</span>
+<span class="lineNum">     979 </span>                :<span class="lineCov">        218 :                 minkey_replace[i] = 1;</span>
 <span class="lineNum">     980 </span>                :            :             }
 <span class="lineNum">     981 </span>                :            : 
 <span class="lineNum">     982 </span>                :            :             // when child node is moved to new block
-<span class="lineNum">     983 </span>        [<span class="branchCov" title="Branch 0 was taken 36281 times"> + </span><span class="branchCov" title="Branch 1 was taken 13185760 times"> + </span>]:<span class="lineCov">   13222041 :             if (moved[i-1]) {</span>
+<span class="lineNum">     983 </span>        [<span class="branchCov" title="Branch 0 was taken 36233 times"> + </span><span class="branchCov" title="Branch 1 was taken 13177673 times"> + </span>]:<span class="lineCov">   13213906 :             if (moved[i-1]) {</span>
 <span class="lineNum">     984 </span>                :            :                 // replace the bid (value)
-<span class="lineNum">     985 </span>                :<span class="lineCov">      36281 :                 _bid = _endian_encode(bid[i-1]);</span>
-<span class="lineNum">     986 </span>                :<span class="lineCov">      72562 :                 btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], k,</span>
-<span class="lineNum">     987 </span>                :<span class="lineCov">      36281 :                                       btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
-<span class="lineNum">     988 </span>                :<span class="lineCov">      36281 :                 modified[i] = 1;</span>
+<span class="lineNum">     985 </span>                :<span class="lineCov">      36233 :                 _bid = _endian_encode(bid[i-1]);</span>
+<span class="lineNum">     986 </span>                :<span class="lineCov">      72466 :                 btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], k,</span>
+<span class="lineNum">     987 </span>                :<span class="lineCov">      36233 :                                       btree-&gt;kv_ops-&gt;bid2value(&amp;_bid));</span>
+<span class="lineNum">     988 </span>                :<span class="lineCov">      36233 :                 modified[i] = 1;</span>
 <span class="lineNum">     989 </span>                :            :             }
 <span class="lineNum">     990 </span>                :            :         }
 <span class="lineNum">     991 </span>                :            : 
-<span class="lineNum">     992 </span>[<span class="branchCov" title="Branch 0 was taken 13171183 times"> + </span><span class="branchCov" title="Branch 1 was taken 8142519 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 288 times"> + </span><span class="branchCov" title="Branch 3 was taken 13170895 times"> + </span>]:<span class="lineCov">   21313702 :         if (ins[i] || minkey_replace[i]) {</span>
+<span class="lineNum">     992 </span>[<span class="branchCov" title="Branch 0 was taken 13163076 times"> + </span><span class="branchCov" title="Branch 1 was taken 8134645 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 293 times"> + </span><span class="branchCov" title="Branch 3 was taken 13162783 times"> + </span>]:<span class="lineCov">   21297721 :         if (ins[i] || minkey_replace[i]) {</span>
 <span class="lineNum">     993 </span>                :            :             // there is a key-value pair to be inserted into this (level of)
 <span class="lineNum">     994 </span>                :            :             // node check whether btree node space is enough to add new
 <span class="lineNum">     995 </span>                :            :             // key-value pair or not, OR action is not insertion but update
 <span class="lineNum">     996 </span>                :            :             // (key_ins exists in current node)
-<span class="lineNum">     997 </span>                :<span class="lineCov">    8142807 :             _is_update = 0;</span>
+<span class="lineNum">     997 </span>                :<span class="lineCov">    8134938 :             _is_update = 0;</span>
 <span class="lineNum">     998 </span>                :            :             size_t nodesize;
-<span class="lineNum">     999 </span>        [<span class="branchCov" title="Branch 0 was taken 211 times"> + </span><span class="branchCov" title="Branch 1 was taken 8142596 times"> + </span>]:<span class="lineCov">    8142807 :             void *new_minkey = (minkey_replace[i])?(key):(NULL);</span>
+<span class="lineNum">     999 </span>        [<span class="branchCov" title="Branch 0 was taken 218 times"> + </span><span class="branchCov" title="Branch 1 was taken 8134720 times"> + </span>]:<span class="lineCov">    8134938 :             void *new_minkey = (minkey_replace[i])?(key):(NULL);</span>
 <span class="lineNum">    1000 </span>                :            : 
-<span class="lineNum">    1001 </span>        [<span class="branchCov" title="Branch 0 was taken 8091740 times"> + </span><span class="branchCov" title="Branch 1 was taken 51067 times"> + </span>]:<span class="lineCov">    8142807 :             if (i==0) {</span>
-<span class="lineNum">    1002 </span>                :<span class="lineCov">    8091740 :                 e = list_begin(&amp;kv_ins_list[i]);</span>
-<span class="lineNum">    1003 </span>                :<span class="lineCov">    8091739 :                 kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">    1001 </span>        [<span class="branchCov" title="Branch 0 was taken 8083889 times"> + </span><span class="branchCov" title="Branch 1 was taken 51049 times"> + </span>]:<span class="lineCov">    8134938 :             if (i==0) {</span>
+<span class="lineNum">    1002 </span>                :<span class="lineCov">    8083889 :                 e = list_begin(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">    1003 </span>                :<span class="lineCov">    8083889 :                 kv_item = _get_entry(e, struct kv_ins_item, le);</span>
 <span class="lineNum">    1004 </span>                :            :                 _is_update =
-<span class="lineNum">    1005 </span>                :<span class="lineCov">    8091739 :                     (idx[i] != BTREE_IDX_NOT_FOUND &amp;&amp;</span>
-<span class="lineNum">    1006 </span>[<span class="branchCov" title="Branch 0 was taken 8090498 times"> + </span><span class="branchCov" title="Branch 1 was taken 1241 times"> + </span>][<span class="branchCov" title="Branch 3 was taken 525889 times"> + </span><span class="branchCov" title="Branch 4 was taken 7564602 times"> + </span>]:<span class="lineCov">    8091739 :                      !btree-&gt;kv_ops-&gt;cmp(kv_item-&gt;key, k, btree-&gt;aux));</span>
+<span class="lineNum">    1005 </span>                :<span class="lineCov">    8083889 :                     (idx[i] != BTREE_IDX_NOT_FOUND &amp;&amp;</span>
+<span class="lineNum">    1006 </span>[<span class="branchCov" title="Branch 0 was taken 8082658 times"> + </span><span class="branchCov" title="Branch 1 was taken 1231 times"> + </span>][<span class="branchCov" title="Branch 3 was taken 521021 times"> + </span><span class="branchCov" title="Branch 4 was taken 7561645 times"> + </span>]:<span class="lineCov">    8083889 :                      !btree-&gt;kv_ops-&gt;cmp(kv_item-&gt;key, k, btree-&gt;aux));</span>
 <span class="lineNum">    1007 </span>                :            :             }
 <span class="lineNum">    1008 </span>                :            : 
 <span class="lineNum">    1009 </span>                :            :         check_node:;
 <span class="lineNum">    1010 </span>                :            :             int _size_check =
-<span class="lineNum">    1011 </span>                :<span class="lineCov">   16287006 :                 _bnode_size_check(btree, bid[i], node[i], new_minkey,</span>
-<span class="lineNum">    1012 </span>                :<span class="lineCov">    8143503 :                                   &amp;kv_ins_list[i], &amp;nodesize);</span>
+<span class="lineNum">    1011 </span>                :<span class="lineCov">   16271300 :                 _bnode_size_check(btree, bid[i], node[i], new_minkey,</span>
+<span class="lineNum">    1012 </span>                :<span class="lineCov">    8135650 :                                   &amp;kv_ins_list[i], &amp;nodesize);</span>
 <span class="lineNum">    1013 </span>                :            : 
-<span class="lineNum">    1014 </span>[<span class="branchCov" title="Branch 0 was taken 53384 times"> + </span><span class="branchCov" title="Branch 1 was taken 8090126 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1328 times"> + </span><span class="branchCov" title="Branch 3 was taken 52056 times"> + </span>]:<span class="lineCov">    8143510 :             if (_size_check || _is_update ) {</span>
+<span class="lineNum">    1014 </span>[<span class="branchCov" title="Branch 0 was taken 53386 times"> + </span><span class="branchCov" title="Branch 1 was taken 8082255 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1358 times"> + </span><span class="branchCov" title="Branch 3 was taken 52028 times"> + </span>]:<span class="lineCov">    8135641 :             if (_size_check || _is_update ) {</span>
 <span class="lineNum">    1015 </span>                :            :                 //2 enough space
-<span class="lineNum">    1016 </span>        [<span class="branchCov" title="Branch 0 was taken 8091242 times"> + </span><span class="branchCov" title="Branch 1 was taken 212 times"> + </span>]:<span class="lineCov">    8091454 :                 if (ins[i]) {</span>
+<span class="lineNum">    1016 </span>        [<span class="branchCov" title="Branch 0 was taken 8083395 times"> + </span><span class="branchCov" title="Branch 1 was taken 218 times"> + </span>]:<span class="lineCov">    8083613 :                 if (ins[i]) {</span>
 <span class="lineNum">    1017 </span>                :            :                     // insert key/value pair(s)
 <span class="lineNum">    1018 </span>                :            :                     // insert all kv pairs on list
-<span class="lineNum">    1019 </span>                :<span class="lineCov">    8091242 :                     e = list_begin(&amp;kv_ins_list[i]);</span>
-<span class="lineNum">    1020 </span>        [<span class="branchCov" title="Branch 0 was taken 8091241 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091253 times"> + </span>]:<span class="lineCov">   16182494 :                     while(e) {</span>
-<span class="lineNum">    1021 </span>                :<span class="lineCov">    8091241 :                         kv_item = _get_entry(e, struct kv_ins_item, le);</span>
-<span class="lineNum">    1022 </span>                :<span class="lineCov">   16182482 :                         idx_ins[i] = _btree_add_entry(btree, node[i],</span>
-<span class="lineNum">    1023 </span>                :<span class="lineCov">    8091241 :                                                  kv_item-&gt;key, kv_item-&gt;value);</span>
-<span class="lineNum">    1024 </span>                :<span class="lineCov">    8091255 :                         e = list_next(e);</span>
+<span class="lineNum">    1019 </span>                :<span class="lineCov">    8083395 :                     e = list_begin(&amp;kv_ins_list[i]);</span>
+<span class="lineNum">    1020 </span>        [<span class="branchCov" title="Branch 0 was taken 8083395 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083376 times"> + </span>]:<span class="lineCov">   16166771 :                     while(e) {</span>
+<span class="lineNum">    1021 </span>                :<span class="lineCov">    8083395 :                         kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">    1022 </span>                :<span class="lineCov">   16166790 :                         idx_ins[i] = _btree_add_entry(btree, node[i],</span>
+<span class="lineNum">    1023 </span>                :<span class="lineCov">    8083395 :                                                  kv_item-&gt;key, kv_item-&gt;value);</span>
+<span class="lineNum">    1024 </span>                :<span class="lineCov">    8083378 :                         e = list_next(e);</span>
 <span class="lineNum">    1025 </span>                :            :                     }
 <span class="lineNum">    1026 </span>                :            :                 }
-<span class="lineNum">    1027 </span>        [<span class="branchCov" title="Branch 0 was taken 211 times"> + </span><span class="branchCov" title="Branch 1 was taken 8091254 times"> + </span>]:<span class="lineCov">    8091465 :                 if (minkey_replace[i]) {</span>
+<span class="lineNum">    1027 </span>        [<span class="branchCov" title="Branch 0 was taken 218 times"> + </span><span class="branchCov" title="Branch 1 was taken 8083376 times"> + </span>]:<span class="lineCov">    8083594 :                 if (minkey_replace[i]) {</span>
 <span class="lineNum">    1028 </span>                :            :                     // replace the minimum key in the node to KEY
-<span class="lineNum">    1029 </span>                :<span class="lineCov">        211 :                     btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
-<span class="lineNum">    1030 </span>                :<span class="lineCov">        211 :                     btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], key, v);</span>
+<span class="lineNum">    1029 </span>                :<span class="lineCov">        218 :                     btree-&gt;kv_ops-&gt;get_kv(node[i], idx[i], k, v);</span>
+<span class="lineNum">    1030 </span>                :<span class="lineCov">        218 :                     btree-&gt;kv_ops-&gt;set_kv(node[i], idx[i], key, v);</span>
 <span class="lineNum">    1031 </span>                :            :                 }
-<span class="lineNum">    1032 </span>                :<span class="lineCov">    8091465 :                 modified[i] = 1;</span>
+<span class="lineNum">    1032 </span>                :<span class="lineCov">    8083599 :                 modified[i] = 1;</span>
 <span class="lineNum">    1033 </span>                :            : 
 <span class="lineNum">    1034 </span>                :            :             }else{
 <span class="lineNum">    1035 </span>                :            :                 //2 not enough
 <span class="lineNum">    1036 </span>                :            :                 // first check if the node can be enlarged
-<span class="lineNum">    1037 </span>  [<span class="branchCov" title="Branch 0 was taken 52056 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 704 times"> + </span><span class="branchCov" title="Branch 3 was taken 51352 times"> + </span>]:<span class="lineCov">     104112 :                 if (btree-&gt;blk_ops-&gt;blk_enlarge_node &amp;&amp;</span>
-<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 704 times"> + </span><span class="branchCov" title="Branch 5 was taken 51352 times"> + </span>]
-<span class="lineNum">    1038 </span>                :<span class="lineCov">      52056 :                     is_subblock(bid[i])) {</span>
+<span class="lineNum">    1037 </span>  [<span class="branchCov" title="Branch 0 was taken 52028 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 704 times"> + </span><span class="branchCov" title="Branch 3 was taken 51324 times"> + </span>]:<span class="lineCov">     104056 :                 if (btree-&gt;blk_ops-&gt;blk_enlarge_node &amp;&amp;</span>
+<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 704 times"> + </span><span class="branchCov" title="Branch 5 was taken 51324 times"> + </span>]
+<span class="lineNum">    1038 </span>                :<span class="lineCov">      52028 :                     is_subblock(bid[i])) {</span>
 <span class="lineNum">    1039 </span>                :            :                     bid_t new_bid;
 <span class="lineNum">    1040 </span>                :            :                     addr = btree-&gt;blk_ops-&gt;blk_enlarge_node(btree-&gt;blk_handle,
 <span class="lineNum">    1041 </span>                :<span class="lineCov">        704 :                         bid[i], nodesize, &amp;new_bid);</span>
@@ -1128,61 +1128,61 @@
 <span class="lineNum">    1055 </span>                :            : 
 <span class="lineNum">    1056 </span>                :            :                 //otherwise, split the node
 <span class="lineNum">    1057 </span>                :            :                 nsplitnode = _btree_get_nsplitnode(btree, BLK_NOT_FOUND,
-<span class="lineNum">    1058 </span>                :<span class="lineCov">      51352 :                                                    node[i], nodesize);</span>
+<span class="lineNum">    1058 </span>                :<span class="lineCov">      51324 :                                                    node[i], nodesize);</span>
 <span class="lineNum">    1059 </span>                :            :                 // force the node split when the node size of new layout is
 <span class="lineNum">    1060 </span>                :            :                 // larger than the current node size
-<span class="lineNum">    1061 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 51352 times"> + </span>]:<span class="lineCov">      51352 :                 if (nsplitnode == 1) nsplitnode = 2;</span>
+<span class="lineNum">    1061 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 51324 times"> + </span>]:<span class="lineCov">      51324 :                 if (nsplitnode == 1) nsplitnode = 2;</span>
 <span class="lineNum">    1062 </span>                :            : 
 <span class="lineNum">    1063 </span>                :            :                 height_growup = _btree_split_node(
 <span class="lineNum">    1064 </span>                :            :                     btree, key, node, bid, idx, i,
 <span class="lineNum">    1065 </span>                :            :                     kv_ins_list, nsplitnode, k, v,
-<span class="lineNum">    1066 </span>                :<span class="lineCov">      51352 :                     modified, minkey_replace, ins);</span>
+<span class="lineNum">    1066 </span>                :<span class="lineCov">      51324 :                     modified, minkey_replace, ins);</span>
 <span class="lineNum">    1067 </span>                :            :             } // split
 <span class="lineNum">    1068 </span>                :            :         } // insert
 <span class="lineNum">    1069 </span>                :            : 
-<span class="lineNum">    1070 </span>        [<span class="branchCov" title="Branch 0 was taken 493 times"> + </span><span class="branchCov" title="Branch 1 was taken 21313219 times"> + </span>]:<span class="lineCov">   21313712 :         if (height_growup) break;</span>
+<span class="lineNum">    1070 </span>        [<span class="branchCov" title="Branch 0 was taken 493 times"> + </span><span class="branchCov" title="Branch 1 was taken 21297213 times"> + </span>]:<span class="lineCov">   21297706 :         if (height_growup) break;</span>
 <span class="lineNum">    1071 </span>                :            : 
-<span class="lineNum">    1072 </span>        [<span class="branchCov" title="Branch 0 was taken 8178601 times"> + </span><span class="branchCov" title="Branch 1 was taken 13134618 times"> + </span>]:<span class="lineCov">   21313219 :         if (modified[i]) {</span>
+<span class="lineNum">    1072 </span>        [<span class="branchCov" title="Branch 0 was taken 8170659 times"> + </span><span class="branchCov" title="Branch 1 was taken 13126554 times"> + </span>]:<span class="lineCov">   21297213 :         if (modified[i]) {</span>
 <span class="lineNum">    1073 </span>                :            :             //2 when the node is modified
-<span class="lineNum">    1074 </span>        [<span class="branchCov" title="Branch 1 was taken 38230 times"> + </span><span class="branchCov" title="Branch 2 was taken 8140387 times"> + </span>]:<span class="lineCov">    8178601 :             if (!btree-&gt;blk_ops-&gt;blk_is_writable(btree-&gt;blk_handle, bid[i])) {</span>
+<span class="lineNum">    1074 </span>        [<span class="branchCov" title="Branch 1 was taken 38180 times"> + </span><span class="branchCov" title="Branch 2 was taken 8132491 times"> + </span>]:<span class="lineCov">    8170659 :             if (!btree-&gt;blk_ops-&gt;blk_is_writable(btree-&gt;blk_handle, bid[i])) {</span>
 <span class="lineNum">    1075 </span>                :            :                 // not writable .. already flushed block -&gt; cannot overwrite,
 <span class="lineNum">    1076 </span>                :            :                 // we have to move to new block
 <span class="lineNum">    1077 </span>                :            :                 height_growup = _btree_move_modified_node(
 <span class="lineNum">    1078 </span>                :            :                     btree, key, node, bid, idx, i,
 <span class="lineNum">    1079 </span>                :            :                     kv_ins_list, k, v,
-<span class="lineNum">    1080 </span>                :<span class="lineCov">      38230 :                     modified, minkey_replace, ins, moved);</span>
+<span class="lineNum">    1080 </span>                :<span class="lineCov">      38180 :                     modified, minkey_replace, ins, moved);</span>
 <span class="lineNum">    1081 </span>                :            : 
-<span class="lineNum">    1082 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 38230 times"> + </span>]:<span class="lineCov">      38230 :                 if (height_growup) break;</span>
+<span class="lineNum">    1082 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 38180 times"> + </span>]:<span class="lineCov">      38180 :                 if (height_growup) break;</span>
 <span class="lineNum">    1083 </span>                :            :             }else{
 <span class="lineNum">    1084 </span>                :            :                 // writable .. just set dirty to write back into storage
-<span class="lineNum">    1085 </span>                :<span class="lineCov">    8140387 :                 btree-&gt;blk_ops-&gt;blk_set_dirty(btree-&gt;blk_handle, bid[i]);</span>
+<span class="lineNum">    1085 </span>                :<span class="lineCov">    8132491 :                 btree-&gt;blk_ops-&gt;blk_set_dirty(btree-&gt;blk_handle, bid[i]);</span>
 <span class="lineNum">    1086 </span>                :            :             } // is writable
 <span class="lineNum">    1087 </span>                :            :         } // is modified
 <span class="lineNum">    1088 </span>                :            :     } // for loop
 <span class="lineNum">    1089 </span>                :            : 
 <span class="lineNum">    1090 </span>                :            :     // release temporary resources
-<span class="lineNum">    1091 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8091653 times"> + </span>]:<span class="lineCov">    8091653 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
+<span class="lineNum">    1091 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8083718 times"> + </span>]:<span class="lineCov">    8083718 :     if (btree-&gt;blk_ops-&gt;blk_operation_end) {</span>
 <span class="lineNum">    1092 </span>                :<span class="lineNoCov">          0 :         btree-&gt;blk_ops-&gt;blk_operation_end(btree-&gt;blk_handle);</span>
 <span class="lineNum">    1093 </span>                :            :     }
-<span class="lineNum">    1094 </span>        [<span class="branchCov" title="Branch 0 was taken 2031 times"> + </span><span class="branchCov" title="Branch 1 was taken 8089698 times"> + </span>]:<span class="lineCov">    8091729 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
+<span class="lineNum">    1094 </span>        [<span class="branchCov" title="Branch 0 was taken 2031 times"> + </span><span class="branchCov" title="Branch 1 was taken 8081820 times"> + </span>]:<span class="lineCov">    8083851 :     if (btree-&gt;kv_ops-&gt;free_kv_var) btree-&gt;kv_ops-&gt;free_kv_var(btree, k, v);</span>
 <span class="lineNum">    1095 </span>                :            : 
-<span class="lineNum">    1096 </span>[<span class="branchCov" title="Branch 0 was taken 1110 times"> + </span><span class="branchCov" title="Branch 1 was taken 29404460 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 21313798 times"> + </span><span class="branchCov" title="Branch 3 was taken 8091772 times"> + </span>]:<span class="lineCov">   29405570 :     for (j=0; j &lt; ((height_growup)?(btree-&gt;height-1):(btree-&gt;height)); ++j){</span>
-<span class="lineNum">    1097 </span>                :<span class="lineCov">   21313798 :         e = list_begin(&amp;kv_ins_list[j]);</span>
-<span class="lineNum">    1098 </span>        [<span class="branchCov" title="Branch 0 was taken 8142593 times"> + </span><span class="branchCov" title="Branch 1 was taken 21313841 times"> + </span>]:<span class="lineCov">   29456434 :         while(e) {</span>
-<span class="lineNum">    1099 </span>                :<span class="lineCov">    8142593 :             kv_item = _get_entry(e, struct kv_ins_item, le);</span>
-<span class="lineNum">    1100 </span>                :<span class="lineCov">    8142593 :             e = list_remove(&amp;kv_ins_list[j], e);</span>
+<span class="lineNum">    1096 </span>[<span class="branchCov" title="Branch 0 was taken 1086 times"> + </span><span class="branchCov" title="Branch 1 was taken 29380604 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 21297796 times"> + </span><span class="branchCov" title="Branch 3 was taken 8083894 times"> + </span>]:<span class="lineCov">   29381690 :     for (j=0; j &lt; ((height_growup)?(btree-&gt;height-1):(btree-&gt;height)); ++j){</span>
+<span class="lineNum">    1097 </span>                :<span class="lineCov">   21297796 :         e = list_begin(&amp;kv_ins_list[j]);</span>
+<span class="lineNum">    1098 </span>        [<span class="branchCov" title="Branch 0 was taken 8134680 times"> + </span><span class="branchCov" title="Branch 1 was taken 21297839 times"> + </span>]:<span class="lineCov">   29432519 :         while(e) {</span>
+<span class="lineNum">    1099 </span>                :<span class="lineCov">    8134680 :             kv_item = _get_entry(e, struct kv_ins_item, le);</span>
+<span class="lineNum">    1100 </span>                :<span class="lineCov">    8134680 :             e = list_remove(&amp;kv_ins_list[j], e);</span>
 <span class="lineNum">    1101 </span>                :            : 
-<span class="lineNum">    1102 </span>        [<span class="branchCov" title="Branch 0 was taken 2051 times"> + </span><span class="branchCov" title="Branch 1 was taken 8140536 times"> + </span>]:<span class="lineCov">    8142587 :             if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1102 </span>        [<span class="branchCov" title="Branch 0 was taken 2051 times"> + </span><span class="branchCov" title="Branch 1 was taken 8132625 times"> + </span>]:<span class="lineCov">    8134676 :             if (btree-&gt;kv_ops-&gt;free_kv_var) {</span>
 <span class="lineNum">    1103 </span>                :<span class="lineCov">       2051 :                 btree-&gt;kv_ops-&gt;free_kv_var(btree, kv_item-&gt;key, kv_item-&gt;value);</span>
 <span class="lineNum">    1104 </span>                :            :             }
-<span class="lineNum">    1105 </span>                :<span class="lineCov">    8142587 :             _kv_ins_item_free(kv_item);</span>
+<span class="lineNum">    1105 </span>                :<span class="lineCov">    8134676 :             _kv_ins_item_free(kv_item);</span>
 <span class="lineNum">    1106 </span>                :            :         }
 <span class="lineNum">    1107 </span>                :            :     }
 <span class="lineNum">    1108 </span>                :            : 
-<span class="lineNum">    1109 </span>        [<span class="branchCov" title="Branch 0 was taken 525889 times"> + </span><span class="branchCov" title="Branch 1 was taken 7565883 times"> + </span>]:<span class="lineCov">    8091772 :     if (_is_update) {</span>
-<span class="lineNum">    1110 </span>                :<span class="lineCov">     525889 :         return BTREE_RESULT_UPDATE;</span>
+<span class="lineNum">    1109 </span>        [<span class="branchCov" title="Branch 0 was taken 521021 times"> + </span><span class="branchCov" title="Branch 1 was taken 7562873 times"> + </span>]:<span class="lineCov">    8083894 :     if (_is_update) {</span>
+<span class="lineNum">    1110 </span>                :<span class="lineCov">     521021 :         return BTREE_RESULT_UPDATE;</span>
 <span class="lineNum">    1111 </span>                :            :     }else{
-<span class="lineNum">    1112 </span>                :<span class="lineCov">    8091772 :         return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1112 </span>                :<span class="lineCov">    8083894 :         return BTREE_RESULT_SUCCESS;</span>
 <span class="lineNum">    1113 </span>                :            :     }
 <a name="1114"><span class="lineNum">    1114 </span>                :            : }</a>
 <span class="lineNum">    1115 </span>                :            : 
@@ -1556,35 +1556,35 @@
 <span class="lineNum">    1480 </span>                :<span class="lineCov">       1164 :     return br;</span>
 <a name="1481"><span class="lineNum">    1481 </span>                :            : }</a>
 <span class="lineNum">    1482 </span>                :            : 
-<span class="lineNum">    1483 </span>                :<span class="lineCov">    5435416 : btree_result _btree_next(struct btree_iterator *it, void *key_buf,</span>
+<span class="lineNum">    1483 </span>                :<span class="lineCov">    5436856 : btree_result _btree_next(struct btree_iterator *it, void *key_buf,</span>
 <span class="lineNum">    1484 </span>                :            :                          void *value_buf, int depth)
 <span class="lineNum">    1485 </span>                :            : {
 <span class="lineNum">    1486 </span>                :            :     struct btree *btree;
-<span class="lineNum">    1487 </span>                :<span class="lineCov">    5435416 :     btree = &amp;it-&gt;btree;</span>
+<span class="lineNum">    1487 </span>                :<span class="lineCov">    5436856 :     btree = &amp;it-&gt;btree;</span>
 <span class="lineNum">    1488 </span>                :            :     int i;
-<span class="lineNum">    1489 </span>                :<span class="lineCov">    5435416 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
-<span class="lineNum">    1490 </span>                :<span class="lineCov">    5435416 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
+<span class="lineNum">    1489 </span>                :<span class="lineCov">    5436856 :     uint8_t *k = alca(uint8_t, btree-&gt;ksize);</span>
+<span class="lineNum">    1490 </span>                :<span class="lineCov">    5436856 :     uint8_t *v = alca(uint8_t, btree-&gt;vsize);</span>
 <span class="lineNum">    1491 </span>                :            :     void *addr;
 <span class="lineNum">    1492 </span>                :            :     struct bnode *node;
 <span class="lineNum">    1493 </span>                :            :     btree_result r;
 <span class="lineNum">    1494 </span>                :            : 
-<span class="lineNum">    1495 </span>        [<span class="branchCov" title="Branch 0 was taken 5436666 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    5435416 :     if (it-&gt;btree.kv_ops-&gt;init_kv_var) {</span>
-<span class="lineNum">    1496 </span>                :<span class="lineCov">    5436666 :         it-&gt;btree.kv_ops-&gt;init_kv_var(&amp;it-&gt;btree, k, v);</span>
+<span class="lineNum">    1495 </span>        [<span class="branchCov" title="Branch 0 was taken 5437964 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    5436856 :     if (it-&gt;btree.kv_ops-&gt;init_kv_var) {</span>
+<span class="lineNum">    1496 </span>                :<span class="lineCov">    5437964 :         it-&gt;btree.kv_ops-&gt;init_kv_var(&amp;it-&gt;btree, k, v);</span>
 <span class="lineNum">    1497 </span>                :            :     }
 <span class="lineNum">    1498 </span>                :            : 
-<span class="lineNum">    1499 </span>        [<span class="branchCov" title="Branch 0 was taken 12002 times"> + </span><span class="branchCov" title="Branch 1 was taken 5422978 times"> + </span>]:<span class="lineCov">    5434980 :     if (it-&gt;node[depth] == NULL){</span>
+<span class="lineNum">    1499 </span>        [<span class="branchCov" title="Branch 0 was taken 11988 times"> + </span><span class="branchCov" title="Branch 1 was taken 5424497 times"> + </span>]:<span class="lineCov">    5436485 :     if (it-&gt;node[depth] == NULL){</span>
 <span class="lineNum">    1500 </span>                :            :         size_t blksize;
-<span class="lineNum">    1501 </span>                :<span class="lineCov">      12002 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, it-&gt;bid[depth]);</span>
-<span class="lineNum">    1502 </span>                :<span class="lineCov">      12002 :         it-&gt;addr[depth] = (void *)mempool_alloc(btree-&gt;blksize);</span>
+<span class="lineNum">    1501 </span>                :<span class="lineCov">      11988 :         addr = btree-&gt;blk_ops-&gt;blk_read(btree-&gt;blk_handle, it-&gt;bid[depth]);</span>
+<span class="lineNum">    1502 </span>                :<span class="lineCov">      11988 :         it-&gt;addr[depth] = (void *)mempool_alloc(btree-&gt;blksize);</span>
 <span class="lineNum">    1503 </span>                :            :         blksize = btree-&gt;blk_ops-&gt;blk_get_size(btree-&gt;blk_handle,
-<span class="lineNum">    1504 </span>                :<span class="lineCov">      12002 :                                                it-&gt;bid[depth]);</span>
-<span class="lineNum">    1505 </span>                :<span class="lineCov">      12002 :         memcpy(it-&gt;addr[depth], addr, blksize);</span>
-<span class="lineNum">    1506 </span>                :<span class="lineCov">      12002 :         it-&gt;node[depth] = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
+<span class="lineNum">    1504 </span>                :<span class="lineCov">      11988 :                                                it-&gt;bid[depth]);</span>
+<span class="lineNum">    1505 </span>                :<span class="lineCov">      11988 :         memcpy(it-&gt;addr[depth], addr, blksize);</span>
+<span class="lineNum">    1506 </span>                :<span class="lineCov">      11988 :         it-&gt;node[depth] = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
 <span class="lineNum">    1507 </span>                :            :     }
-<span class="lineNum">    1508 </span>                :<span class="lineCov">    5434980 :     node = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
+<span class="lineNum">    1508 </span>                :<span class="lineCov">    5436485 :     node = _fetch_bnode(&amp;it-&gt;btree, it-&gt;addr[depth], depth+1);</span>
 <span class="lineNum">    1509 </span>                :            :     //assert(node-&gt;level == depth+1);
 <span class="lineNum">    1510 </span>                :            : 
-<span class="lineNum">    1511 </span>        [<span class="branchCov" title="Branch 0 was taken 1001 times"> + </span><span class="branchCov" title="Branch 1 was taken 5437481 times"> + </span>]:<span class="lineCov">    5438482 :     if (node-&gt;nentry &lt;= 0) {</span>
+<span class="lineNum">    1511 </span>        [<span class="branchCov" title="Branch 0 was taken 1001 times"> + </span><span class="branchCov" title="Branch 1 was taken 5437971 times"> + </span>]:<span class="lineCov">    5438972 :     if (node-&gt;nentry &lt;= 0) {</span>
 <span class="lineNum">    1512 </span>        [<span class="branchCov" title="Branch 0 was taken 1001 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1001 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) it-&gt;btree.kv_ops-&gt;free_kv_var(</span>
 <span class="lineNum">    1513 </span>                :<span class="lineCov">       1001 :                                                              &amp;it-&gt;btree, k, v);</span>
 <span class="lineNum">    1514 </span>        [<span class="branchCov" title="Branch 0 was taken 1001 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1001 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
@@ -1593,7 +1593,7 @@
 <span class="lineNum">    1517 </span>                :<span class="lineCov">       1001 :         return BTREE_RESULT_FAIL;</span>
 <span class="lineNum">    1518 </span>                :            :     }
 <span class="lineNum">    1519 </span>                :            : 
-<span class="lineNum">    1520 </span>        [<span class="branchCov" title="Branch 0 was taken 230 times"> + </span><span class="branchCov" title="Branch 1 was taken 5437251 times"> + </span>]:<span class="lineCov">    5437481 :     if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
+<span class="lineNum">    1520 </span>        [<span class="branchCov" title="Branch 0 was taken 230 times"> + </span><span class="branchCov" title="Branch 1 was taken 5437741 times"> + </span>]:<span class="lineCov">    5437971 :     if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
 <span class="lineNum">    1521 </span>                :            :         // curkey: lastly returned key
 <span class="lineNum">    1522 </span>                :<span class="lineCov">        230 :         it-&gt;idx[depth] = _btree_find_entry(btree, node, it-&gt;curkey);</span>
 <span class="lineNum">    1523 </span>        [<span class="branchCov" title="Branch 0 was taken 150 times"> + </span><span class="branchCov" title="Branch 1 was taken 80 times"> + </span>]:<span class="lineCov">        230 :         if (it-&gt;idx[depth] == BTREE_IDX_NOT_FOUND) {</span>
@@ -1609,7 +1609,7 @@
 <span class="lineNum">    1532 </span>                :            :         }
 <span class="lineNum">    1533 </span>                :            :     }
 <span class="lineNum">    1534 </span>                :            : 
-<span class="lineNum">    1535 </span>[<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 5437473 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">    5437481 :     if (BTREE_ITR_IS_REV(it) &amp;&amp; depth == 0) {</span>
+<span class="lineNum">    1535 </span>[<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 5437963 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">    5437971 :     if (BTREE_ITR_IS_REV(it) &amp;&amp; depth == 0) {</span>
 <span class="lineNum">    1536 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">          7 :         if (it-&gt;idx[depth] &gt;= node-&gt;nentry) {</span>
 <span class="lineNum">    1537 </span>                :            :             // 'idx' becomes out-of-bounds by previous btree_prev() call.
 <span class="lineNum">    1538 </span>                :            :             // this means that the last returned entry was the smallest entry.
@@ -1620,85 +1620,85 @@
 <span class="lineNum">    1543 </span>                :            :         }
 <span class="lineNum">    1544 </span>                :            :     }
 <span class="lineNum">    1545 </span>                :            : 
-<span class="lineNum">    1546 </span>        [<span class="branchCov" title="Branch 0 was taken 10855 times"> + </span><span class="branchCov" title="Branch 1 was taken 5426626 times"> + </span>]:<span class="lineCov">    5437481 :     if (it-&gt;idx[depth] &gt;= node-&gt;nentry) {</span>
+<span class="lineNum">    1546 </span>        [<span class="branchCov" title="Branch 0 was taken 10842 times"> + </span><span class="branchCov" title="Branch 1 was taken 5427129 times"> + </span>]:<span class="lineCov">    5437971 :     if (it-&gt;idx[depth] &gt;= node-&gt;nentry) {</span>
 <span class="lineNum">    1547 </span>                :            :         // out of bound .. go up to parent node
-<span class="lineNum">    1548 </span>                :<span class="lineCov">      10855 :         it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND; // reset for btree_prev</span>
-<span class="lineNum">    1549 </span>        [<span class="branchCov" title="Branch 0 was taken 10855 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      10855 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
-<span class="lineNum">    1550 </span>                :<span class="lineCov">      10855 :         it-&gt;node[depth] = NULL;</span>
-<span class="lineNum">    1551 </span>                :<span class="lineCov">      10855 :         it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1548 </span>                :<span class="lineCov">      10842 :         it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND; // reset for btree_prev</span>
+<span class="lineNum">    1549 </span>        [<span class="branchCov" title="Branch 0 was taken 10842 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      10842 :         if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1550 </span>                :<span class="lineCov">      10842 :         it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1551 </span>                :<span class="lineCov">      10842 :         it-&gt;addr[depth] = NULL;</span>
 <span class="lineNum">    1552 </span>                :            : 
-<span class="lineNum">    1553 </span>        [<span class="branchCov" title="Branch 0 was taken 56 times"> + </span><span class="branchCov" title="Branch 1 was taken 10799 times"> + </span>]:<span class="lineCov">      10855 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1553 </span>        [<span class="branchCov" title="Branch 0 was taken 56 times"> + </span><span class="branchCov" title="Branch 1 was taken 10786 times"> + </span>]:<span class="lineCov">      10842 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
 <span class="lineNum">    1554 </span>                :<span class="lineCov">         56 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
 <span class="lineNum">    1555 </span>                :            :         }
-<span class="lineNum">    1556 </span>                :<span class="lineCov">      10855 :         return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1556 </span>                :<span class="lineCov">      10842 :         return BTREE_RESULT_FAIL;</span>
 <span class="lineNum">    1557 </span>                :            :     }
 <span class="lineNum">    1558 </span>                :            : 
-<span class="lineNum">    1559 </span>        [<span class="branchCov" title="Branch 0 was taken 3591681 times"> + </span><span class="branchCov" title="Branch 1 was taken 1834945 times"> + </span>]:<span class="lineCov">    5426626 :     if (depth &gt; 0) {</span>
+<span class="lineNum">    1559 </span>        [<span class="branchCov" title="Branch 0 was taken 3592445 times"> + </span><span class="branchCov" title="Branch 1 was taken 1834684 times"> + </span>]:<span class="lineCov">    5427129 :     if (depth &gt; 0) {</span>
 <span class="lineNum">    1560 </span>                :            :         // index node
-<span class="lineNum">    1561 </span>        [<span class="branchCov" title="Branch 0 was taken 144 times"> + </span><span class="branchCov" title="Branch 1 was taken 3591537 times"> + </span>]:<span class="lineCov">    3591681 :         if (it-&gt;node[depth-1] == NULL) {</span>
-<span class="lineNum">    1562 </span>                :<span class="lineCov">        144 :             btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
-<span class="lineNum">    1563 </span>                :<span class="lineCov">        144 :             it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
-<span class="lineNum">    1564 </span>                :<span class="lineCov">        144 :             it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
+<span class="lineNum">    1561 </span>        [<span class="branchCov" title="Branch 0 was taken 143 times"> + </span><span class="branchCov" title="Branch 1 was taken 3592302 times"> + </span>]:<span class="lineCov">    3592445 :         if (it-&gt;node[depth-1] == NULL) {</span>
+<span class="lineNum">    1562 </span>                :<span class="lineCov">        143 :             btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
+<span class="lineNum">    1563 </span>                :<span class="lineCov">        143 :             it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1564 </span>                :<span class="lineCov">        143 :             it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
 <span class="lineNum">    1565 </span>                :            :         }
-<span class="lineNum">    1566 </span>                :<span class="lineCov">    3591681 :         r = _btree_next(it, key_buf, value_buf, depth-1);</span>
+<span class="lineNum">    1566 </span>                :<span class="lineCov">    3592445 :         r = _btree_next(it, key_buf, value_buf, depth-1);</span>
 <span class="lineNum">    1567 </span>                :            : 
-<span class="lineNum">    1568 </span>        [<span class="branchCov" title="Branch 0 was taken 10859 times"> + </span><span class="branchCov" title="Branch 1 was taken 3583050 times"> + </span>]:<span class="lineCov">    3593909 :         if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1568 </span>        [<span class="branchCov" title="Branch 0 was taken 10844 times"> + </span><span class="branchCov" title="Branch 1 was taken 3583207 times"> + </span>]:<span class="lineCov">    3594051 :         if (r == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1569 </span>                :            :             // move index to right
-<span class="lineNum">    1570 </span>                :<span class="lineCov">      10859 :             it-&gt;idx[depth]++;</span>
+<span class="lineNum">    1570 </span>                :<span class="lineCov">      10844 :             it-&gt;idx[depth]++;</span>
 <span class="lineNum">    1571 </span>                :            : 
-<span class="lineNum">    1572 </span>        [<span class="branchCov" title="Branch 0 was taken 139 times"> + </span><span class="branchCov" title="Branch 1 was taken 10720 times"> + </span>]:<span class="lineCov">      10859 :             if (it-&gt;idx[depth] &gt;= node-&gt;nentry){</span>
+<span class="lineNum">    1572 </span>        [<span class="branchCov" title="Branch 0 was taken 138 times"> + </span><span class="branchCov" title="Branch 1 was taken 10706 times"> + </span>]:<span class="lineCov">      10844 :             if (it-&gt;idx[depth] &gt;= node-&gt;nentry){</span>
 <span class="lineNum">    1573 </span>                :            :                 // out of bound .. go up to parent node
-<span class="lineNum">    1574 </span>                :<span class="lineCov">        139 :                 it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND;</span>
-<span class="lineNum">    1575 </span>        [<span class="branchCov" title="Branch 0 was taken 139 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        139 :                 if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
-<span class="lineNum">    1576 </span>                :<span class="lineCov">        139 :                 it-&gt;node[depth] = NULL;</span>
-<span class="lineNum">    1577 </span>                :<span class="lineCov">        139 :                 it-&gt;addr[depth] = NULL;</span>
+<span class="lineNum">    1574 </span>                :<span class="lineCov">        138 :                 it-&gt;idx[depth] = BTREE_IDX_NOT_FOUND;</span>
+<span class="lineNum">    1575 </span>        [<span class="branchCov" title="Branch 0 was taken 138 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        138 :                 if (it-&gt;node[depth] != NULL) mempool_free(it-&gt;addr[depth]);</span>
+<span class="lineNum">    1576 </span>                :<span class="lineCov">        138 :                 it-&gt;node[depth] = NULL;</span>
+<span class="lineNum">    1577 </span>                :<span class="lineCov">        138 :                 it-&gt;addr[depth] = NULL;</span>
 <span class="lineNum">    1578 </span>                :            : 
-<span class="lineNum">    1579 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 134 times"> + </span>]:<span class="lineCov">        139 :                 if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1579 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 133 times"> + </span>]:<span class="lineCov">        138 :                 if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
 <span class="lineNum">    1580 </span>                :<span class="lineCov">          5 :                     it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
 <span class="lineNum">    1581 </span>                :            :                 }
-<span class="lineNum">    1582 </span>                :<span class="lineCov">        139 :                 return BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1582 </span>                :<span class="lineCov">        138 :                 return BTREE_RESULT_FAIL;</span>
 <span class="lineNum">    1583 </span>                :            :             }else{
-<span class="lineNum">    1584 </span>                :<span class="lineCov">      10720 :                 btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
-<span class="lineNum">    1585 </span>                :<span class="lineCov">      10720 :                 it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
-<span class="lineNum">    1586 </span>                :<span class="lineCov">      10720 :                 it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
+<span class="lineNum">    1584 </span>                :<span class="lineCov">      10706 :                 btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], k, v);</span>
+<span class="lineNum">    1585 </span>                :<span class="lineCov">      10706 :                 it-&gt;bid[depth-1] = btree-&gt;kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">    1586 </span>                :<span class="lineCov">      10707 :                 it-&gt;bid[depth-1] = _endian_decode(it-&gt;bid[depth-1]);</span>
 <span class="lineNum">    1587 </span>                :            :                 // reset child index
-<span class="lineNum">    1588 </span>        [<span class="branchCov" title="Branch 0 was taken 10771 times"> + </span><span class="branchCov" title="Branch 1 was taken 10720 times"> + </span>]:<span class="lineCov">      21491 :                 for (i=depth-1; i&gt;=0; --i) {</span>
-<span class="lineNum">    1589 </span>                :<span class="lineCov">      10771 :                     it-&gt;idx[i] = 0;</span>
-<span class="lineNum">    1590 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 10771 times"> + </span>]:<span class="lineCov">      10771 :                     if (it-&gt;node[i] != NULL) mempool_free(it-&gt;addr[i]);</span>
-<span class="lineNum">    1591 </span>                :<span class="lineCov">      10771 :                     it-&gt;node[i] = NULL;</span>
-<span class="lineNum">    1592 </span>                :<span class="lineCov">      10771 :                     it-&gt;addr[i] = NULL;</span>
+<span class="lineNum">    1588 </span>        [<span class="branchCov" title="Branch 0 was taken 10756 times"> + </span><span class="branchCov" title="Branch 1 was taken 10707 times"> + </span>]:<span class="lineCov">      21463 :                 for (i=depth-1; i&gt;=0; --i) {</span>
+<span class="lineNum">    1589 </span>                :<span class="lineCov">      10756 :                     it-&gt;idx[i] = 0;</span>
+<span class="lineNum">    1590 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 10756 times"> + </span>]:<span class="lineCov">      10756 :                     if (it-&gt;node[i] != NULL) mempool_free(it-&gt;addr[i]);</span>
+<span class="lineNum">    1591 </span>                :<span class="lineCov">      10756 :                     it-&gt;node[i] = NULL;</span>
+<span class="lineNum">    1592 </span>                :<span class="lineCov">      10756 :                     it-&gt;addr[i] = NULL;</span>
 <span class="lineNum">    1593 </span>                :            :                 }
 <span class="lineNum">    1594 </span>                :            :                 // retry
-<span class="lineNum">    1595 </span>                :<span class="lineCov">      10720 :                 r = _btree_next(it, key_buf, value_buf, depth-1);</span>
+<span class="lineNum">    1595 </span>                :<span class="lineCov">      10707 :                 r = _btree_next(it, key_buf, value_buf, depth-1);</span>
 <span class="lineNum">    1596 </span>                :            :             }
 <span class="lineNum">    1597 </span>                :            :         }
-<span class="lineNum">    1598 </span>        [<span class="branchCov" title="Branch 0 was taken 3022 times"> + </span><span class="branchCov" title="Branch 1 was taken 3590748 times"> + </span>]:<span class="lineCov">    3593770 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1598 </span>        [<span class="branchCov" title="Branch 0 was taken 3022 times"> + </span><span class="branchCov" title="Branch 1 was taken 3590892 times"> + </span>]:<span class="lineCov">    3593914 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
 <span class="lineNum">    1599 </span>                :<span class="lineCov">       3022 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
 <span class="lineNum">    1600 </span>                :            :         }
-<span class="lineNum">    1601 </span>                :<span class="lineCov">    3593777 :         return r;</span>
+<span class="lineNum">    1601 </span>                :<span class="lineCov">    3593943 :         return r;</span>
 <span class="lineNum">    1602 </span>                :            :     }else{
 <span class="lineNum">    1603 </span>                :            :         // leaf node
-<span class="lineNum">    1604 </span>                :<span class="lineCov">    1834945 :         btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], key_buf, value_buf);</span>
+<span class="lineNum">    1604 </span>                :<span class="lineCov">    1834684 :         btree-&gt;kv_ops-&gt;get_kv(node, it-&gt;idx[depth], key_buf, value_buf);</span>
 <span class="lineNum">    1605 </span>                :            :         //memcpy(it-&gt;curkey, key_buf, btree-&gt;ksize);
-<span class="lineNum">    1606 </span>                :<span class="lineCov">    1834841 :         btree-&gt;kv_ops-&gt;set_key(btree, it-&gt;curkey, key_buf);</span>
-<span class="lineNum">    1607 </span>                :<span class="lineCov">    1834737 :         it-&gt;idx[depth]++;</span>
-<span class="lineNum">    1608 </span>        [<span class="branchCov" title="Branch 0 was taken 3051 times"> + </span><span class="branchCov" title="Branch 1 was taken 1831686 times"> + </span>]:<span class="lineCov">    1834737 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
+<span class="lineNum">    1606 </span>                :<span class="lineCov">    1834634 :         btree-&gt;kv_ops-&gt;set_key(btree, it-&gt;curkey, key_buf);</span>
+<span class="lineNum">    1607 </span>                :<span class="lineCov">    1834577 :         it-&gt;idx[depth]++;</span>
+<span class="lineNum">    1608 </span>        [<span class="branchCov" title="Branch 0 was taken 3051 times"> + </span><span class="branchCov" title="Branch 1 was taken 1831526 times"> + </span>]:<span class="lineCov">    1834577 :         if (it-&gt;btree.kv_ops-&gt;free_kv_var) {</span>
 <span class="lineNum">    1609 </span>                :<span class="lineCov">       3051 :             it-&gt;btree.kv_ops-&gt;free_kv_var(&amp;it-&gt;btree, k, v);</span>
 <span class="lineNum">    1610 </span>                :            :         }
-<span class="lineNum">    1611 </span>                :<span class="lineCov">    5440517 :         return BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1611 </span>                :<span class="lineCov">    5440495 :         return BTREE_RESULT_SUCCESS;</span>
 <span class="lineNum">    1612 </span>                :            :     }
 <a name="1613"><span class="lineNum">    1613 </span>                :            : }</a>
 <span class="lineNum">    1614 </span>                :            : 
-<span class="lineNum">    1615 </span>                :<span class="lineCov">    1836642 : btree_result btree_next(struct btree_iterator *it, void *key_buf,</span>
+<span class="lineNum">    1615 </span>                :<span class="lineCov">    1836252 : btree_result btree_next(struct btree_iterator *it, void *key_buf,</span>
 <span class="lineNum">    1616 </span>                :            :                         void *value_buf)
 <span class="lineNum">    1617 </span>                :            : {
-<span class="lineNum">    1618 </span>                :<span class="lineCov">    1836642 :     btree_result br = _btree_next(it, key_buf, value_buf, it-&gt;btree.height-1);</span>
-<span class="lineNum">    1619 </span>        [<span class="branchCov" title="Branch 0 was taken 1834510 times"> + </span><span class="branchCov" title="Branch 1 was taken 1136 times"> + </span>]:<span class="lineCov">    1835646 :     if (br == BTREE_RESULT_SUCCESS) {</span>
-<span class="lineNum">    1620 </span>                :<span class="lineCov">    1834510 :         BTREE_ITR_SET_FWD(it);</span>
+<span class="lineNum">    1618 </span>                :<span class="lineCov">    1836252 :     btree_result br = _btree_next(it, key_buf, value_buf, it-&gt;btree.height-1);</span>
+<span class="lineNum">    1619 </span>        [<span class="branchCov" title="Branch 0 was taken 1834459 times"> + </span><span class="branchCov" title="Branch 1 was taken 1136 times"> + </span>]:<span class="lineCov">    1835595 :     if (br == BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1620 </span>                :<span class="lineCov">    1834459 :         BTREE_ITR_SET_FWD(it);</span>
 <span class="lineNum">    1621 </span>                :            :     } else {
 <span class="lineNum">    1622 </span>                :<span class="lineCov">       1136 :         BTREE_ITR_SET_NONE(it);</span>
 <span class="lineNum">    1623 </span>                :            :     }
-<span class="lineNum">    1624 </span>                :<span class="lineCov">    1835646 :     return br;</span>
+<span class="lineNum">    1624 </span>                :<span class="lineCov">    1835595 :     return br;</span>
 <span class="lineNum">    1625 </span>                :            : }
 <span class="lineNum">    1626 </span>                :            : 
 </pre>

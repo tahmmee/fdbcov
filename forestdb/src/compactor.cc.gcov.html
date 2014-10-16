@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-10-15</td>
+            <td class="headerValue">2014-10-16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -184,8 +184,8 @@
 <span class="lineNum">     113 </span>                :<span class="lineCov">         62 :     gettimeofday(&amp;tp, NULL);</span>
 <span class="lineNum">     114 </span>                :<span class="lineCov">         62 :     wakeup = ((uint64_t)(tp.tv_sec) * 1000) + (tp.tv_usec / 1000) + ms;</span>
 <span class="lineNum">     115 </span>                :            :     /* Round up for sub ms */
-<span class="lineNum">     116 </span>        [<span class="branchCov" title="Branch 0 was taken 32 times"> + </span><span class="branchCov" title="Branch 1 was taken 30 times"> + </span>]:<span class="lineCov">         62 :     if ((tp.tv_usec % 1000) &gt; 499) {</span>
-<span class="lineNum">     117 </span>                :<span class="lineCov">         32 :         ++wakeup;</span>
+<span class="lineNum">     116 </span>        [<span class="branchCov" title="Branch 0 was taken 30 times"> + </span><span class="branchCov" title="Branch 1 was taken 32 times"> + </span>]:<span class="lineCov">         62 :     if ((tp.tv_usec % 1000) &gt; 499) {</span>
+<span class="lineNum">     117 </span>                :<span class="lineCov">         30 :         ++wakeup;</span>
 <span class="lineNum">     118 </span>                :            :     }
 <span class="lineNum">     119 </span>                :            : 
 <span class="lineNum">     120 </span>                :<span class="lineCov">         62 :     ts.tv_sec = wakeup / 1000;</span>
@@ -196,9 +196,9 @@
 <span class="lineNum">     125 </span>                :            : #endif
 <a name="126"><span class="lineNum">     126 </span>                :            : </a>
 <span class="lineNum">     127 </span>                :            : #if !defined(WIN32) &amp;&amp; !defined(_WIN32)
-<span class="lineNum">     128 </span>                :<span class="lineCov">        165 : static bool does_file_exist(const char *filename) {</span>
+<span class="lineNum">     128 </span>                :<span class="lineCov">        164 : static bool does_file_exist(const char *filename) {</span>
 <span class="lineNum">     129 </span>                :            :     struct stat st;
-<span class="lineNum">     130 </span>                :<span class="lineCov">        165 :     int result = stat(filename, &amp;st);</span>
+<span class="lineNum">     130 </span>                :<span class="lineCov">        164 :     int result = stat(filename, &amp;st);</span>
 <span class="lineNum">     131 </span>                :<span class="lineCov">        165 :     return result == 0;</span>
 <span class="lineNum">     132 </span>                :            : }
 <span class="lineNum">     133 </span>                :            : #else
@@ -216,65 +216,65 @@
 <span class="lineNum">     145 </span>                :<span class="lineCov">        124 :     return strcmp(aa-&gt;file-&gt;filename, bb-&gt;file-&gt;filename);</span>
 <a name="146"><span class="lineNum">     146 </span>                :            : }</a>
 <span class="lineNum">     147 </span>                :            : 
-<span class="lineNum">     148 </span>                :<span class="lineCov">         17 : INLINE uint64_t _compactor_estimate_space(struct openfiles_elem *elem)</span>
+<span class="lineNum">     148 </span>                :<span class="lineCov">         18 : INLINE uint64_t _compactor_estimate_space(struct openfiles_elem *elem)</span>
 <span class="lineNum">     149 </span>                :            : {
 <span class="lineNum">     150 </span>                :            :     bid_t dummy_bid;
 <span class="lineNum">     151 </span>                :            :     uint64_t dummy_64;
-<span class="lineNum">     152 </span>                :<span class="lineCov">         17 :     uint64_t ret = 0;</span>
+<span class="lineNum">     152 </span>                :<span class="lineCov">         18 :     uint64_t ret = 0;</span>
 <span class="lineNum">     153 </span>                :            :     uint64_t datasize;
 <span class="lineNum">     154 </span>                :            :     uint64_t nlivenodes;
 <span class="lineNum">     155 </span>                :            :     size_t header_len;
-<span class="lineNum">     156 </span>                :<span class="lineCov">         17 :     void *header_buf = NULL;</span>
+<span class="lineNum">     156 </span>                :<span class="lineCov">         18 :     void *header_buf = NULL;</span>
 <span class="lineNum">     157 </span>                :            : 
-<span class="lineNum">     158 </span>                :<span class="lineCov">         17 :     header_buf = filemgr_fetch_header(elem-&gt;file, NULL, &amp;header_len);</span>
-<span class="lineNum">     159 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         17 :     if (header_len &gt; 0) {</span>
+<span class="lineNum">     158 </span>                :<span class="lineCov">         18 :     header_buf = filemgr_fetch_header(elem-&gt;file, NULL, &amp;header_len);</span>
+<span class="lineNum">     159 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         18 :     if (header_len &gt; 0) {</span>
 <span class="lineNum">     160 </span>                :            :         char *compacted_filename;
 <span class="lineNum">     161 </span>                :            : 
 <span class="lineNum">     162 </span>                :            :         fdb_fetch_header(header_buf, &amp;dummy_bid, &amp;dummy_bid,
 <span class="lineNum">     163 </span>                :            :                          &amp;dummy_64, &amp;nlivenodes,
 <span class="lineNum">     164 </span>                :            :                          &amp;datasize, &amp;dummy_64,
-<span class="lineNum">     165 </span>                :<span class="lineCov">         16 :                          &amp;compacted_filename, NULL);</span>
+<span class="lineNum">     165 </span>                :<span class="lineCov">         17 :                          &amp;compacted_filename, NULL);</span>
 <span class="lineNum">     166 </span>                :            : 
-<span class="lineNum">     167 </span>                :<span class="lineCov">         16 :         ret += datasize;</span>
-<span class="lineNum">     168 </span>                :<span class="lineCov">         16 :         ret += nlivenodes * elem-&gt;config.blocksize;</span>
-<span class="lineNum">     169 </span>                :<span class="lineCov">         16 :         ret += wal_get_datasize(elem-&gt;file);</span>
+<span class="lineNum">     167 </span>                :<span class="lineCov">         17 :         ret += datasize;</span>
+<span class="lineNum">     168 </span>                :<span class="lineCov">         17 :         ret += nlivenodes * elem-&gt;config.blocksize;</span>
+<span class="lineNum">     169 </span>                :<span class="lineCov">         17 :         ret += wal_get_datasize(elem-&gt;file);</span>
 <span class="lineNum">     170 </span>                :            :     }
 <span class="lineNum">     171 </span>                :            : 
-<span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         17 :     if (header_buf) {</span>
-<span class="lineNum">     173 </span>                :<span class="lineCov">         16 :         free(header_buf);</span>
+<span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         18 :     if (header_buf) {</span>
+<span class="lineNum">     173 </span>                :<span class="lineCov">         17 :         free(header_buf);</span>
 <span class="lineNum">     174 </span>                :            :     }
 <span class="lineNum">     175 </span>                :            : 
-<span class="lineNum">     176 </span>                :<span class="lineCov">         17 :     return ret;</span>
+<span class="lineNum">     176 </span>                :<span class="lineCov">         18 :     return ret;</span>
 <span class="lineNum">     177 </span>                :            : }
 <a name="178"><span class="lineNum">     178 </span>                :            : </a>
 <span class="lineNum">     179 </span>                :            : // check if the compaction threshold is satisfied
-<span class="lineNum">     180 </span>                :<span class="lineCov">         23 : INLINE int _compactor_is_threshold_satisfied(struct openfiles_elem *elem)</span>
+<span class="lineNum">     180 </span>                :<span class="lineCov">         25 : INLINE int _compactor_is_threshold_satisfied(struct openfiles_elem *elem)</span>
 <span class="lineNum">     181 </span>                :            : {
 <span class="lineNum">     182 </span>                :            :     uint64_t filesize;
 <span class="lineNum">     183 </span>                :            :     uint64_t active_data;
 <span class="lineNum">     184 </span>                :            :     int threshold;
 <span class="lineNum">     185 </span>                :            : 
-<span class="lineNum">     186 </span>        [<span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 23 times"> + </span>]:<span class="lineCov">         23 :     if (filemgr_is_rollback_on(elem-&gt;file)) {</span>
+<span class="lineNum">     186 </span>        [<span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 25 times"> + </span>]:<span class="lineCov">         25 :     if (filemgr_is_rollback_on(elem-&gt;file)) {</span>
 <span class="lineNum">     187 </span>                :            :         // do not perform compaction during rollback
 <span class="lineNum">     188 </span>                :<span class="lineNoCov">          0 :         return 0;</span>
 <span class="lineNum">     189 </span>                :            :     }
 <span class="lineNum">     190 </span>                :            : 
-<span class="lineNum">     191 </span>                :<span class="lineCov">         23 :     threshold = elem-&gt;config.compaction_threshold;</span>
-<span class="lineNum">     192 </span>[<span class="branchCov" title="Branch 0 was taken 23 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span>]:<span class="lineCov">         23 :     if (elem-&gt;config.compaction_mode == FDB_COMPACTION_AUTO &amp;&amp;</span>
-<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<span class="lineNum">     193 </span>                :<span class="lineCov">         17 :         threshold &gt; 0 &amp;&amp; !elem-&gt;compaction_flag)</span>
+<span class="lineNum">     191 </span>                :<span class="lineCov">         25 :     threshold = elem-&gt;config.compaction_threshold;</span>
+<span class="lineNum">     192 </span>[<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 18 times"> + </span><span class="branchCov" title="Branch 3 was taken 7 times"> + </span>]:<span class="lineCov">         25 :     if (elem-&gt;config.compaction_mode == FDB_COMPACTION_AUTO &amp;&amp;</span>
+<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<span class="lineNum">     193 </span>                :<span class="lineCov">         18 :         threshold &gt; 0 &amp;&amp; !elem-&gt;compaction_flag)</span>
 <span class="lineNum">     194 </span>                :            :         {
-<span class="lineNum">     195 </span>                :<span class="lineCov">         17 :         filesize = filemgr_get_pos(elem-&gt;file);</span>
-<span class="lineNum">     196 </span>                :<span class="lineCov">         17 :         active_data = _compactor_estimate_space(elem);</span>
-<span class="lineNum">     197 </span>[<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>][<span class="branchCov" title="Branch 2 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         17 :         if (active_data == 0 || active_data &gt;= filesize ||</span>
-<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 6 times"> + </span><span class="branchCov" title="Branch 5 was taken 10 times"> + </span>]
+<span class="lineNum">     195 </span>                :<span class="lineCov">         18 :         filesize = filemgr_get_pos(elem-&gt;file);</span>
+<span class="lineNum">     196 </span>                :<span class="lineCov">         18 :         active_data = _compactor_estimate_space(elem);</span>
+<span class="lineNum">     197 </span>[<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>][<span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         18 :         if (active_data == 0 || active_data &gt;= filesize ||</span>
+<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 7 times"> + </span><span class="branchCov" title="Branch 5 was taken 10 times"> + </span>]
 <span class="lineNum">     198 </span>                :            :             filesize &lt; elem-&gt;config.compaction_minimum_filesize) {
-<span class="lineNum">     199 </span>                :<span class="lineCov">          7 :             return 0;</span>
+<span class="lineNum">     199 </span>                :<span class="lineCov">          8 :             return 0;</span>
 <span class="lineNum">     200 </span>                :            :         }
 <span class="lineNum">     201 </span>                :            : 
 <span class="lineNum">     202 </span>                :<span class="lineCov">         10 :         return ((filesize / 100.0 * threshold) &lt; (filesize - active_data));</span>
 <span class="lineNum">     203 </span>                :            :     } else {
-<span class="lineNum">     204 </span>                :<span class="lineCov">         23 :         return 0;</span>
+<span class="lineNum">     204 </span>                :<span class="lineCov">         25 :         return 0;</span>
 <span class="lineNum">     205 </span>                :            :     }
 <span class="lineNum">     206 </span>                :            : }
 <a name="207"><span class="lineNum">     207 </span>                :            : </a>
@@ -394,10 +394,10 @@
 <span class="lineNum">     320 </span>                :            : 
 <span class="lineNum">     321 </span>                :<span class="lineCov">         60 :         spin_lock(&amp;cpt_lock);</span>
 <span class="lineNum">     322 </span>                :<span class="lineCov">         60 :         a = avl_first(&amp;openfiles);</span>
-<span class="lineNum">     323 </span>        [<span class="branchCov" title="Branch 0 was taken 23 times"> + </span><span class="branchCov" title="Branch 1 was taken 57 times"> + </span>]:<span class="lineCov">         80 :         while(a) {</span>
-<span class="lineNum">     324 </span>                :<span class="lineCov">         23 :             elem = _get_entry(a, struct openfiles_elem, avl);</span>
+<span class="lineNum">     323 </span>        [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchCov" title="Branch 1 was taken 57 times"> + </span>]:<span class="lineCov">         82 :         while(a) {</span>
+<span class="lineNum">     324 </span>                :<span class="lineCov">         25 :             elem = _get_entry(a, struct openfiles_elem, avl);</span>
 <span class="lineNum">     325 </span>                :            : 
-<span class="lineNum">     326 </span>        [<span class="branchCov" title="Branch 1 was taken 9 times"> + </span><span class="branchCov" title="Branch 2 was taken 14 times"> + </span>]:<span class="lineCov">         23 :             if (_compactor_is_threshold_satisfied(elem)) {</span>
+<span class="lineNum">     326 </span>        [<span class="branchCov" title="Branch 1 was taken 9 times"> + </span><span class="branchCov" title="Branch 2 was taken 16 times"> + </span>]:<span class="lineCov">         25 :             if (_compactor_is_threshold_satisfied(elem)) {</span>
 <span class="lineNum">     327 </span>                :            :                 // perform compaction
 <span class="lineNum">     328 </span>                :<span class="lineCov">          9 :                 strcpy(filename, elem-&gt;file-&gt;filename);</span>
 <span class="lineNum">     329 </span>                :<span class="lineCov">          9 :                 _compactor_get_vfilename(filename, vfilename);</span>
@@ -434,9 +434,9 @@
 <span class="lineNum">     360 </span>                :<span class="lineNoCov">          0 :                     elem-&gt;compaction_flag = false;</span>
 <span class="lineNum">     361 </span>                :            :                 }
 <span class="lineNum">     362 </span>                :            :             } else {
-<span class="lineNum">     363 </span>                :<span class="lineCov">         14 :                 a = avl_next(a);</span>
+<span class="lineNum">     363 </span>                :<span class="lineCov">         16 :                 a = avl_next(a);</span>
 <span class="lineNum">     364 </span>                :            :             }
-<span class="lineNum">     365 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 20 times"> + </span>]:<span class="lineCov">         23 :             if (compactor_terminate_signal) {</span>
+<span class="lineNum">     365 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 22 times"> + </span>]:<span class="lineCov">         25 :             if (compactor_terminate_signal) {</span>
 <span class="lineNum">     366 </span>                :<span class="lineCov">          3 :                 spin_unlock(&amp;cpt_lock);</span>
 <span class="lineNum">     367 </span>                :<span class="lineCov">          3 :                 return NULL;</span>
 <span class="lineNum">     368 </span>                :            :             }
@@ -620,22 +620,22 @@
 <span class="lineNum">     546 </span>                :<span class="lineNoCov">          0 :     spin_unlock(&amp;cpt_lock);</span>
 <a name="547"><span class="lineNum">     547 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <span class="lineNum">     548 </span>                :            : 
-<span class="lineNum">     549 </span>                :<span class="lineCov">        207 : struct compactor_meta * _compactor_read_metafile(char *metafile,</span>
+<span class="lineNum">     549 </span>                :<span class="lineCov">        204 : struct compactor_meta * _compactor_read_metafile(char *metafile,</span>
 <span class="lineNum">     550 </span>                :            :                                                  struct compactor_meta *metadata)
 <span class="lineNum">     551 </span>                :            : {
 <span class="lineNum">     552 </span>                :            :     int fd_meta, fd_db;
 <span class="lineNum">     553 </span>                :            :     ssize_t ret;
-<span class="lineNum">     554 </span>                :<span class="lineCov">        207 :     uint8_t *buf = alca(uint8_t, sizeof(struct compactor_meta));</span>
+<span class="lineNum">     554 </span>                :<span class="lineCov">        204 :     uint8_t *buf = alca(uint8_t, sizeof(struct compactor_meta));</span>
 <span class="lineNum">     555 </span>                :            :     uint32_t crc;
 <span class="lineNum">     556 </span>                :            :     struct filemgr_ops *ops;
 <span class="lineNum">     557 </span>                :            :     struct compactor_meta meta;
 <span class="lineNum">     558 </span>                :            : 
-<span class="lineNum">     559 </span>                :<span class="lineCov">        207 :     ops = get_filemgr_ops();</span>
-<span class="lineNum">     560 </span>                :<span class="lineCov">        206 :     fd_meta = ops-&gt;open(metafile, O_RDONLY, 0644);</span>
+<span class="lineNum">     559 </span>                :<span class="lineCov">        204 :     ops = get_filemgr_ops();</span>
+<span class="lineNum">     560 </span>                :<span class="lineCov">        204 :     fd_meta = ops-&gt;open(metafile, O_RDONLY, 0644);</span>
 <span class="lineNum">     561 </span>                :            : 
-<span class="lineNum">     562 </span>        [<span class="branchCov" title="Branch 0 was taken 30 times"> + </span><span class="branchCov" title="Branch 1 was taken 176 times"> + </span>]:<span class="lineCov">        206 :     if (fd_meta &gt;= 0) {</span>
+<span class="lineNum">     562 </span>        [<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchCov" title="Branch 1 was taken 176 times"> + </span>]:<span class="lineCov">        207 :     if (fd_meta &gt;= 0) {</span>
 <span class="lineNum">     563 </span>                :            :         // metafile exists .. read metadata
-<span class="lineNum">     564 </span>                :<span class="lineCov">         30 :         ret = ops-&gt;pread(fd_meta, buf, sizeof(struct compactor_meta), 0);</span>
+<span class="lineNum">     564 </span>                :<span class="lineCov">         31 :         ret = ops-&gt;pread(fd_meta, buf, sizeof(struct compactor_meta), 0);</span>
 <span class="lineNum">     565 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 31 times"> + </span>]:<span class="lineCov">         31 :         if (ret &lt; sizeof(struct compactor_meta)) {</span>
 <span class="lineNum">     566 </span>                :<span class="lineNoCov">          0 :             ops-&gt;close(fd_meta);</span>
 <span class="lineNum">     567 </span>                :<span class="lineNoCov">          0 :             return NULL;</span>
@@ -647,11 +647,11 @@
 <span class="lineNum">     573 </span>                :            : 
 <span class="lineNum">     574 </span>                :            :         // CRC check
 <span class="lineNum">     575 </span>                :<span class="lineCov">         31 :         crc = chksum(buf, sizeof(struct compactor_meta) - sizeof(crc));</span>
-<span class="lineNum">     576 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 30 times"> + </span>]:<span class="lineCov">         30 :         if (crc != meta.crc) {</span>
+<span class="lineNum">     576 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 29 times"> + </span>]:<span class="lineCov">         29 :         if (crc != meta.crc) {</span>
 <span class="lineNum">     577 </span>                :<span class="lineNoCov">          0 :             return NULL;</span>
 <span class="lineNum">     578 </span>                :            :         }
 <span class="lineNum">     579 </span>                :            :         // check if the file exists
-<span class="lineNum">     580 </span>                :<span class="lineCov">         30 :         fd_db = ops-&gt;open(meta.filename, O_RDONLY, 0644);</span>
+<span class="lineNum">     580 </span>                :<span class="lineCov">         29 :         fd_db = ops-&gt;open(meta.filename, O_RDONLY, 0644);</span>
 <span class="lineNum">     581 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 30 times"> + </span>]:<span class="lineCov">         31 :         if (fd_db &lt; 0) {</span>
 <span class="lineNum">     582 </span>                :            :             // file doesn't exist
 <span class="lineNum">     583 </span>                :<span class="lineCov">          1 :             return NULL;</span>
