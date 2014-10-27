@@ -93,46 +93,46 @@
 <span class="lineNum">      22 </span>                :            : #include &quot;btree_kv.h&quot;
 <a name="23"><span class="lineNum">      23 </span>                :            : #include &quot;memleak.h&quot;</a>
 <span class="lineNum">      24 </span>                :            : 
-<span class="lineNum">      25 </span>                :<span class="lineCov">  308412849 : INLINE void _get_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
+<span class="lineNum">      25 </span>                :<span class="lineCov">  319701463 : INLINE void _get_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
 <span class="lineNum">      26 </span>                :            : {
 <span class="lineNum">      27 </span>                :            :     int ksize, vsize;
 <span class="lineNum">      28 </span>                :            :     void *ptr;
-<span class="lineNum">      29 </span>                :<span class="lineCov">  308412849 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">      30 </span>                :<span class="lineCov">  308412849 :     ptr = (uint8_t *)node-&gt;data + (idx * (ksize+vsize));</span>
+<span class="lineNum">      29 </span>                :<span class="lineCov">  319701463 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">      30 </span>                :<span class="lineCov">  319701463 :     ptr = (uint8_t *)node-&gt;data + (idx * (ksize+vsize));</span>
 <span class="lineNum">      31 </span>                :            : 
-<span class="lineNum">      32 </span>                :<span class="lineCov">  308412849 :     memcpy(key, ptr, ksize);</span>
-<span class="lineNum">      33 </span>        [<span class="branchCov" title="Branch 0 was taken 29173975 times"> + </span><span class="branchCov" title="Branch 1 was taken 279238874 times"> + </span>]:<span class="lineCov">  308412849 :     if (value) {</span>
-<span class="lineNum">      34 </span>                :<span class="lineCov">   29173975 :         memcpy(value, (uint8_t *)ptr + ksize, vsize);</span>
+<span class="lineNum">      32 </span>                :<span class="lineCov">  319701463 :     memcpy(key, ptr, ksize);</span>
+<span class="lineNum">      33 </span>        [<span class="branchCov" title="Branch 0 was taken 30273016 times"> + </span><span class="branchCov" title="Branch 1 was taken 289428447 times"> + </span>]:<span class="lineCov">  319701463 :     if (value) {</span>
+<span class="lineNum">      34 </span>                :<span class="lineCov">   30273016 :         memcpy(value, (uint8_t *)ptr + ksize, vsize);</span>
 <span class="lineNum">      35 </span>                :            :     }
-<a name="36"><span class="lineNum">      36 </span>                :<span class="lineCov">  308412849 : }</span></a>
+<a name="36"><span class="lineNum">      36 </span>                :<span class="lineCov">  319701463 : }</span></a>
 <span class="lineNum">      37 </span>                :            : 
-<span class="lineNum">      38 </span>                :<span class="lineCov">    4269092 : INLINE void _set_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
+<span class="lineNum">      38 </span>                :<span class="lineCov">    4429075 : INLINE void _set_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
 <span class="lineNum">      39 </span>                :            : {
 <span class="lineNum">      40 </span>                :            :     int ksize, vsize;
 <span class="lineNum">      41 </span>                :            :     void *ptr;
-<span class="lineNum">      42 </span>                :<span class="lineCov">    4269092 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">      43 </span>                :<span class="lineCov">    4269092 :     ptr = (uint8_t *)node-&gt;data + (idx * (ksize+vsize));</span>
+<span class="lineNum">      42 </span>                :<span class="lineCov">    4429075 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">      43 </span>                :<span class="lineCov">    4429075 :     ptr = (uint8_t *)node-&gt;data + (idx * (ksize+vsize));</span>
 <span class="lineNum">      44 </span>                :            : 
-<span class="lineNum">      45 </span>                :<span class="lineCov">    4269092 :     memcpy(ptr, key, ksize);</span>
-<span class="lineNum">      46 </span>                :<span class="lineCov">    4269092 :     memcpy((uint8_t *)ptr + ksize, value, vsize);</span>
-<a name="47"><span class="lineNum">      47 </span>                :<span class="lineCov">    4269092 : }</span></a>
+<span class="lineNum">      45 </span>                :<span class="lineCov">    4429075 :     memcpy(ptr, key, ksize);</span>
+<span class="lineNum">      46 </span>                :<span class="lineCov">    4429075 :     memcpy((uint8_t *)ptr + ksize, value, vsize);</span>
+<a name="47"><span class="lineNum">      47 </span>                :<span class="lineCov">    4429075 : }</span></a>
 <span class="lineNum">      48 </span>                :            : 
-<span class="lineNum">      49 </span>                :<span class="lineCov">    3394089 : INLINE void _ins_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
+<span class="lineNum">      49 </span>                :<span class="lineCov">    3553631 : INLINE void _ins_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
 <span class="lineNum">      50 </span>                :            : {
 <span class="lineNum">      51 </span>                :            :     int ksize, vsize, kvsize;
 <span class="lineNum">      52 </span>                :            :     void *ptr;
-<span class="lineNum">      53 </span>                :<span class="lineCov">    3394089 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">      54 </span>                :<span class="lineCov">    3394089 :     kvsize = ksize + vsize;</span>
-<span class="lineNum">      55 </span>                :<span class="lineCov">    3394089 :     ptr = node-&gt;data;</span>
+<span class="lineNum">      53 </span>                :<span class="lineCov">    3553631 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">      54 </span>                :<span class="lineCov">    3553631 :     kvsize = ksize + vsize;</span>
+<span class="lineNum">      55 </span>                :<span class="lineCov">    3553631 :     ptr = node-&gt;data;</span>
 <span class="lineNum">      56 </span>                :            : 
-<span class="lineNum">      57 </span>[<span class="branchCov" title="Branch 0 was taken 3394088 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>][<span class="branchCov" title="Branch 2 was taken 3394088 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">    3394089 :     if (key &amp;&amp; value) {</span>
+<span class="lineNum">      57 </span>[<span class="branchCov" title="Branch 0 was taken 3553630 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>][<span class="branchCov" title="Branch 2 was taken 3553630 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">    3553631 :     if (key &amp;&amp; value) {</span>
 <span class="lineNum">      58 </span>                :            :         // insert
 <span class="lineNum">      59 </span>                :            :         memmove(
-<span class="lineNum">      60 </span>                :<span class="lineCov">    3394088 :             (uint8_t *)ptr + (idx+1)*kvsize,</span>
+<span class="lineNum">      60 </span>                :<span class="lineCov">    3553630 :             (uint8_t *)ptr + (idx+1)*kvsize,</span>
 <span class="lineNum">      61 </span>                :            :             (uint8_t *)ptr + idx*kvsize,
-<span class="lineNum">      62 </span>                :<span class="lineCov">    6788176 :             (node-&gt;nentry - idx)*kvsize);</span>
-<span class="lineNum">      63 </span>                :<span class="lineCov">    3394088 :         memcpy((uint8_t *)ptr + idx*kvsize, key, ksize);</span>
-<span class="lineNum">      64 </span>                :<span class="lineCov">    3394088 :         memcpy((uint8_t *)ptr + idx*kvsize + ksize, value, vsize);</span>
+<span class="lineNum">      62 </span>                :<span class="lineCov">    7107260 :             (node-&gt;nentry - idx)*kvsize);</span>
+<span class="lineNum">      63 </span>                :<span class="lineCov">    3553630 :         memcpy((uint8_t *)ptr + idx*kvsize, key, ksize);</span>
+<span class="lineNum">      64 </span>                :<span class="lineCov">    3553630 :         memcpy((uint8_t *)ptr + idx*kvsize + ksize, value, vsize);</span>
 <span class="lineNum">      65 </span>                :            :     }else{
 <span class="lineNum">      66 </span>                :            :         // remove
 <span class="lineNum">      67 </span>                :            :         memmove(
@@ -140,36 +140,36 @@
 <span class="lineNum">      69 </span>                :            :             (uint8_t *)ptr + (idx+1)*kvsize,
 <span class="lineNum">      70 </span>                :<span class="lineCov">          1 :             (node-&gt;nentry - (idx+1))*kvsize);</span>
 <span class="lineNum">      71 </span>                :            :     }
-<a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">    3394089 : }</span></a>
+<a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">    3553631 : }</span></a>
 <span class="lineNum">      73 </span>                :            : 
-<span class="lineNum">      74 </span>                :<span class="lineCov">      96032 : INLINE void _copy_kv(</span>
+<span class="lineNum">      74 </span>                :<span class="lineCov">     100186 : INLINE void _copy_kv(</span>
 <span class="lineNum">      75 </span>                :            :     struct bnode *node_dst, struct bnode *node_src, idx_t dst_idx, idx_t src_idx, idx_t len)
 <span class="lineNum">      76 </span>                :            : {
 <span class="lineNum">      77 </span>                :            :     int ksize, vsize, kvsize;
 <span class="lineNum">      78 </span>                :            :     void *ptr_src, *ptr_dst;
 <span class="lineNum">      79 </span>                :            : 
-<span class="lineNum">      80 </span>        [<span class="branchCov" title="Branch 0 was taken 48016 times"> + </span><span class="branchCov" title="Branch 1 was taken 48016 times"> + </span>]:<span class="lineCov">      96032 :     if (node_dst == node_src) {</span>
-<span class="lineNum">      81 </span>                :<span class="lineCov">      96032 :         return;</span>
+<span class="lineNum">      80 </span>        [<span class="branchCov" title="Branch 0 was taken 50093 times"> + </span><span class="branchCov" title="Branch 1 was taken 50093 times"> + </span>]:<span class="lineCov">     100186 :     if (node_dst == node_src) {</span>
+<span class="lineNum">      81 </span>                :<span class="lineCov">     100186 :         return;</span>
 <span class="lineNum">      82 </span>                :            :     }
 <span class="lineNum">      83 </span>                :            : 
-<span class="lineNum">      84 </span>                :<span class="lineCov">      48016 :     _get_kvsize(node_src-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">      85 </span>                :<span class="lineCov">      48016 :     kvsize = ksize + vsize;</span>
+<span class="lineNum">      84 </span>                :<span class="lineCov">      50093 :     _get_kvsize(node_src-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">      85 </span>                :<span class="lineCov">      50093 :     kvsize = ksize + vsize;</span>
 <span class="lineNum">      86 </span>                :            : 
-<span class="lineNum">      87 </span>                :<span class="lineCov">      48016 :     ptr_src = node_src-&gt;data;</span>
-<span class="lineNum">      88 </span>                :<span class="lineCov">      48016 :     ptr_dst = node_dst-&gt;data;</span>
+<span class="lineNum">      87 </span>                :<span class="lineCov">      50093 :     ptr_src = node_src-&gt;data;</span>
+<span class="lineNum">      88 </span>                :<span class="lineCov">      50093 :     ptr_dst = node_dst-&gt;data;</span>
 <span class="lineNum">      89 </span>                :            : 
 <span class="lineNum">      90 </span>                :            :     memcpy(
-<span class="lineNum">      91 </span>                :<span class="lineCov">      48016 :         (uint8_t *)ptr_dst + kvsize * dst_idx,</span>
+<span class="lineNum">      91 </span>                :<span class="lineCov">      50093 :         (uint8_t *)ptr_dst + kvsize * dst_idx,</span>
 <span class="lineNum">      92 </span>                :            :         (uint8_t *)ptr_src + kvsize * src_idx,
-<span class="lineNum">      93 </span>                :<span class="lineCov">      48016 :         kvsize * len);</span>
+<span class="lineNum">      93 </span>                :<span class="lineCov">      50093 :         kvsize * len);</span>
 <a name="94"><span class="lineNum">      94 </span>                :            : }</a>
 <span class="lineNum">      95 </span>                :            : 
-<span class="lineNum">      96 </span>                :<span class="lineCov">    7626940 : INLINE size_t _get_data_size(</span>
+<span class="lineNum">      96 </span>                :<span class="lineCov">    7947342 : INLINE size_t _get_data_size(</span>
 <span class="lineNum">      97 </span>                :            :     struct bnode *node, void *new_minkey, void *key_arr, void *value_arr, size_t len)
 <span class="lineNum">      98 </span>                :            : {
 <span class="lineNum">      99 </span>                :            :     int ksize, vsize;
-<span class="lineNum">     100 </span>                :<span class="lineCov">    7626940 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">     101 </span>[<span class="branchCov" title="Branch 0 was taken 7626364 times"> + </span><span class="branchCov" title="Branch 1 was taken 576 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 7626366 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">    7626940 :     return node-&gt;nentry * (ksize + vsize) + ((key_arr &amp;&amp; value_arr)?((ksize + vsize)*len):0);</span>
+<span class="lineNum">     100 </span>                :<span class="lineCov">    7947342 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">     101 </span>[<span class="branchCov" title="Branch 0 was taken 7946748 times"> + </span><span class="branchCov" title="Branch 1 was taken 594 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 7946750 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">    7947342 :     return node-&gt;nentry * (ksize + vsize) + ((key_arr &amp;&amp; value_arr)?((ksize + vsize)*len):0);</span>
 <a name="102"><span class="lineNum">     102 </span>                :            : }</a>
 <span class="lineNum">     103 </span>                :            : 
 <span class="lineNum">     104 </span>                :<span class="lineNoCov">          0 : INLINE size_t _get_kv_size(struct btree *tree, void *key, void *value)</span>
@@ -177,45 +177,45 @@
 <span class="lineNum">     106 </span>[<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     return ((uint8_t *)key) ? tree-&gt;ksize : 0 + ((uint8_t *)value) ? tree-&gt;vsize : 0;</span>
 <a name="107"><span class="lineNum">     107 </span>                :            : }</a>
 <span class="lineNum">     108 </span>                :            : 
-<span class="lineNum">     109 </span>                :<span class="lineCov">   75898456 : INLINE void _init_kv_var(struct btree *tree, void *key, void *value)</span>
+<span class="lineNum">     109 </span>                :<span class="lineCov">   79113079 : INLINE void _init_kv_var(struct btree *tree, void *key, void *value)</span>
 <span class="lineNum">     110 </span>                :            : {
-<span class="lineNum">     111 </span>        [<span class="branchCov" title="Branch 0 was taken 75899127 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   75898456 :     if (key) memset(key, 0, tree-&gt;ksize);</span>
-<span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 25559406 times"> + </span><span class="branchCov" title="Branch 1 was taken 50339050 times"> + </span>]:<span class="lineCov">   75898456 :     if (value) memset(value, 0, tree-&gt;vsize);</span>
-<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">   75898456 : }</span></a>
+<span class="lineNum">     111 </span>        [<span class="branchCov" title="Branch 0 was taken 79120377 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   79113079 :     if (key) memset(key, 0, tree-&gt;ksize);</span>
+<span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 26895554 times"> + </span><span class="branchCov" title="Branch 1 was taken 52217525 times"> + </span>]:<span class="lineCov">   79113079 :     if (value) memset(value, 0, tree-&gt;vsize);</span>
+<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">   79113079 : }</span></a>
 <span class="lineNum">     114 </span>                :            : 
-<span class="lineNum">     115 </span>                :<span class="lineCov">    9142059 : INLINE void _set_key(struct btree *tree, void *dst, void *src)</span>
+<span class="lineNum">     115 </span>                :<span class="lineCov">    9635393 : INLINE void _set_key(struct btree *tree, void *dst, void *src)</span>
 <span class="lineNum">     116 </span>                :            : {
-<span class="lineNum">     117 </span>                :<span class="lineCov">    9142059 :     memcpy(dst, src, tree-&gt;ksize);</span>
-<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">    9142059 : }</span></a>
+<span class="lineNum">     117 </span>                :<span class="lineCov">    9635393 :     memcpy(dst, src, tree-&gt;ksize);</span>
+<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">    9635393 : }</span></a>
 <span class="lineNum">     119 </span>                :            : 
-<span class="lineNum">     120 </span>                :<span class="lineCov">   10109502 : INLINE void _set_value(struct btree *tree, void *dst, void *src)</span>
+<span class="lineNum">     120 </span>                :<span class="lineCov">   10398940 : INLINE void _set_value(struct btree *tree, void *dst, void *src)</span>
 <span class="lineNum">     121 </span>                :            : {
-<span class="lineNum">     122 </span>                :<span class="lineCov">   10109502 :     memcpy(dst, src, tree-&gt;vsize);</span>
-<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">   10109502 : }</span></a>
+<span class="lineNum">     122 </span>                :<span class="lineCov">   10398940 :     memcpy(dst, src, tree-&gt;vsize);</span>
+<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">   10398940 : }</span></a>
 <span class="lineNum">     124 </span>                :            : 
-<span class="lineNum">     125 </span>                :<span class="lineCov">     144048 : INLINE void _get_nth_idx(struct bnode *node, idx_t num, idx_t den, idx_t *idx)</span>
+<span class="lineNum">     125 </span>                :<span class="lineCov">     150279 : INLINE void _get_nth_idx(struct bnode *node, idx_t num, idx_t den, idx_t *idx)</span>
 <span class="lineNum">     126 </span>                :            : {
-<span class="lineNum">     127 </span>                :<span class="lineCov">     144048 :     size_t rem = node-&gt;nentry - (int)(node-&gt;nentry / den) * den;</span>
-<span class="lineNum">     128 </span>                :<span class="lineCov">     144048 :     *idx = (node-&gt;nentry / den) * num + ((num &lt; rem)?(num):(rem));</span>
-<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">     144048 : }</span></a>
+<span class="lineNum">     127 </span>                :<span class="lineCov">     150279 :     size_t rem = node-&gt;nentry - (int)(node-&gt;nentry / den) * den;</span>
+<span class="lineNum">     128 </span>                :<span class="lineCov">     150279 :     *idx = (node-&gt;nentry / den) * num + ((num &lt; rem)?(num):(rem));</span>
+<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">     150279 : }</span></a>
 <span class="lineNum">     130 </span>                :            : 
-<span class="lineNum">     131 </span>                :<span class="lineCov">      48016 : INLINE void _get_nth_splitter(struct bnode *prev_node, struct bnode *node, void *key)</span>
+<span class="lineNum">     131 </span>                :<span class="lineCov">      50093 : INLINE void _get_nth_splitter(struct bnode *prev_node, struct bnode *node, void *key)</span>
 <span class="lineNum">     132 </span>                :            : {
 <span class="lineNum">     133 </span>                :            :     int ksize, vsize;
 <span class="lineNum">     134 </span>                :            : 
-<span class="lineNum">     135 </span>                :<span class="lineCov">      48016 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">     135 </span>                :<span class="lineCov">      50093 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
 <span class="lineNum">     136 </span>                :            :     // always return the first key of the NODE
-<span class="lineNum">     137 </span>                :<span class="lineCov">      48016 :     memcpy(key, node-&gt;data, ksize);</span>
-<a name="138"><span class="lineNum">     138 </span>                :<span class="lineCov">      48016 : }</span></a>
+<span class="lineNum">     137 </span>                :<span class="lineCov">      50093 :     memcpy(key, node-&gt;data, ksize);</span>
+<a name="138"><span class="lineNum">     138 </span>                :<span class="lineCov">      50093 : }</span></a>
 <span class="lineNum">     139 </span>                :            : 
-<span class="lineNum">     140 </span>                :<span class="lineCov">   25455794 : INLINE bid_t _value_to_bid_64(void *value)</span>
+<span class="lineNum">     140 </span>                :<span class="lineCov">   26385166 : INLINE bid_t _value_to_bid_64(void *value)</span>
 <span class="lineNum">     141 </span>                :            : {
-<span class="lineNum">     142 </span>                :<span class="lineCov">   25455794 :     return *((bid_t *)value);</span>
+<span class="lineNum">     142 </span>                :<span class="lineCov">   26385166 :     return *((bid_t *)value);</span>
 <a name="143"><span class="lineNum">     143 </span>                :            : }</a>
 <span class="lineNum">     144 </span>                :            : 
-<span class="lineNum">     145 </span>                :<span class="lineCov">      37251 : INLINE void* _bid_to_value_64(bid_t *bid)</span>
+<span class="lineNum">     145 </span>                :<span class="lineCov">      36420 : INLINE void* _bid_to_value_64(bid_t *bid)</span>
 <span class="lineNum">     146 </span>                :            : {
-<span class="lineNum">     147 </span>                :<span class="lineCov">      37251 :     return (void *)bid;</span>
+<span class="lineNum">     147 </span>                :<span class="lineCov">      36420 :     return (void *)bid;</span>
 <a name="148"><span class="lineNum">     148 </span>                :            : }</a>
 <span class="lineNum">     149 </span>                :            : 
 <span class="lineNum">     150 </span>                :<span class="lineNoCov">          0 : INLINE int _cmp_uint32_t(void *key1, void *key2, void *aux)</span>
@@ -272,14 +272,14 @@
 <span class="lineNum">     201 </span>                :            : #endif
 <a name="202"><span class="lineNum">     202 </span>                :            : }</a>
 <span class="lineNum">     203 </span>                :            : 
-<span class="lineNum">     204 </span>                :<span class="lineCov">  233325381 : INLINE int _cmp_binary64(void *key1, void *key2, void *aux)</span>
+<span class="lineNum">     204 </span>                :<span class="lineCov">  242293709 : INLINE int _cmp_binary64(void *key1, void *key2, void *aux)</span>
 <span class="lineNum">     205 </span>                :            : {
 <span class="lineNum">     206 </span>                :            :     (void) aux;
 <span class="lineNum">     207 </span>                :            : #ifdef __BIT_CMP
 <span class="lineNum">     208 </span>                :            :     uint64_t a,b;
-<span class="lineNum">     209 </span>                :<span class="lineCov">  233325381 :     a = _endian_encode(deref64(key1));</span>
-<span class="lineNum">     210 </span>                :<span class="lineCov">  233180485 :     b = _endian_encode(deref64(key2));</span>
-<span class="lineNum">     211 </span>                :<span class="lineCov">  233311612 :     return _CMP_U64(a, b);</span>
+<span class="lineNum">     209 </span>                :<span class="lineCov">  242293709 :     a = _endian_encode(deref64(key1));</span>
+<span class="lineNum">     210 </span>                :<span class="lineCov">  242252546 :     b = _endian_encode(deref64(key2));</span>
+<span class="lineNum">     211 </span>                :<span class="lineCov">  242371709 :     return _CMP_U64(a, b);</span>
 <span class="lineNum">     212 </span>                :            : #else
 <span class="lineNum">     213 </span>                :            :     return memcmp(key1, key2, 8);
 <span class="lineNum">     214 </span>                :            : #endif
