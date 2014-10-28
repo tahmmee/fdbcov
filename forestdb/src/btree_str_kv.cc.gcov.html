@@ -31,27 +31,27 @@
             <td class="headerValue">coverage.info.cleaned</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">74</td>
+            <td class="headerCovTableEntry">96</td>
             <td class="headerCovTableEntry">231</td>
-            <td class="headerCovTableEntryLo">32.0 %</td>
+            <td class="headerCovTableEntryLo">41.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-10-27</td>
+            <td class="headerValue">2014-10-28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">7</td>
             <td class="headerCovTableEntry">19</td>
-            <td class="headerCovTableEntryLo">31.6 %</td>
+            <td class="headerCovTableEntryLo">36.8 %</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">28</td>
             <td class="headerCovTableEntry">90</td>
-            <td class="headerCovTableEntryLo">24.4 %</td>
+            <td class="headerCovTableEntryLo">31.1 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -103,49 +103,49 @@
 <span class="lineNum">      32 </span>                :            : [keylen][key ...][value][keylen][key ...][value]
 <a name="33"><span class="lineNum">      33 </span>                :            : */</a>
 <span class="lineNum">      34 </span>                :            : 
-<span class="lineNum">      35 </span>                :<span class="lineNoCov">          0 : static void _get_str_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
+<span class="lineNum">      35 </span>                :<span class="lineCov">          9 : static void _get_str_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
 <span class="lineNum">      36 </span>                :            : {
 <span class="lineNum">      37 </span>                :            :     int ksize, vsize, i;
 <span class="lineNum">      38 </span>                :            :     void *key_ptr, *ptr;
 <span class="lineNum">      39 </span>                :            :     key_len_t keylen, _keylen;
 <span class="lineNum">      40 </span>                :            :     size_t offset;
 <span class="lineNum">      41 </span>                :            : 
-<span class="lineNum">      42 </span>                :<span class="lineNoCov">          0 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">      43 </span>                :<span class="lineNoCov">          0 :     ksize = sizeof(void *);</span>
+<span class="lineNum">      42 </span>                :<span class="lineCov">          9 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">      43 </span>                :<span class="lineCov">          9 :     ksize = sizeof(void *);</span>
 <span class="lineNum">      44 </span>                :            : 
-<span class="lineNum">      45 </span>                :<span class="lineNoCov">          0 :     ptr = node-&gt;data;</span>
-<span class="lineNum">      46 </span>                :<span class="lineNoCov">          0 :     offset = 0;</span>
+<span class="lineNum">      45 </span>                :<span class="lineCov">          9 :     ptr = node-&gt;data;</span>
+<span class="lineNum">      46 </span>                :<span class="lineCov">          9 :     offset = 0;</span>
 <span class="lineNum">      47 </span>                :            :     // linear search
-<span class="lineNum">      48 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     for (i=0;i&lt;idx;++i){</span>
-<span class="lineNum">      49 </span>                :<span class="lineNoCov">          0 :         memcpy(&amp;_keylen, (uint8_t*)ptr+offset, sizeof(key_len_t));</span>
-<span class="lineNum">      50 </span>                :<span class="lineNoCov">          0 :         keylen = _endian_decode(_keylen);</span>
-<span class="lineNum">      51 </span>                :<span class="lineNoCov">          0 :         offset += sizeof(key_len_t)+keylen + vsize;</span>
+<span class="lineNum">      48 </span>        [<span class="branchCov" title="Branch 0 was taken 15 times"> + </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span>]:<span class="lineCov">         24 :     for (i=0;i&lt;idx;++i){</span>
+<span class="lineNum">      49 </span>                :<span class="lineCov">         15 :         memcpy(&amp;_keylen, (uint8_t*)ptr+offset, sizeof(key_len_t));</span>
+<span class="lineNum">      50 </span>                :<span class="lineCov">         15 :         keylen = _endian_decode(_keylen);</span>
+<span class="lineNum">      51 </span>                :<span class="lineCov">         15 :         offset += sizeof(key_len_t)+keylen + vsize;</span>
 <span class="lineNum">      52 </span>                :            :     }
 <span class="lineNum">      53 </span>                :            : 
 <span class="lineNum">      54 </span>                :            :     // if KEY already points to previous key, then free it
-<span class="lineNum">      55 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key_ptr, key, ksize);</span>
-<span class="lineNum">      56 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (key_ptr) {</span>
-<span class="lineNum">      57 </span>                :<span class="lineNoCov">          0 :         free(key_ptr);</span>
+<span class="lineNum">      55 </span>                :<span class="lineCov">          9 :     memcpy(&amp;key_ptr, key, ksize);</span>
+<span class="lineNum">      56 </span>        [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          9 :     if (key_ptr) {</span>
+<span class="lineNum">      57 </span>                :<span class="lineCov">          7 :         free(key_ptr);</span>
 <span class="lineNum">      58 </span>                :            :     }
 <span class="lineNum">      59 </span>                :            : 
 <span class="lineNum">      60 </span>                :            :     // allocate space for key
-<span class="lineNum">      61 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_keylen, (uint8_t*)ptr+offset, sizeof(key_len_t));</span>
-<span class="lineNum">      62 </span>                :<span class="lineNoCov">          0 :     keylen = _endian_decode(_keylen);</span>
-<span class="lineNum">      63 </span>                :<span class="lineNoCov">          0 :     key_ptr = (void*)malloc(sizeof(key_len_t) + keylen);</span>
+<span class="lineNum">      61 </span>                :<span class="lineCov">          9 :     memcpy(&amp;_keylen, (uint8_t*)ptr+offset, sizeof(key_len_t));</span>
+<span class="lineNum">      62 </span>                :<span class="lineCov">          9 :     keylen = _endian_decode(_keylen);</span>
+<span class="lineNum">      63 </span>                :<span class="lineCov">          9 :     key_ptr = (void*)malloc(sizeof(key_len_t) + keylen);</span>
 <span class="lineNum">      64 </span>                :            : 
 <span class="lineNum">      65 </span>                :            :     // copy key
-<span class="lineNum">      66 </span>                :<span class="lineNoCov">          0 :     memcpy(key_ptr, &amp;_keylen, sizeof(key_len_t));</span>
-<span class="lineNum">      67 </span>                :<span class="lineNoCov">          0 :     memcpy((uint8_t*)key_ptr + sizeof(key_len_t),</span>
-<span class="lineNum">      68 </span>                :<span class="lineNoCov">          0 :            (uint8_t*)ptr+offset+sizeof(key_len_t), keylen);</span>
+<span class="lineNum">      66 </span>                :<span class="lineCov">          9 :     memcpy(key_ptr, &amp;_keylen, sizeof(key_len_t));</span>
+<span class="lineNum">      67 </span>                :<span class="lineCov">          9 :     memcpy((uint8_t*)key_ptr + sizeof(key_len_t),</span>
+<span class="lineNum">      68 </span>                :<span class="lineCov">         18 :            (uint8_t*)ptr+offset+sizeof(key_len_t), keylen);</span>
 <span class="lineNum">      69 </span>                :            :     // copy key pointer
-<span class="lineNum">      70 </span>                :<span class="lineNoCov">          0 :     memcpy(key, &amp;key_ptr, ksize);</span>
+<span class="lineNum">      70 </span>                :<span class="lineCov">          9 :     memcpy(key, &amp;key_ptr, ksize);</span>
 <span class="lineNum">      71 </span>                :            :     // copy value
-<span class="lineNum">      72 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (value) {</span>
-<span class="lineNum">      73 </span>                :<span class="lineNoCov">          0 :         memcpy(value, (uint8_t*)ptr + offset + sizeof(key_len_t) + keylen, vsize);</span>
+<span class="lineNum">      72 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          9 :     if (value) {</span>
+<span class="lineNum">      73 </span>                :<span class="lineCov">          8 :         memcpy(value, (uint8_t*)ptr + offset + sizeof(key_len_t) + keylen, vsize);</span>
 <span class="lineNum">      74 </span>                :            :     }
-<a name="75"><span class="lineNum">      75 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="75"><span class="lineNum">      75 </span>                :<span class="lineCov">          9 : }</span></a>
 <span class="lineNum">      76 </span>                :            : 
-<span class="lineNum">      77 </span>                :<span class="lineCov">         22 : static void _set_str_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
+<span class="lineNum">      77 </span>                :<span class="lineCov">         29 : static void _set_str_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
 <span class="lineNum">      78 </span>                :            : {
 <span class="lineNum">      79 </span>                :            :     int ksize, vsize, i;
 <span class="lineNum">      80 </span>                :            :     void *key_ptr, *ptr;
@@ -153,47 +153,47 @@
 <span class="lineNum">      82 </span>                :            :     key_len_t _keylen, _keylen_ins;
 <span class="lineNum">      83 </span>                :            :     size_t offset, offset_idx, offset_next, next_len;
 <span class="lineNum">      84 </span>                :            : 
-<span class="lineNum">      85 </span>                :<span class="lineCov">         22 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
-<span class="lineNum">      86 </span>                :<span class="lineCov">         22 :     ksize = sizeof(void *);</span>
+<span class="lineNum">      85 </span>                :<span class="lineCov">         29 :     _get_kvsize(node-&gt;kvsize, ksize, vsize);</span>
+<span class="lineNum">      86 </span>                :<span class="lineCov">         29 :     ksize = sizeof(void *);</span>
 <span class="lineNum">      87 </span>                :            : 
-<span class="lineNum">      88 </span>                :<span class="lineCov">         22 :     ptr = node-&gt;data;</span>
-<span class="lineNum">      89 </span>                :<span class="lineCov">         22 :     offset = keylen = 0;</span>
+<span class="lineNum">      88 </span>                :<span class="lineCov">         29 :     ptr = node-&gt;data;</span>
+<span class="lineNum">      89 </span>                :<span class="lineCov">         29 :     offset = keylen = 0;</span>
 <span class="lineNum">      90 </span>                :            :     // linear search
-<span class="lineNum">      91 </span>        [<span class="branchCov" title="Branch 0 was taken 53 times"> + </span><span class="branchCov" title="Branch 1 was taken 22 times"> + </span>]:<span class="lineCov">         75 :     for (i=0;i&lt;idx;++i){</span>
-<span class="lineNum">      92 </span>                :<span class="lineCov">         53 :         memcpy(&amp;_keylen, (uint8_t*)ptr+offset, sizeof(key_len_t));</span>
-<span class="lineNum">      93 </span>                :<span class="lineCov">         53 :         keylen = _endian_decode(_keylen);</span>
-<span class="lineNum">      94 </span>                :<span class="lineCov">         53 :         offset += sizeof(key_len_t)+keylen + vsize;</span>
+<span class="lineNum">      91 </span>        [<span class="branchCov" title="Branch 0 was taken 68 times"> + </span><span class="branchCov" title="Branch 1 was taken 29 times"> + </span>]:<span class="lineCov">         97 :     for (i=0;i&lt;idx;++i){</span>
+<span class="lineNum">      92 </span>                :<span class="lineCov">         68 :         memcpy(&amp;_keylen, (uint8_t*)ptr+offset, sizeof(key_len_t));</span>
+<span class="lineNum">      93 </span>                :<span class="lineCov">         68 :         keylen = _endian_decode(_keylen);</span>
+<span class="lineNum">      94 </span>                :<span class="lineCov">         68 :         offset += sizeof(key_len_t)+keylen + vsize;</span>
 <span class="lineNum">      95 </span>                :            :     }
-<span class="lineNum">      96 </span>                :<span class="lineCov">         22 :     offset_idx = offset;</span>
+<span class="lineNum">      96 </span>                :<span class="lineCov">         29 :     offset_idx = offset;</span>
 <span class="lineNum">      97 </span>                :            : 
 <span class="lineNum">      98 </span>                :            :     // copy key info from KEY
-<span class="lineNum">      99 </span>                :<span class="lineCov">         22 :     memcpy(&amp;key_ptr, key, ksize);</span>
-<span class="lineNum">     100 </span>                :<span class="lineCov">         22 :     memcpy(&amp;_keylen_ins, key_ptr, sizeof(key_len_t));</span>
-<span class="lineNum">     101 </span>                :<span class="lineCov">         22 :     keylen_ins = _endian_decode(_keylen_ins);</span>
+<span class="lineNum">      99 </span>                :<span class="lineCov">         29 :     memcpy(&amp;key_ptr, key, ksize);</span>
+<span class="lineNum">     100 </span>                :<span class="lineCov">         29 :     memcpy(&amp;_keylen_ins, key_ptr, sizeof(key_len_t));</span>
+<span class="lineNum">     101 </span>                :<span class="lineCov">         29 :     keylen_ins = _endian_decode(_keylen_ins);</span>
 <span class="lineNum">     102 </span>                :            : 
-<span class="lineNum">     103 </span>[<span class="branchCov" title="Branch 0 was taken 22 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchCov" title="Branch 3 was taken 5 times"> + </span>]:<span class="lineCov">         22 :     if (keylen_ins != keylen &amp;&amp; idx+2 &lt;= node-&gt;nentry) {</span>
+<span class="lineNum">     103 </span>[<span class="branchCov" title="Branch 0 was taken 29 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 22 times"> + </span><span class="branchCov" title="Branch 3 was taken 7 times"> + </span>]:<span class="lineCov">         29 :     if (keylen_ins != keylen &amp;&amp; idx+2 &lt;= node-&gt;nentry) {</span>
 <span class="lineNum">     104 </span>                :            :         // we have to move idx+1 ~ nentry KVs to appropriate position
-<span class="lineNum">     105 </span>                :<span class="lineCov">         17 :         next_len = 0;</span>
-<span class="lineNum">     106 </span>        [<span class="branchCov" title="Branch 0 was taken 69 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         86 :         for (i=idx;i&lt;node-&gt;nentry;++i){</span>
-<span class="lineNum">     107 </span>                :<span class="lineCov">         69 :             memcpy(&amp;_keylen, (uint8_t*)ptr + offset, sizeof(key_len_t));</span>
-<span class="lineNum">     108 </span>                :<span class="lineCov">         69 :             keylen = _endian_decode(_keylen);</span>
+<span class="lineNum">     105 </span>                :<span class="lineCov">         22 :         next_len = 0;</span>
+<span class="lineNum">     106 </span>        [<span class="branchCov" title="Branch 0 was taken 89 times"> + </span><span class="branchCov" title="Branch 1 was taken 22 times"> + </span>]:<span class="lineCov">        111 :         for (i=idx;i&lt;node-&gt;nentry;++i){</span>
+<span class="lineNum">     107 </span>                :<span class="lineCov">         89 :             memcpy(&amp;_keylen, (uint8_t*)ptr + offset, sizeof(key_len_t));</span>
+<span class="lineNum">     108 </span>                :<span class="lineCov">         89 :             keylen = _endian_decode(_keylen);</span>
 <span class="lineNum">     109 </span>                :            : 
-<span class="lineNum">     110 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 52 times"> + </span>]:<span class="lineCov">         69 :             if (i==idx) keylen_idx = keylen;</span>
-<span class="lineNum">     111 </span>        [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         69 :             if (i&gt;idx) next_len += sizeof(key_len_t) + keylen + vsize;</span>
-<span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 52 times"> + </span>]:<span class="lineCov">         69 :             if (i == idx+1) offset_next = offset;</span>
+<span class="lineNum">     110 </span>        [<span class="branchCov" title="Branch 0 was taken 22 times"> + </span><span class="branchCov" title="Branch 1 was taken 67 times"> + </span>]:<span class="lineCov">         89 :             if (i==idx) keylen_idx = keylen;</span>
+<span class="lineNum">     111 </span>        [<span class="branchCov" title="Branch 0 was taken 67 times"> + </span><span class="branchCov" title="Branch 1 was taken 22 times"> + </span>]:<span class="lineCov">         89 :             if (i&gt;idx) next_len += sizeof(key_len_t) + keylen + vsize;</span>
+<span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 22 times"> + </span><span class="branchCov" title="Branch 1 was taken 67 times"> + </span>]:<span class="lineCov">         89 :             if (i == idx+1) offset_next = offset;</span>
 <span class="lineNum">     113 </span>                :            : 
-<span class="lineNum">     114 </span>                :<span class="lineCov">         69 :             offset += sizeof(key_len_t) + keylen + vsize;</span>
+<span class="lineNum">     114 </span>                :<span class="lineCov">         89 :             offset += sizeof(key_len_t) + keylen + vsize;</span>
 <span class="lineNum">     115 </span>                :            :         }
 <span class="lineNum">     116 </span>                :            :         // move
-<span class="lineNum">     117 </span>                :<span class="lineCov">         17 :         memmove((uint8_t*)ptr + offset_next + (keylen_ins - keylen_idx),</span>
-<span class="lineNum">     118 </span>                :<span class="lineCov">         17 :             (uint8_t*)ptr + offset_next, next_len);</span>
+<span class="lineNum">     117 </span>                :<span class="lineCov">         22 :         memmove((uint8_t*)ptr + offset_next + (keylen_ins - keylen_idx),</span>
+<span class="lineNum">     118 </span>                :<span class="lineCov">         22 :             (uint8_t*)ptr + offset_next, next_len);</span>
 <span class="lineNum">     119 </span>                :            :     }
 <span class="lineNum">     120 </span>                :            : 
 <span class="lineNum">     121 </span>                :            :     // copy key into the node
-<span class="lineNum">     122 </span>                :<span class="lineCov">         22 :     memcpy((uint8_t*)ptr + offset_idx, key_ptr, sizeof(key_len_t) + keylen_ins);</span>
+<span class="lineNum">     122 </span>                :<span class="lineCov">         29 :     memcpy((uint8_t*)ptr + offset_idx, key_ptr, sizeof(key_len_t) + keylen_ins);</span>
 <span class="lineNum">     123 </span>                :            :     // copy value
-<span class="lineNum">     124 </span>                :<span class="lineCov">         22 :     memcpy((uint8_t*)ptr + offset_idx + sizeof(key_len_t) + keylen_ins, value, vsize);</span>
-<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">         22 : }</span></a>
+<span class="lineNum">     124 </span>                :<span class="lineCov">         29 :     memcpy((uint8_t*)ptr + offset_idx + sizeof(key_len_t) + keylen_ins, value, vsize);</span>
+<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">         29 : }</span></a>
 <span class="lineNum">     126 </span>                :            : 
 <span class="lineNum">     127 </span>                :<span class="lineNoCov">          0 : static void _ins_str_kv(struct bnode *node, idx_t idx, void *key, void *value)</span>
 <span class="lineNum">     128 </span>                :            : {
@@ -504,35 +504,35 @@
 <span class="lineNum">     432 </span>                :            :     }
 <a name="433"><span class="lineNum">     433 </span>                :            : }</a>
 <span class="lineNum">     434 </span>                :            : 
-<span class="lineNum">     435 </span>                :<span class="lineCov">          6 : struct btree_kv_ops * btree_str_kv_get_kb64_vb64(struct btree_kv_ops *kv_ops)</span>
+<span class="lineNum">     435 </span>                :<span class="lineCov">          8 : struct btree_kv_ops * btree_str_kv_get_kb64_vb64(struct btree_kv_ops *kv_ops)</span>
 <span class="lineNum">     436 </span>                :            : {
 <span class="lineNum">     437 </span>                :            :     struct btree_kv_ops *btree_kv_ops;
-<span class="lineNum">     438 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          6 :     if (kv_ops) {</span>
-<span class="lineNum">     439 </span>                :<span class="lineCov">          4 :         btree_kv_ops = kv_ops;</span>
+<span class="lineNum">     438 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          8 :     if (kv_ops) {</span>
+<span class="lineNum">     439 </span>                :<span class="lineCov">          5 :         btree_kv_ops = kv_ops;</span>
 <span class="lineNum">     440 </span>                :            :     }else{
-<span class="lineNum">     441 </span>                :<span class="lineCov">          2 :         btree_kv_ops = (struct btree_kv_ops *)malloc(sizeof(struct btree_kv_ops));</span>
+<span class="lineNum">     441 </span>                :<span class="lineCov">          3 :         btree_kv_ops = (struct btree_kv_ops *)malloc(sizeof(struct btree_kv_ops));</span>
 <span class="lineNum">     442 </span>                :            :     }
 <span class="lineNum">     443 </span>                :            : 
-<span class="lineNum">     444 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;get_kv = _get_str_kv;</span>
-<span class="lineNum">     445 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;set_kv = _set_str_kv;</span>
-<span class="lineNum">     446 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;ins_kv = _ins_str_kv;</span>
-<span class="lineNum">     447 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;copy_kv = _copy_str_kv;</span>
-<span class="lineNum">     448 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;set_key = _set_str_key;</span>
-<span class="lineNum">     449 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;set_value = _set_str_value;</span>
-<span class="lineNum">     450 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;get_data_size = _get_str_data_size;</span>
-<span class="lineNum">     451 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;get_kv_size = _get_str_kv_size;</span>
-<span class="lineNum">     452 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;init_kv_var = _init_str_kv_var;</span>
-<span class="lineNum">     453 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;free_kv_var = _free_str_kv_var;</span>
+<span class="lineNum">     444 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;get_kv = _get_str_kv;</span>
+<span class="lineNum">     445 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;set_kv = _set_str_kv;</span>
+<span class="lineNum">     446 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;ins_kv = _ins_str_kv;</span>
+<span class="lineNum">     447 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;copy_kv = _copy_str_kv;</span>
+<span class="lineNum">     448 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;set_key = _set_str_key;</span>
+<span class="lineNum">     449 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;set_value = _set_str_value;</span>
+<span class="lineNum">     450 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;get_data_size = _get_str_data_size;</span>
+<span class="lineNum">     451 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;get_kv_size = _get_str_kv_size;</span>
+<span class="lineNum">     452 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;init_kv_var = _init_str_kv_var;</span>
+<span class="lineNum">     453 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;free_kv_var = _free_str_kv_var;</span>
 <span class="lineNum">     454 </span>                :            : 
-<span class="lineNum">     455 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;get_nth_idx = _get_str_nth_idx;</span>
-<span class="lineNum">     456 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;get_nth_splitter = _get_str_nth_splitter;</span>
+<span class="lineNum">     455 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;get_nth_idx = _get_str_nth_idx;</span>
+<span class="lineNum">     456 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;get_nth_splitter = _get_str_nth_splitter;</span>
 <span class="lineNum">     457 </span>                :            : 
-<span class="lineNum">     458 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;cmp = _cmp_str64;</span>
+<span class="lineNum">     458 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;cmp = _cmp_str64;</span>
 <span class="lineNum">     459 </span>                :            : 
-<span class="lineNum">     460 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;bid2value = _str_bid_to_value_64;</span>
-<span class="lineNum">     461 </span>                :<span class="lineCov">          6 :     btree_kv_ops-&gt;value2bid = _str_value_to_bid_64;</span>
+<span class="lineNum">     460 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;bid2value = _str_bid_to_value_64;</span>
+<span class="lineNum">     461 </span>                :<span class="lineCov">          8 :     btree_kv_ops-&gt;value2bid = _str_value_to_bid_64;</span>
 <span class="lineNum">     462 </span>                :            : 
-<span class="lineNum">     463 </span>                :<span class="lineCov">          6 :     return btree_kv_ops;</span>
+<span class="lineNum">     463 </span>                :<span class="lineCov">          8 :     return btree_kv_ops;</span>
 <span class="lineNum">     464 </span>                :            : }
 </pre>
       </td>
