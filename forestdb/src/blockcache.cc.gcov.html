@@ -225,14 +225,14 @@
 <span class="lineNum">     154 </span>                :<span class="lineNoCov">          0 : }</span>
 <a name="155"><span class="lineNum">     155 </span>                :            : #endif</a>
 <span class="lineNum">     156 </span>                :            : 
-<span class="lineNum">     157 </span>                :<span class="lineCov">    3148484 : INLINE int _dirty_cmp(struct avl_node *a, struct avl_node *b, void *aux)</span>
+<span class="lineNum">     157 </span>                :<span class="lineCov">    3066114 : INLINE int _dirty_cmp(struct avl_node *a, struct avl_node *b, void *aux)</span>
 <span class="lineNum">     158 </span>                :            : {
 <span class="lineNum">     159 </span>                :            :     struct dirty_item *aa, *bb;
-<span class="lineNum">     160 </span>                :<span class="lineCov">    3148484 :     aa = _get_entry(a, struct dirty_item, avl);</span>
-<span class="lineNum">     161 </span>                :<span class="lineCov">    3148484 :     bb = _get_entry(b, struct dirty_item, avl);</span>
+<span class="lineNum">     160 </span>                :<span class="lineCov">    3066114 :     aa = _get_entry(a, struct dirty_item, avl);</span>
+<span class="lineNum">     161 </span>                :<span class="lineCov">    3066114 :     bb = _get_entry(b, struct dirty_item, avl);</span>
 <span class="lineNum">     162 </span>                :            : 
 <span class="lineNum">     163 </span>                :            :     #ifdef __BIT_CMP
-<span class="lineNum">     164 </span>                :<span class="lineCov">    3148484 :         return _CMP_U64(aa-&gt;item-&gt;bid , bb-&gt;item-&gt;bid);</span>
+<span class="lineNum">     164 </span>                :<span class="lineCov">    3066114 :         return _CMP_U64(aa-&gt;item-&gt;bid , bb-&gt;item-&gt;bid);</span>
 <span class="lineNum">     165 </span>                :            : 
 <span class="lineNum">     166 </span>                :            :     #else
 <span class="lineNum">     167 </span>                :            :         if (aa-&gt;item-&gt;bid &lt; bb-&gt;item-&gt;bid) return -1;
@@ -242,46 +242,46 @@
 <span class="lineNum">     171 </span>                :            :     #endif
 <a name="172"><span class="lineNum">     172 </span>                :            : }</a>
 <span class="lineNum">     173 </span>                :            : 
-<span class="lineNum">     174 </span>                :<span class="lineCov">        176 : INLINE uint32_t _fname_hash(struct hash *hash, struct hash_elem *e)</span>
+<span class="lineNum">     174 </span>                :<span class="lineCov">        174 : INLINE uint32_t _fname_hash(struct hash *hash, struct hash_elem *e)</span>
 <span class="lineNum">     175 </span>                :            : {
-<span class="lineNum">     176 </span>                :<span class="lineCov">        176 :     struct fnamedic_item *item = _get_entry(e, struct fnamedic_item, hash_elem);</span>
-<span class="lineNum">     177 </span>                :<span class="lineCov">        176 :     return item-&gt;hash &amp; ((unsigned)(BCACHE_NDICBUCKET-1));</span>
+<span class="lineNum">     176 </span>                :<span class="lineCov">        174 :     struct fnamedic_item *item = _get_entry(e, struct fnamedic_item, hash_elem);</span>
+<span class="lineNum">     177 </span>                :<span class="lineCov">        174 :     return item-&gt;hash &amp; ((unsigned)(BCACHE_NDICBUCKET-1));</span>
 <a name="178"><span class="lineNum">     178 </span>                :            : }</a>
 <span class="lineNum">     179 </span>                :            : 
-<span class="lineNum">     180 </span>                :<span class="lineCov">         88 : INLINE int _fname_cmp(struct hash_elem *a, struct hash_elem *b)</span>
+<span class="lineNum">     180 </span>                :<span class="lineCov">         87 : INLINE int _fname_cmp(struct hash_elem *a, struct hash_elem *b)</span>
 <span class="lineNum">     181 </span>                :            : {
 <span class="lineNum">     182 </span>                :            :     size_t len;
 <span class="lineNum">     183 </span>                :            :     struct fnamedic_item *aa, *bb;
-<span class="lineNum">     184 </span>                :<span class="lineCov">         88 :     aa = _get_entry(a, struct fnamedic_item, hash_elem);</span>
-<span class="lineNum">     185 </span>                :<span class="lineCov">         88 :     bb = _get_entry(b, struct fnamedic_item, hash_elem);</span>
+<span class="lineNum">     184 </span>                :<span class="lineCov">         87 :     aa = _get_entry(a, struct fnamedic_item, hash_elem);</span>
+<span class="lineNum">     185 </span>                :<span class="lineCov">         87 :     bb = _get_entry(b, struct fnamedic_item, hash_elem);</span>
 <span class="lineNum">     186 </span>                :            : 
-<span class="lineNum">     187 </span>        [<span class="branchCov" title="Branch 0 was taken 88 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         88 :     if (aa-&gt;filename_len == bb-&gt;filename_len) {</span>
-<span class="lineNum">     188 </span>                :<span class="lineCov">         88 :         return memcmp(aa-&gt;filename, bb-&gt;filename, aa-&gt;filename_len);</span>
+<span class="lineNum">     187 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         87 :     if (aa-&gt;filename_len == bb-&gt;filename_len) {</span>
+<span class="lineNum">     188 </span>                :<span class="lineCov">         87 :         return memcmp(aa-&gt;filename, bb-&gt;filename, aa-&gt;filename_len);</span>
 <span class="lineNum">     189 </span>                :            :     }else {
 <span class="lineNum">     190 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         len = MIN(aa-&gt;filename_len , bb-&gt;filename_len);</span>
 <span class="lineNum">     191 </span>                :<span class="lineNoCov">          0 :         int cmp = memcmp(aa-&gt;filename, bb-&gt;filename, len);</span>
 <span class="lineNum">     192 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (cmp != 0) return cmp;</span>
 <span class="lineNum">     193 </span>                :            :         else {
-<span class="lineNum">     194 </span>                :<span class="lineCov">         88 :             return (int)((int)aa-&gt;filename_len - (int)bb-&gt;filename_len);</span>
+<span class="lineNum">     194 </span>                :<span class="lineCov">         87 :             return (int)((int)aa-&gt;filename_len - (int)bb-&gt;filename_len);</span>
 <span class="lineNum">     195 </span>                :            :         }
 <span class="lineNum">     196 </span>                :            :     }
 <a name="197"><span class="lineNum">     197 </span>                :            : }</a>
 <span class="lineNum">     198 </span>                :            : 
-<span class="lineNum">     199 </span>                :<span class="lineCov">   53750947 : INLINE uint32_t _bcache_hash(struct hash *hash, struct hash_elem *e)</span>
+<span class="lineNum">     199 </span>                :<span class="lineCov">   54156999 : INLINE uint32_t _bcache_hash(struct hash *hash, struct hash_elem *e)</span>
 <span class="lineNum">     200 </span>                :            : {
-<span class="lineNum">     201 </span>                :<span class="lineCov">   53750947 :     struct bcache_item *item = _get_entry(e, struct bcache_item, hash_elem);</span>
-<span class="lineNum">     202 </span>                :<span class="lineCov">   53750947 :     return (item-&gt;bid) &amp; ((uint32_t)BCACHE_NBUCKET-1);</span>
+<span class="lineNum">     201 </span>                :<span class="lineCov">   54156999 :     struct bcache_item *item = _get_entry(e, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     202 </span>                :<span class="lineCov">   54156999 :     return (item-&gt;bid) &amp; ((uint32_t)BCACHE_NBUCKET-1);</span>
 <a name="203"><span class="lineNum">     203 </span>                :            : }</a>
 <span class="lineNum">     204 </span>                :            : 
-<span class="lineNum">     205 </span>                :<span class="lineCov">   71522897 : INLINE int _bcache_cmp(struct hash_elem *a, struct hash_elem *b)</span>
+<span class="lineNum">     205 </span>                :<span class="lineCov">   70507009 : INLINE int _bcache_cmp(struct hash_elem *a, struct hash_elem *b)</span>
 <span class="lineNum">     206 </span>                :            : {
 <span class="lineNum">     207 </span>                :            :     struct bcache_item *aa, *bb;
-<span class="lineNum">     208 </span>                :<span class="lineCov">   71522897 :     aa = _get_entry(a, struct bcache_item, hash_elem);</span>
-<span class="lineNum">     209 </span>                :<span class="lineCov">   71522897 :     bb = _get_entry(b, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     208 </span>                :<span class="lineCov">   70507009 :     aa = _get_entry(a, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     209 </span>                :<span class="lineCov">   70507009 :     bb = _get_entry(b, struct bcache_item, hash_elem);</span>
 <span class="lineNum">     210 </span>                :            : 
 <span class="lineNum">     211 </span>                :            :     #ifdef __BIT_CMP
 <span class="lineNum">     212 </span>                :            : 
-<span class="lineNum">     213 </span>                :<span class="lineCov">   71522897 :         return _CMP_U64(aa-&gt;bid, bb-&gt;bid);</span>
+<span class="lineNum">     213 </span>                :<span class="lineCov">   70507009 :         return _CMP_U64(aa-&gt;bid, bb-&gt;bid);</span>
 <span class="lineNum">     214 </span>                :            : 
 <span class="lineNum">     215 </span>                :            :     #else
 <span class="lineNum">     216 </span>                :            : 
@@ -292,56 +292,56 @@
 <span class="lineNum">     221 </span>                :            :     #endif
 <a name="222"><span class="lineNum">     222 </span>                :            : }</a>
 <span class="lineNum">     223 </span>                :            : 
-<span class="lineNum">     224 </span>                :<span class="lineCov">   51121569 : void _bcache_move_fname_list(struct fnamedic_item *fname, struct list *list)</span>
+<span class="lineNum">     224 </span>                :<span class="lineCov">   51245458 : void _bcache_move_fname_list(struct fnamedic_item *fname, struct list *list)</span>
 <span class="lineNum">     225 </span>                :            : {
 <span class="lineNum">     226 </span>                :            :     file_status_t fs;
 <span class="lineNum">     227 </span>                :            : 
-<span class="lineNum">     228 </span>                :<span class="lineCov">   51121569 :     spin_lock(&amp;filelist_lock);</span>
+<span class="lineNum">     228 </span>                :<span class="lineCov">   51245458 :     spin_lock(&amp;filelist_lock);</span>
 <span class="lineNum">     229 </span>                :            : 
-<span class="lineNum">     230 </span>        [<span class="branchCov" title="Branch 0 was taken 1164146 times"> + </span><span class="branchCov" title="Branch 1 was taken 49958865 times"> + </span>]:<span class="lineCov">   51123011 :     if (fname-&gt;curlist != list) {</span>
-<span class="lineNum">     231 </span>        [<span class="branchCov" title="Branch 0 was taken 582029 times"> + </span><span class="branchCov" title="Branch 1 was taken 582117 times"> + </span>]:<span class="lineCov">    1164146 :         if (list == &amp;file_lru) {</span>
-<span class="lineNum">     232 </span>                :<span class="lineCov">     582029 :             fnames++;</span>
+<span class="lineNum">     230 </span>        [<span class="branchCov" title="Branch 0 was taken 1465917 times"> + </span><span class="branchCov" title="Branch 1 was taken 49781105 times"> + </span>]:<span class="lineCov">   51247022 :     if (fname-&gt;curlist != list) {</span>
+<span class="lineNum">     231 </span>        [<span class="branchCov" title="Branch 0 was taken 732915 times"> + </span><span class="branchCov" title="Branch 1 was taken 733002 times"> + </span>]:<span class="lineCov">    1465917 :         if (list == &amp;file_lru) {</span>
+<span class="lineNum">     232 </span>                :<span class="lineCov">     732915 :             fnames++;</span>
 <span class="lineNum">     233 </span>                :            :         } else {
-<span class="lineNum">     234 </span>                :<span class="lineCov">     582117 :             fnames--;</span>
+<span class="lineNum">     234 </span>                :<span class="lineCov">     733002 :             fnames--;</span>
 <span class="lineNum">     235 </span>                :            :         }
 <span class="lineNum">     236 </span>                :            :     }
 <span class="lineNum">     237 </span>                :            : 
-<span class="lineNum">     238 </span>        [<span class="branchCov" title="Branch 0 was taken 51122923 times"> + </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">   51123011 :     if (fname-&gt;curlist) list_remove(fname-&gt;curlist, &amp;fname-&gt;le);</span>
-<span class="lineNum">     239 </span>        [<span class="branchCov" title="Branch 0 was taken 51122923 times"> + </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">   51123011 :     if (list) {</span>
-<span class="lineNum">     240 </span>                :<span class="lineCov">   51122923 :         fs = filemgr_get_file_status(fname-&gt;curfile);</span>
+<span class="lineNum">     238 </span>        [<span class="branchCov" title="Branch 0 was taken 51246935 times"> + </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">   51247022 :     if (fname-&gt;curlist) list_remove(fname-&gt;curlist, &amp;fname-&gt;le);</span>
+<span class="lineNum">     239 </span>        [<span class="branchCov" title="Branch 0 was taken 51246935 times"> + </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">   51247022 :     if (list) {</span>
+<span class="lineNum">     240 </span>                :<span class="lineCov">   51246935 :         fs = filemgr_get_file_status(fname-&gt;curfile);</span>
 <span class="lineNum">     241 </span>                :            : 
-<span class="lineNum">     242 </span>[<span class="branchCov" title="Branch 0 was taken 50452172 times"> + </span><span class="branchCov" title="Branch 1 was taken 670751 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 555676 times"> + </span><span class="branchCov" title="Branch 3 was taken 49896496 times"> + </span>]:<span class="lineCov">   51122923 :         if (list == &amp;file_lru &amp;&amp; fs == FILE_COMPACT_OLD) {</span>
+<span class="lineNum">     242 </span>[<span class="branchCov" title="Branch 0 was taken 50404934 times"> + </span><span class="branchCov" title="Branch 1 was taken 842001 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 576874 times"> + </span><span class="branchCov" title="Branch 3 was taken 49828060 times"> + </span>]:<span class="lineCov">   51246935 :         if (list == &amp;file_lru &amp;&amp; fs == FILE_COMPACT_OLD) {</span>
 <span class="lineNum">     243 </span>                :            :             // insert compact old file always at the tail of LRU
-<span class="lineNum">     244 </span>                :<span class="lineCov">     555676 :             list_push_back(list, &amp;fname-&gt;le);</span>
+<span class="lineNum">     244 </span>                :<span class="lineCov">     576874 :             list_push_back(list, &amp;fname-&gt;le);</span>
 <span class="lineNum">     245 </span>                :            :         }else{
-<span class="lineNum">     246 </span>                :<span class="lineCov">   51122923 :             list_push_front(list, &amp;fname-&gt;le);</span>
+<span class="lineNum">     246 </span>                :<span class="lineCov">   51246935 :             list_push_front(list, &amp;fname-&gt;le);</span>
 <span class="lineNum">     247 </span>                :            :         }
 <span class="lineNum">     248 </span>                :            :     }
-<span class="lineNum">     249 </span>                :<span class="lineCov">   51123011 :     fname-&gt;curlist = list;</span>
+<span class="lineNum">     249 </span>                :<span class="lineCov">   51247022 :     fname-&gt;curlist = list;</span>
 <span class="lineNum">     250 </span>                :            : 
-<span class="lineNum">     251 </span>                :<span class="lineCov">   51123011 :     spin_unlock(&amp;filelist_lock);</span>
-<span class="lineNum">     252 </span>                :<span class="lineCov">   51123011 : }</span>
+<span class="lineNum">     251 </span>                :<span class="lineCov">   51247022 :     spin_unlock(&amp;filelist_lock);</span>
+<span class="lineNum">     252 </span>                :<span class="lineCov">   51247022 : }</span>
 <span class="lineNum">     253 </span>                :            : 
 <span class="lineNum">     254 </span>                :            : #define _list_empty(list) (((list).head) == NULL)
 <a name="255"><span class="lineNum">     255 </span>                :            : #define _tree_empty(tree) (((tree).root) == NULL)</a>
 <span class="lineNum">     256 </span>                :            : 
-<span class="lineNum">     257 </span>                :<span class="lineCov">    5617429 : struct fnamedic_item *_bcache_get_victim()</span>
+<span class="lineNum">     257 </span>                :<span class="lineCov">   10343435 : struct fnamedic_item *_bcache_get_victim()</span>
 <span class="lineNum">     258 </span>                :            : {
-<span class="lineNum">     259 </span>                :<span class="lineCov">    5617429 :     struct list_elem *e = NULL, *prev;</span>
+<span class="lineNum">     259 </span>                :<span class="lineCov">   10343435 :     struct list_elem *e = NULL, *prev;</span>
 <span class="lineNum">     260 </span>                :            : 
-<span class="lineNum">     261 </span>                :<span class="lineCov">    5617429 :     spin_lock(&amp;filelist_lock);</span>
+<span class="lineNum">     261 </span>                :<span class="lineCov">   10343435 :     spin_lock(&amp;filelist_lock);</span>
 <span class="lineNum">     262 </span>                :            : 
 <span class="lineNum">     263 </span>                :            : #ifdef __BCACHE_RANDOM_VICTIM
 <span class="lineNum">     264 </span>                :            :     size_t i, r;
 <span class="lineNum">     265 </span>                :            : 
-<span class="lineNum">     266 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 5617429 times"> + </span>]:<span class="lineCov">    5617429 :     if (fnames &gt; BCACHE_RANDOM_VICTIM_UNIT){</span>
+<span class="lineNum">     266 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 10343435 times"> + </span>]:<span class="lineCov">   10343435 :     if (fnames &gt; BCACHE_RANDOM_VICTIM_UNIT){</span>
 <span class="lineNum">     267 </span>                :<span class="lineNoCov">          0 :         r = rand() % BCACHE_RANDOM_VICTIM_UNIT;</span>
 <span class="lineNum">     268 </span>                :            :     }else{
-<span class="lineNum">     269 </span>                :<span class="lineCov">    5617429 :         r = 0;</span>
+<span class="lineNum">     269 </span>                :<span class="lineCov">   10343435 :         r = 0;</span>
 <span class="lineNum">     270 </span>                :            :     }
-<span class="lineNum">     271 </span>                :<span class="lineCov">    5617429 :     e = prev = list_end(&amp;file_lru);</span>
+<span class="lineNum">     271 </span>                :<span class="lineCov">   10343435 :     e = prev = list_end(&amp;file_lru);</span>
 <span class="lineNum">     272 </span>                :            : 
-<span class="lineNum">     273 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 5617429 times"> + </span>]:<span class="lineCov">    5617429 :     for (i=0;i&lt;r;++i){</span>
+<span class="lineNum">     273 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 10343435 times"> + </span>]:<span class="lineCov">   10343435 :     for (i=0;i&lt;r;++i){</span>
 <span class="lineNum">     274 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (e == NULL) {</span>
 <span class="lineNum">     275 </span>                :<span class="lineNoCov">          0 :             e = prev;</span>
 <span class="lineNum">     276 </span>                :<span class="lineNoCov">          0 :             break;</span>
@@ -354,199 +354,199 @@
 <span class="lineNum">     283 </span>                :            :     e = list_end(&amp;file_lru);
 <span class="lineNum">     284 </span>                :            : #endif
 <span class="lineNum">     285 </span>                :            : 
-<span class="lineNum">     286 </span>        [<span class="branchCov" title="Branch 0 was taken 4942515 times"> + </span><span class="branchCov" title="Branch 1 was taken 674914 times"> + </span>]:<span class="lineCov">    5617429 :     if (e==NULL) {</span>
-<span class="lineNum">     287 </span>                :<span class="lineCov">    4942515 :         e = list_begin(&amp;file_empty);</span>
+<span class="lineNum">     286 </span>        [<span class="branchCov" title="Branch 0 was taken 9508716 times"> + </span><span class="branchCov" title="Branch 1 was taken 834719 times"> + </span>]:<span class="lineCov">   10343435 :     if (e==NULL) {</span>
+<span class="lineNum">     287 </span>                :<span class="lineCov">    9508716 :         e = list_begin(&amp;file_empty);</span>
 <span class="lineNum">     288 </span>                :            : 
-<span class="lineNum">     289 </span>        [<span class="branchCov" title="Branch 0 was taken 4942515 times"> + </span><span class="branchCov" title="Branch 1 was taken 4937398 times"> + </span>]:<span class="lineCov">    9885030 :         while (e) {</span>
-<span class="lineNum">     290 </span>                :<span class="lineCov">    4942515 :             struct fnamedic_item *fname = _get_entry(e, struct fnamedic_item, le);</span>
-<span class="lineNum">     291 </span>[<span class="branchCov" title="Branch 0 was taken 4937404 times"> + </span><span class="branchCov" title="Branch 1 was taken 5111 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 6 times"> + </span><span class="branchCov" title="Branch 3 was taken 4937398 times"> + </span>]:<span class="lineCov">    4942515 :             if (!(_list_empty(fname-&gt;cleanlist) &amp;&amp; _tree_empty(fname-&gt;tree))) {</span>
-<span class="lineNum">     292 </span>                :<span class="lineCov">       5117 :                 break;</span>
+<span class="lineNum">     289 </span>        [<span class="branchCov" title="Branch 0 was taken 9508716 times"> + </span><span class="branchCov" title="Branch 1 was taken 9495146 times"> + </span>]:<span class="lineCov">   19017432 :         while (e) {</span>
+<span class="lineNum">     290 </span>                :<span class="lineCov">    9508716 :             struct fnamedic_item *fname = _get_entry(e, struct fnamedic_item, le);</span>
+<span class="lineNum">     291 </span>[<span class="branchCov" title="Branch 0 was taken 9495148 times"> + </span><span class="branchCov" title="Branch 1 was taken 13568 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 9495146 times"> + </span>]:<span class="lineCov">    9508716 :             if (!(_list_empty(fname-&gt;cleanlist) &amp;&amp; _tree_empty(fname-&gt;tree))) {</span>
+<span class="lineNum">     292 </span>                :<span class="lineCov">      13570 :                 break;</span>
 <span class="lineNum">     293 </span>                :            :             }
-<span class="lineNum">     294 </span>                :<span class="lineCov">    4937398 :             e = list_next(e);</span>
+<span class="lineNum">     294 </span>                :<span class="lineCov">    9495146 :             e = list_next(e);</span>
 <span class="lineNum">     295 </span>                :            :         }
 <span class="lineNum">     296 </span>                :            :     }
 <span class="lineNum">     297 </span>                :            : 
-<span class="lineNum">     298 </span>                :<span class="lineCov">    5617429 :     spin_unlock(&amp;filelist_lock);</span>
+<span class="lineNum">     298 </span>                :<span class="lineCov">   10343435 :     spin_unlock(&amp;filelist_lock);</span>
 <span class="lineNum">     299 </span>                :            : 
-<span class="lineNum">     300 </span>        [<span class="branchCov" title="Branch 0 was taken 680031 times"> + </span><span class="branchCov" title="Branch 1 was taken 4937398 times"> + </span>]:<span class="lineCov">    5617429 :     if (e) {</span>
-<span class="lineNum">     301 </span>                :<span class="lineCov">     680031 :         return _get_entry(e, struct fnamedic_item, le);</span>
+<span class="lineNum">     300 </span>        [<span class="branchCov" title="Branch 0 was taken 848289 times"> + </span><span class="branchCov" title="Branch 1 was taken 9495146 times"> + </span>]:<span class="lineCov">   10343435 :     if (e) {</span>
+<span class="lineNum">     301 </span>                :<span class="lineCov">     848289 :         return _get_entry(e, struct fnamedic_item, le);</span>
 <span class="lineNum">     302 </span>                :            :     }
-<span class="lineNum">     303 </span>                :<span class="lineCov">    5617429 :     return NULL;</span>
+<span class="lineNum">     303 </span>                :<span class="lineCov">   10343435 :     return NULL;</span>
 <a name="304"><span class="lineNum">     304 </span>                :            : }</a>
 <span class="lineNum">     305 </span>                :            : 
-<span class="lineNum">     306 </span>                :<span class="lineCov">    1712397 : struct bcache_item *_bcache_alloc_freeblock()</span>
+<span class="lineNum">     306 </span>                :<span class="lineCov">    2024876 : struct bcache_item *_bcache_alloc_freeblock()</span>
 <span class="lineNum">     307 </span>                :            : {
-<span class="lineNum">     308 </span>                :<span class="lineCov">    1712397 :     struct list_elem *e = NULL;</span>
+<span class="lineNum">     308 </span>                :<span class="lineCov">    2024876 :     struct list_elem *e = NULL;</span>
 <span class="lineNum">     309 </span>                :            :     struct bcache_item *item;
 <span class="lineNum">     310 </span>                :            : 
-<span class="lineNum">     311 </span>                :<span class="lineCov">    1712397 :     spin_lock(&amp;freelist_lock);</span>
-<span class="lineNum">     312 </span>                :<span class="lineCov">    1712397 :     e = list_pop_front(&amp;freelist);</span>
-<span class="lineNum">     313 </span>        [<span class="branchCov" title="Branch 0 was taken 1037143 times"> + </span><span class="branchCov" title="Branch 1 was taken 675254 times"> + </span>]:<span class="lineCov">    1712397 :     if (e) freelist_count--;</span>
-<span class="lineNum">     314 </span>                :<span class="lineCov">    1712397 :     spin_unlock(&amp;freelist_lock);</span>
+<span class="lineNum">     311 </span>                :<span class="lineCov">    2024876 :     spin_lock(&amp;freelist_lock);</span>
+<span class="lineNum">     312 </span>                :<span class="lineCov">    2024876 :     e = list_pop_front(&amp;freelist);</span>
+<span class="lineNum">     313 </span>        [<span class="branchCov" title="Branch 0 was taken 1189757 times"> + </span><span class="branchCov" title="Branch 1 was taken 835119 times"> + </span>]:<span class="lineCov">    2024876 :     if (e) freelist_count--;</span>
+<span class="lineNum">     314 </span>                :<span class="lineCov">    2024876 :     spin_unlock(&amp;freelist_lock);</span>
 <span class="lineNum">     315 </span>                :            : 
-<span class="lineNum">     316 </span>        [<span class="branchCov" title="Branch 0 was taken 1037143 times"> + </span><span class="branchCov" title="Branch 1 was taken 675254 times"> + </span>]:<span class="lineCov">    1712397 :     if (e) {</span>
-<span class="lineNum">     317 </span>                :<span class="lineCov">    1037143 :         item = _get_entry(e, struct bcache_item, list_elem);</span>
-<span class="lineNum">     318 </span>                :<span class="lineCov">    1037143 :         return item;</span>
+<span class="lineNum">     316 </span>        [<span class="branchCov" title="Branch 0 was taken 1189757 times"> + </span><span class="branchCov" title="Branch 1 was taken 835119 times"> + </span>]:<span class="lineCov">    2024876 :     if (e) {</span>
+<span class="lineNum">     317 </span>                :<span class="lineCov">    1189757 :         item = _get_entry(e, struct bcache_item, list_elem);</span>
+<span class="lineNum">     318 </span>                :<span class="lineCov">    1189757 :         return item;</span>
 <span class="lineNum">     319 </span>                :            :     }
-<span class="lineNum">     320 </span>                :<span class="lineCov">    1712397 :     return NULL;</span>
+<span class="lineNum">     320 </span>                :<span class="lineCov">    2024876 :     return NULL;</span>
 <a name="321"><span class="lineNum">     321 </span>                :            : }</a>
 <span class="lineNum">     322 </span>                :            : 
-<span class="lineNum">     323 </span>                :<span class="lineCov">    1037143 : void _bcache_release_freeblock(struct bcache_item *item)</span>
+<span class="lineNum">     323 </span>                :<span class="lineCov">    1189757 : void _bcache_release_freeblock(struct bcache_item *item)</span>
 <span class="lineNum">     324 </span>                :            : {
-<span class="lineNum">     325 </span>                :<span class="lineCov">    1037143 :     spin_lock(&amp;freelist_lock);</span>
-<span class="lineNum">     326 </span>                :<span class="lineCov">    1037143 :     item-&gt;flag = BCACHE_FREE;</span>
-<span class="lineNum">     327 </span>                :<span class="lineCov">    1037143 :     item-&gt;score = 0;</span>
-<span class="lineNum">     328 </span>                :<span class="lineCov">    1037143 :     list_push_front(&amp;freelist, &amp;item-&gt;list_elem);</span>
-<span class="lineNum">     329 </span>                :<span class="lineCov">    1037143 :     freelist_count++;</span>
-<span class="lineNum">     330 </span>                :<span class="lineCov">    1037143 :     spin_unlock(&amp;freelist_lock);</span>
-<span class="lineNum">     331 </span>                :<span class="lineCov">    1037143 : }</span>
+<span class="lineNum">     325 </span>                :<span class="lineCov">    1189757 :     spin_lock(&amp;freelist_lock);</span>
+<span class="lineNum">     326 </span>                :<span class="lineCov">    1189757 :     item-&gt;flag = BCACHE_FREE;</span>
+<span class="lineNum">     327 </span>                :<span class="lineCov">    1189757 :     item-&gt;score = 0;</span>
+<span class="lineNum">     328 </span>                :<span class="lineCov">    1189757 :     list_push_front(&amp;freelist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     329 </span>                :<span class="lineCov">    1189757 :     freelist_count++;</span>
+<span class="lineNum">     330 </span>                :<span class="lineCov">    1189757 :     spin_unlock(&amp;freelist_lock);</span>
+<span class="lineNum">     331 </span>                :<span class="lineCov">    1189757 : }</span>
 <span class="lineNum">     332 </span>                :            : 
 <a name="333"><span class="lineNum">     333 </span>                :            : // flush a bunch of dirty blocks (BCACHE_FLUSH_UNIT) &amp; make then as clean</a>
 <span class="lineNum">     334 </span>                :            : //2 FNAME_LOCK is already acquired by caller (of the caller)
-<span class="lineNum">     335 </span>                :<span class="lineCov">      50807 : void _bcache_evict_dirty(struct fnamedic_item *fname_item, int sync)</span>
+<span class="lineNum">     335 </span>                :<span class="lineCov">      53010 : void _bcache_evict_dirty(struct fnamedic_item *fname_item, int sync)</span>
 <span class="lineNum">     336 </span>                :            : {
 <span class="lineNum">     337 </span>                :            :     // get oldest dirty block
-<span class="lineNum">     338 </span>                :<span class="lineCov">      50807 :     void *buf = NULL;</span>
+<span class="lineNum">     338 </span>                :<span class="lineCov">      53010 :     void *buf = NULL;</span>
 <span class="lineNum">     339 </span>                :            :     struct list_elem *prevhead;
 <span class="lineNum">     340 </span>                :            :     struct avl_node *a;
 <span class="lineNum">     341 </span>                :            :     struct dirty_item *ditem;
 <span class="lineNum">     342 </span>                :            :     int count;
 <span class="lineNum">     343 </span>                :            :     ssize_t ret;
 <span class="lineNum">     344 </span>                :            :     bid_t start_bid, prev_bid;
-<span class="lineNum">     345 </span>                :<span class="lineCov">      50807 :     void *ptr = NULL;</span>
-<span class="lineNum">     346 </span>                :<span class="lineCov">      50807 :     uint8_t marker = 0x0;</span>
+<span class="lineNum">     345 </span>                :<span class="lineCov">      53010 :     void *ptr = NULL;</span>
+<span class="lineNum">     346 </span>                :<span class="lineCov">      53010 :     uint8_t marker = 0x0;</span>
 <span class="lineNum">     347 </span>                :            : 
 <span class="lineNum">     348 </span>                :            :     // scan and gather rb-tree items sequentially
-<span class="lineNum">     349 </span>        [<span class="branchCov" title="Branch 0 was taken 50805 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      50807 :     if (sync) {</span>
-<span class="lineNum">     350 </span>                :<span class="lineCov">      50805 :         malloc_align(buf, FDB_SECTOR_SIZE, bcache_flush_unit);</span>
+<span class="lineNum">     349 </span>        [<span class="branchCov" title="Branch 0 was taken 53008 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      53010 :     if (sync) {</span>
+<span class="lineNum">     350 </span>                :<span class="lineCov">      53008 :         malloc_align(buf, FDB_SECTOR_SIZE, bcache_flush_unit);</span>
 <span class="lineNum">     351 </span>                :            :     }
 <span class="lineNum">     352 </span>                :            : 
-<span class="lineNum">     353 </span>                :<span class="lineCov">      50807 :     prev_bid = start_bid = BLK_NOT_FOUND;</span>
-<span class="lineNum">     354 </span>                :<span class="lineCov">      50807 :     count = 0;</span>
+<span class="lineNum">     353 </span>                :<span class="lineCov">      53010 :     prev_bid = start_bid = BLK_NOT_FOUND;</span>
+<span class="lineNum">     354 </span>                :<span class="lineCov">      53010 :     count = 0;</span>
 <span class="lineNum">     355 </span>                :            : 
 <span class="lineNum">     356 </span>                :            :     // traverse rb-tree in a sequential order
-<span class="lineNum">     357 </span>                :<span class="lineCov">      50807 :     a = avl_first(&amp;fname_item-&gt;tree);</span>
-<span class="lineNum">     358 </span>        [<span class="branchCov" title="Branch 0 was taken 319137 times"> + </span><span class="branchCov" title="Branch 1 was taken 45730 times"> + </span>]:<span class="lineCov">     364867 :     while(a) {</span>
-<span class="lineNum">     359 </span>                :<span class="lineCov">     319137 :         ditem = _get_entry(a, struct dirty_item, avl);</span>
+<span class="lineNum">     357 </span>                :<span class="lineCov">      53010 :     a = avl_first(&amp;fname_item-&gt;tree);</span>
+<span class="lineNum">     358 </span>        [<span class="branchCov" title="Branch 0 was taken 314630 times"> + </span><span class="branchCov" title="Branch 1 was taken 48055 times"> + </span>]:<span class="lineCov">     362685 :     while(a) {</span>
+<span class="lineNum">     359 </span>                :<span class="lineCov">     314630 :         ditem = _get_entry(a, struct dirty_item, avl);</span>
 <span class="lineNum">     360 </span>                :            : 
 <span class="lineNum">     361 </span>                :            :         // if BID of next dirty block is not consecutive .. stop
-<span class="lineNum">     362 </span>[<span class="branchCov" title="Branch 0 was taken 41546 times"> + </span><span class="branchCov" title="Branch 1 was taken 277591 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1145 times"> + </span><span class="branchCov" title="Branch 3 was taken 40401 times"> + </span>]:<span class="lineCov">     319137 :         if (ditem-&gt;item-&gt;bid != prev_bid + 1 &amp;&amp; prev_bid != BLK_NOT_FOUND &amp;&amp; sync) break;</span>
-<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 1145 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<span class="lineNum">     362 </span>[<span class="branchCov" title="Branch 0 was taken 43262 times"> + </span><span class="branchCov" title="Branch 1 was taken 271368 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1122 times"> + </span><span class="branchCov" title="Branch 3 was taken 42140 times"> + </span>]:<span class="lineCov">     314630 :         if (ditem-&gt;item-&gt;bid != prev_bid + 1 &amp;&amp; prev_bid != BLK_NOT_FOUND &amp;&amp; sync) break;</span>
+<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 1122 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <span class="lineNum">     363 </span>                :            :         // set START_BID if this is the first loop
-<span class="lineNum">     364 </span>        [<span class="branchCov" title="Branch 0 was taken 50807 times"> + </span><span class="branchCov" title="Branch 1 was taken 267185 times"> + </span>]:<span class="lineCov">     317992 :         if (start_bid == BLK_NOT_FOUND) start_bid = ditem-&gt;item-&gt;bid;</span>
+<span class="lineNum">     364 </span>        [<span class="branchCov" title="Branch 0 was taken 53010 times"> + </span><span class="branchCov" title="Branch 1 was taken 260498 times"> + </span>]:<span class="lineCov">     313508 :         if (start_bid == BLK_NOT_FOUND) start_bid = ditem-&gt;item-&gt;bid;</span>
 <span class="lineNum">     365 </span>                :            : 
 <span class="lineNum">     366 </span>                :            :         // set PREV_BID and go to next block
-<span class="lineNum">     367 </span>                :<span class="lineCov">     317992 :         prev_bid = ditem-&gt;item-&gt;bid;</span>
-<span class="lineNum">     368 </span>                :<span class="lineCov">     317992 :         a = avl_next(a);</span>
+<span class="lineNum">     367 </span>                :<span class="lineCov">     313508 :         prev_bid = ditem-&gt;item-&gt;bid;</span>
+<span class="lineNum">     368 </span>                :<span class="lineCov">     313508 :         a = avl_next(a);</span>
 <span class="lineNum">     369 </span>                :            : 
-<span class="lineNum">     370 </span>                :<span class="lineCov">     317992 :         spin_lock(&amp;ditem-&gt;item-&gt;lock);</span>
+<span class="lineNum">     370 </span>                :<span class="lineCov">     313508 :         spin_lock(&amp;ditem-&gt;item-&gt;lock);</span>
 <span class="lineNum">     371 </span>                :            :         // set PTR and get block MARKER
-<span class="lineNum">     372 </span>                :<span class="lineCov">     317992 :         ptr = ditem-&gt;item-&gt;addr;</span>
-<span class="lineNum">     373 </span>                :<span class="lineCov">     317992 :         marker = *((uint8_t*)(ptr) + bcache_blocksize-1);</span>
+<span class="lineNum">     372 </span>                :<span class="lineCov">     313508 :         ptr = ditem-&gt;item-&gt;addr;</span>
+<span class="lineNum">     373 </span>                :<span class="lineCov">     313508 :         marker = *((uint8_t*)(ptr) + bcache_blocksize-1);</span>
 <span class="lineNum">     374 </span>                :            : 
-<span class="lineNum">     375 </span>                :<span class="lineCov">     317992 :         ditem-&gt;item-&gt;flag &amp;= ~(BCACHE_DIRTY);</span>
-<span class="lineNum">     376 </span>        [<span class="branchCov" title="Branch 0 was taken 317990 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">     317992 :         if (sync) {</span>
+<span class="lineNum">     375 </span>                :<span class="lineCov">     313508 :         ditem-&gt;item-&gt;flag &amp;= ~(BCACHE_DIRTY);</span>
+<span class="lineNum">     376 </span>        [<span class="branchCov" title="Branch 0 was taken 313506 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">     313508 :         if (sync) {</span>
 <span class="lineNum">     377 </span>                :            :             // copy to buffer
 <span class="lineNum">     378 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     379 </span>        [<span class="branchCov" title="Branch 0 was taken 86474 times"> + </span><span class="branchCov" title="Branch 1 was taken 231516 times"> + </span>]:<span class="lineCov">     317990 :             if (marker == BLK_MARKER_BNODE ) {</span>
+<span class="lineNum">     379 </span>        [<span class="branchCov" title="Branch 0 was taken 84448 times"> + </span><span class="branchCov" title="Branch 1 was taken 229058 times"> + </span>]:<span class="lineCov">     313506 :             if (marker == BLK_MARKER_BNODE ) {</span>
 <span class="lineNum">     380 </span>                :            :                 // b-tree node .. calculate crc32 and put it into the block
-<span class="lineNum">     381 </span>                :<span class="lineCov">      86474 :                 memset((uint8_t *)(ptr) + BTREE_CRC_OFFSET, 0xff, BTREE_CRC_FIELD_LEN);</span>
-<span class="lineNum">     382 </span>                :<span class="lineCov">      86474 :                 uint32_t crc = chksum(ptr, bcache_blocksize);</span>
-<span class="lineNum">     383 </span>                :<span class="lineCov">      86474 :                 crc = _endian_encode(crc);</span>
-<span class="lineNum">     384 </span>                :<span class="lineCov">      86474 :                 memcpy((uint8_t *)(ptr) + BTREE_CRC_OFFSET, &amp;crc, sizeof(crc));</span>
+<span class="lineNum">     381 </span>                :<span class="lineCov">      84448 :                 memset((uint8_t *)(ptr) + BTREE_CRC_OFFSET, 0xff, BTREE_CRC_FIELD_LEN);</span>
+<span class="lineNum">     382 </span>                :<span class="lineCov">      84448 :                 uint32_t crc = chksum(ptr, bcache_blocksize);</span>
+<span class="lineNum">     383 </span>                :<span class="lineCov">      84448 :                 crc = _endian_encode(crc);</span>
+<span class="lineNum">     384 </span>                :<span class="lineCov">      84448 :                 memcpy((uint8_t *)(ptr) + BTREE_CRC_OFFSET, &amp;crc, sizeof(crc));</span>
 <span class="lineNum">     385 </span>                :            :             }
 <span class="lineNum">     386 </span>                :            : #endif
-<span class="lineNum">     387 </span>                :<span class="lineCov">     317990 :             memcpy((uint8_t *)(buf) + count*bcache_blocksize, ditem-&gt;item-&gt;addr,</span>
-<span class="lineNum">     388 </span>                :<span class="lineCov">     317990 :                    bcache_blocksize);</span>
+<span class="lineNum">     387 </span>                :<span class="lineCov">     313506 :             memcpy((uint8_t *)(buf) + count*bcache_blocksize, ditem-&gt;item-&gt;addr,</span>
+<span class="lineNum">     388 </span>                :<span class="lineCov">     313506 :                    bcache_blocksize);</span>
 <span class="lineNum">     389 </span>                :            :         }
 <span class="lineNum">     390 </span>                :            : 
 <span class="lineNum">     391 </span>                :            :         // remove from rb-tree
-<span class="lineNum">     392 </span>                :<span class="lineCov">     317992 :         avl_remove(&amp;fname_item-&gt;tree, &amp;ditem-&gt;avl);</span>
+<span class="lineNum">     392 </span>                :<span class="lineCov">     313508 :         avl_remove(&amp;fname_item-&gt;tree, &amp;ditem-&gt;avl);</span>
 <span class="lineNum">     393 </span>                :            :         // move to clean list
-<span class="lineNum">     394 </span>                :<span class="lineCov">     317992 :         prevhead = fname_item-&gt;cleanlist.head;</span>
-<span class="lineNum">     395 </span>                :<span class="lineCov">     317992 :         list_push_front(&amp;fname_item-&gt;cleanlist, &amp;ditem-&gt;item-&gt;list_elem);</span>
+<span class="lineNum">     394 </span>                :<span class="lineCov">     313508 :         prevhead = fname_item-&gt;cleanlist.head;</span>
+<span class="lineNum">     395 </span>                :<span class="lineCov">     313508 :         list_push_front(&amp;fname_item-&gt;cleanlist, &amp;ditem-&gt;item-&gt;list_elem);</span>
 <span class="lineNum">     396 </span>                :            : 
-<span class="lineNum">     397 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 317992 times"> + </span>]:<span class="lineCov">     317992 :         assert(!(ditem-&gt;item-&gt;flag &amp; BCACHE_FREE));</span>
-<span class="lineNum">     398 </span>[<span class="branchCov" title="Branch 0 was taken 317992 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 317992 times"> + </span>]:<span class="lineCov">     317992 :         assert(ditem-&gt;item-&gt;list_elem.prev == NULL &amp;&amp; prevhead == ditem-&gt;item-&gt;list_elem.next);</span>
-<span class="lineNum">     399 </span>                :<span class="lineCov">     317992 :         spin_unlock(&amp;ditem-&gt;item-&gt;lock);</span>
+<span class="lineNum">     397 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 313508 times"> + </span>]:<span class="lineCov">     313508 :         assert(!(ditem-&gt;item-&gt;flag &amp; BCACHE_FREE));</span>
+<span class="lineNum">     398 </span>[<span class="branchCov" title="Branch 0 was taken 313508 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 313508 times"> + </span>]:<span class="lineCov">     313508 :         assert(ditem-&gt;item-&gt;list_elem.prev == NULL &amp;&amp; prevhead == ditem-&gt;item-&gt;list_elem.next);</span>
+<span class="lineNum">     399 </span>                :<span class="lineCov">     313508 :         spin_unlock(&amp;ditem-&gt;item-&gt;lock);</span>
 <span class="lineNum">     400 </span>                :            : 
-<span class="lineNum">     401 </span>                :<span class="lineCov">     317992 :         mempool_free(ditem);</span>
+<span class="lineNum">     401 </span>                :<span class="lineCov">     313508 :         mempool_free(ditem);</span>
 <span class="lineNum">     402 </span>                :            : 
 <span class="lineNum">     403 </span>                :            :         // if we have to sync the dirty block, and
 <span class="lineNum">     404 </span>                :            :         // the size of dirty blocks exceeds the BCACHE_FLUSH_UNIT
-<span class="lineNum">     405 </span>                :<span class="lineCov">     317992 :         count++;</span>
-<span class="lineNum">     406 </span>[<span class="branchCov" title="Branch 0 was taken 3932 times"> + </span><span class="branchCov" title="Branch 1 was taken 314060 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 3932 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     317992 :         if (count*bcache_blocksize &gt;= bcache_flush_unit &amp;&amp; sync) break;</span>
+<span class="lineNum">     405 </span>                :<span class="lineCov">     313508 :         count++;</span>
+<span class="lineNum">     406 </span>[<span class="branchCov" title="Branch 0 was taken 3833 times"> + </span><span class="branchCov" title="Branch 1 was taken 309675 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 3833 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     313508 :         if (count*bcache_blocksize &gt;= bcache_flush_unit &amp;&amp; sync) break;</span>
 <span class="lineNum">     407 </span>                :            :     }
 <span class="lineNum">     408 </span>                :            : 
 <span class="lineNum">     409 </span>                :            :     // synchronize
-<span class="lineNum">     410 </span>[<span class="branchCov" title="Branch 0 was taken 50805 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 50805 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      50807 :     if (sync &amp;&amp; count&gt;0) {</span>
+<span class="lineNum">     410 </span>[<span class="branchCov" title="Branch 0 was taken 53008 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 53008 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      53010 :     if (sync &amp;&amp; count&gt;0) {</span>
 <span class="lineNum">     411 </span>                :            :         // TODO: we MUST NOT directly call file-&gt;ops
 <span class="lineNum">     412 </span>                :            :         ret = fname_item-&gt;curfile-&gt;ops-&gt;pwrite(
-<span class="lineNum">     413 </span>                :<span class="lineCov">      50805 :             fname_item-&gt;curfile-&gt;fd, buf, count * bcache_blocksize, start_bid * bcache_blocksize);</span>
+<span class="lineNum">     413 </span>                :<span class="lineCov">      53008 :             fname_item-&gt;curfile-&gt;fd, buf, count * bcache_blocksize, start_bid * bcache_blocksize);</span>
 <span class="lineNum">     414 </span>                :            : 
-<span class="lineNum">     415 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 50805 times"> + </span>]:<span class="lineCov">      50805 :         assert(ret == count * bcache_blocksize);</span>
-<span class="lineNum">     416 </span>                :<span class="lineCov">      50805 :         free_align(buf);</span>
+<span class="lineNum">     415 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 53008 times"> + </span>]:<span class="lineCov">      53008 :         assert(ret == count * bcache_blocksize);</span>
+<span class="lineNum">     416 </span>                :<span class="lineCov">      53008 :         free_align(buf);</span>
 <span class="lineNum">     417 </span>                :            :     }
-<span class="lineNum">     418 </span>                :<span class="lineCov">      50807 : }</span>
+<span class="lineNum">     418 </span>                :<span class="lineCov">      53010 : }</span>
 <a name="419"><span class="lineNum">     419 </span>                :            : </a>
 <span class="lineNum">     420 </span>                :            : // perform eviction
-<span class="lineNum">     421 </span>                :<span class="lineCov">     675205 : struct list_elem * _bcache_evict(struct fnamedic_item *curfile)</span>
+<span class="lineNum">     421 </span>                :<span class="lineCov">     835028 : struct list_elem * _bcache_evict(struct fnamedic_item *curfile)</span>
 <span class="lineNum">     422 </span>                :            : {
 <span class="lineNum">     423 </span>                :            :     size_t n_evict;
-<span class="lineNum">     424 </span>                :<span class="lineCov">     675205 :     struct list_elem *e = NULL;</span>
+<span class="lineNum">     424 </span>                :<span class="lineCov">     835028 :     struct list_elem *e = NULL;</span>
 <span class="lineNum">     425 </span>                :            :     struct bcache_item *item;
-<span class="lineNum">     426 </span>                :<span class="lineCov">     675205 :     struct fnamedic_item *victim = NULL;</span>
+<span class="lineNum">     426 </span>                :<span class="lineCov">     835028 :     struct fnamedic_item *victim = NULL;</span>
 <span class="lineNum">     427 </span>                :            : 
-<span class="lineNum">     428 </span>                :<span class="lineCov">     675205 :     spin_lock(&amp;bcache_lock);</span>
+<span class="lineNum">     428 </span>                :<span class="lineCov">     835028 :     spin_lock(&amp;bcache_lock);</span>
 <span class="lineNum">     429 </span>                :            : 
-<span class="lineNum">     430 </span>        [<span class="branchCov" title="Branch 0 was taken 5617429 times"> + </span><span class="branchCov" title="Branch 1 was taken 675254 times"> + </span>]:<span class="lineCov">    6292683 :     while(victim == NULL) {</span>
+<span class="lineNum">     430 </span>        [<span class="branchCov" title="Branch 0 was taken 10343435 times"> + </span><span class="branchCov" title="Branch 1 was taken 835119 times"> + </span>]:<span class="lineCov">   11178554 :     while(victim == NULL) {</span>
 <span class="lineNum">     431 </span>                :            :         // select victim file (the tail of FILE_LRU)
-<span class="lineNum">     432 </span>                :<span class="lineCov">    5617429 :         victim = _bcache_get_victim();</span>
-<span class="lineNum">     433 </span>        [<span class="branchCov" title="Branch 0 was taken 680031 times"> + </span><span class="branchCov" title="Branch 1 was taken 4942175 times"> + </span>]:<span class="lineCov">    5622206 :         while(victim) {</span>
-<span class="lineNum">     434 </span>                :<span class="lineCov">     680031 :             spin_lock(&amp;victim-&gt;lock);</span>
+<span class="lineNum">     432 </span>                :<span class="lineCov">   10343435 :         victim = _bcache_get_victim();</span>
+<span class="lineNum">     433 </span>        [<span class="branchCov" title="Branch 0 was taken 848289 times"> + </span><span class="branchCov" title="Branch 1 was taken 9508316 times"> + </span>]:<span class="lineCov">   10356605 :         while(victim) {</span>
+<span class="lineNum">     434 </span>                :<span class="lineCov">     848289 :             spin_lock(&amp;victim-&gt;lock);</span>
 <span class="lineNum">     435 </span>                :            : 
 <span class="lineNum">     436 </span>                :            :             // check whether this file has at least one block to be evictied
-<span class="lineNum">     437 </span>[<span class="branchCov" title="Branch 0 was taken 45957 times"> + </span><span class="branchCov" title="Branch 1 was taken 634074 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 41180 times"> + </span><span class="branchCov" title="Branch 3 was taken 4777 times"> + </span>]:<span class="lineCov">     680031 :             if (!_list_empty(victim-&gt;cleanlist) || !_tree_empty(victim-&gt;tree)) {</span>
+<span class="lineNum">     437 </span>[<span class="branchCov" title="Branch 0 was taken 56695 times"> + </span><span class="branchCov" title="Branch 1 was taken 791594 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 43525 times"> + </span><span class="branchCov" title="Branch 3 was taken 13170 times"> + </span>]:<span class="lineCov">     848289 :             if (!_list_empty(victim-&gt;cleanlist) || !_tree_empty(victim-&gt;tree)) {</span>
 <span class="lineNum">     438 </span>                :            :                 // select this file as victim
-<span class="lineNum">     439 </span>                :<span class="lineCov">     675254 :                 break;</span>
+<span class="lineNum">     439 </span>                :<span class="lineCov">     835119 :                 break;</span>
 <span class="lineNum">     440 </span>                :            :             }else{
 <span class="lineNum">     441 </span>                :            :                 // empty file
 <span class="lineNum">     442 </span>                :            :                 // move this file to empty list (it is ok that this was already moved to empty list by other thread)
-<span class="lineNum">     443 </span>                :<span class="lineCov">       4777 :                 _bcache_move_fname_list(victim, &amp;file_empty);</span>
-<span class="lineNum">     444 </span>                :<span class="lineCov">       4777 :                 spin_unlock(&amp;victim-&gt;lock);</span>
+<span class="lineNum">     443 </span>                :<span class="lineCov">      13170 :                 _bcache_move_fname_list(victim, &amp;file_empty);</span>
+<span class="lineNum">     444 </span>                :<span class="lineCov">      13170 :                 spin_unlock(&amp;victim-&gt;lock);</span>
 <span class="lineNum">     445 </span>                :            : 
-<span class="lineNum">     446 </span>                :<span class="lineCov">       4777 :                 victim = NULL;</span>
+<span class="lineNum">     446 </span>                :<span class="lineCov">      13170 :                 victim = NULL;</span>
 <span class="lineNum">     447 </span>                :            :             }
 <span class="lineNum">     448 </span>                :            :         }
 <span class="lineNum">     449 </span>                :            :     }
-<span class="lineNum">     450 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 675254 times"> + </span>]:<span class="lineCov">     675254 :     assert(victim);</span>
-<span class="lineNum">     451 </span>                :<span class="lineCov">     675254 :     spin_unlock(&amp;bcache_lock);</span>
+<span class="lineNum">     450 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 835119 times"> + </span>]:<span class="lineCov">     835119 :     assert(victim);</span>
+<span class="lineNum">     451 </span>                :<span class="lineCov">     835119 :     spin_unlock(&amp;bcache_lock);</span>
 <span class="lineNum">     452 </span>                :            : 
-<span class="lineNum">     453 </span>                :<span class="lineCov">     675254 :     victim-&gt;nvictim++;</span>
+<span class="lineNum">     453 </span>                :<span class="lineCov">     835119 :     victim-&gt;nvictim++;</span>
 <span class="lineNum">     454 </span>                :            : 
 <span class="lineNum">     455 </span>                :            :     // select victim clean block of the victim file
-<span class="lineNum">     456 </span>                :<span class="lineCov">     675254 :     n_evict = 0;</span>
-<span class="lineNum">     457 </span>        [<span class="branchCov" title="Branch 0 was taken 675254 times"> + </span><span class="branchCov" title="Branch 1 was taken 9368 times"> + </span>]:<span class="lineCov">     684622 :     while(n_evict &lt; BCACHE_EVICT_UNIT) {</span>
+<span class="lineNum">     456 </span>                :<span class="lineCov">     835119 :     n_evict = 0;</span>
+<span class="lineNum">     457 </span>        [<span class="branchCov" title="Branch 0 was taken 835119 times"> + </span><span class="branchCov" title="Branch 1 was taken 6375 times"> + </span>]:<span class="lineCov">     841494 :     while(n_evict &lt; BCACHE_EVICT_UNIT) {</span>
 <span class="lineNum">     458 </span>                :            : 
 <span class="lineNum">     459 </span>                :            : #ifdef __BCACHE_SECOND_CHANCE
-<span class="lineNum">     460 </span>                :<span class="lineCov">       1474 :         while(1) {</span>
+<span class="lineNum">     460 </span>                :<span class="lineCov">        950 :         while(1) {</span>
 <span class="lineNum">     461 </span>                :            :             // repeat until zero-score item is found
-<span class="lineNum">     462 </span>                :<span class="lineCov">     676728 :             e = list_pop_back(&amp;victim-&gt;cleanlist);</span>
-<span class="lineNum">     463 </span>        [<span class="branchCov" title="Branch 0 was taken 41180 times"> + </span><span class="branchCov" title="Branch 1 was taken 676728 times"> + </span>]:<span class="lineCov">     717908 :             while (e == NULL) {</span>
+<span class="lineNum">     462 </span>                :<span class="lineCov">     836069 :             e = list_pop_back(&amp;victim-&gt;cleanlist);</span>
+<span class="lineNum">     463 </span>        [<span class="branchCov" title="Branch 0 was taken 43525 times"> + </span><span class="branchCov" title="Branch 1 was taken 836069 times"> + </span>]:<span class="lineCov">     879594 :             while (e == NULL) {</span>
 <span class="lineNum">     464 </span>                :            :                 // when the victim file has no clean block .. evict dirty block
-<span class="lineNum">     465 </span>                :<span class="lineCov">      41180 :                 _bcache_evict_dirty(victim, 1);</span>
+<span class="lineNum">     465 </span>                :<span class="lineCov">      43525 :                 _bcache_evict_dirty(victim, 1);</span>
 <span class="lineNum">     466 </span>                :            : 
 <span class="lineNum">     467 </span>                :            :                 // pop back from cleanlist
-<span class="lineNum">     468 </span>                :<span class="lineCov">      41180 :                 e = list_pop_back(&amp;victim-&gt;cleanlist);</span>
+<span class="lineNum">     468 </span>                :<span class="lineCov">      43525 :                 e = list_pop_back(&amp;victim-&gt;cleanlist);</span>
 <span class="lineNum">     469 </span>                :            :             }
 <span class="lineNum">     470 </span>                :            : 
-<span class="lineNum">     471 </span>                :<span class="lineCov">     676728 :             item = _get_entry(e, struct bcache_item, list_elem);</span>
-<span class="lineNum">     472 </span>        [<span class="branchCov" title="Branch 0 was taken 675254 times"> + </span><span class="branchCov" title="Branch 1 was taken 1474 times"> + </span>]:<span class="lineCov">     676728 :             if (item-&gt;score == 0) {</span>
-<span class="lineNum">     473 </span>                :<span class="lineCov">     675254 :                 break;</span>
+<span class="lineNum">     471 </span>                :<span class="lineCov">     836069 :             item = _get_entry(e, struct bcache_item, list_elem);</span>
+<span class="lineNum">     472 </span>        [<span class="branchCov" title="Branch 0 was taken 835119 times"> + </span><span class="branchCov" title="Branch 1 was taken 950 times"> + </span>]:<span class="lineCov">     836069 :             if (item-&gt;score == 0) {</span>
+<span class="lineNum">     473 </span>                :<span class="lineCov">     835119 :                 break;</span>
 <span class="lineNum">     474 </span>                :            :             } else {
 <span class="lineNum">     475 </span>                :            :                 // give second chance to the item
-<span class="lineNum">     476 </span>                :<span class="lineCov">       1474 :                 item-&gt;score--;</span>
-<span class="lineNum">     477 </span>                :<span class="lineCov">       1474 :                 list_push_front(&amp;victim-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     476 </span>                :<span class="lineCov">        950 :                 item-&gt;score--;</span>
+<span class="lineNum">     477 </span>                :<span class="lineCov">        950 :                 list_push_front(&amp;victim-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
 <span class="lineNum">     478 </span>                :            :             }
 <span class="lineNum">     479 </span>                :            :         }
 <span class="lineNum">     480 </span>                :            : #else
@@ -561,215 +561,215 @@
 <span class="lineNum">     489 </span>                :            :         item = _get_entry(e, struct bcache_item, list_elem);
 <span class="lineNum">     490 </span>                :            : #endif
 <span class="lineNum">     491 </span>                :            : 
-<span class="lineNum">     492 </span>                :<span class="lineCov">     675254 :         victim-&gt;nitems--;</span>
+<span class="lineNum">     492 </span>                :<span class="lineCov">     835119 :         victim-&gt;nitems--;</span>
 <span class="lineNum">     493 </span>                :            : 
-<span class="lineNum">     494 </span>                :<span class="lineCov">     675254 :         spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     494 </span>                :<span class="lineCov">     835119 :         spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     495 </span>                :            : 
 <span class="lineNum">     496 </span>                :            :         // remove from hash and insert into freelist
-<span class="lineNum">     497 </span>                :<span class="lineCov">     675254 :         hash_remove(&amp;victim-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
+<span class="lineNum">     497 </span>                :<span class="lineCov">     835119 :         hash_remove(&amp;victim-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
 <span class="lineNum">     498 </span>                :            : 
 <span class="lineNum">     499 </span>                :            :         // add to freelist
-<span class="lineNum">     500 </span>                :<span class="lineCov">     675254 :         _bcache_release_freeblock(item);</span>
-<span class="lineNum">     501 </span>                :<span class="lineCov">     675254 :         n_evict++;</span>
+<span class="lineNum">     500 </span>                :<span class="lineCov">     835119 :         _bcache_release_freeblock(item);</span>
+<span class="lineNum">     501 </span>                :<span class="lineCov">     835119 :         n_evict++;</span>
 <span class="lineNum">     502 </span>                :            : 
-<span class="lineNum">     503 </span>                :<span class="lineCov">     675254 :         spin_unlock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     503 </span>                :<span class="lineCov">     835119 :         spin_unlock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     504 </span>                :            : 
-<span class="lineNum">     505 </span>        [<span class="branchCov" title="Branch 0 was taken 665886 times"> + </span><span class="branchCov" title="Branch 1 was taken 9368 times"> + </span>]:<span class="lineCov">     675254 :         if (victim-&gt;nitems == 0) {</span>
-<span class="lineNum">     506 </span>                :<span class="lineCov">     665886 :             break;</span>
+<span class="lineNum">     505 </span>        [<span class="branchCov" title="Branch 0 was taken 828744 times"> + </span><span class="branchCov" title="Branch 1 was taken 6375 times"> + </span>]:<span class="lineCov">     835119 :         if (victim-&gt;nitems == 0) {</span>
+<span class="lineNum">     506 </span>                :<span class="lineCov">     828744 :             break;</span>
 <span class="lineNum">     507 </span>                :            :         }
 <span class="lineNum">     508 </span>                :            :     }
 <span class="lineNum">     509 </span>                :            : 
 <span class="lineNum">     510 </span>                :            :     // check whether the victim file has no cached block
-<span class="lineNum">     511 </span>[<span class="branchCov" title="Branch 0 was taken 665887 times"> + </span><span class="branchCov" title="Branch 1 was taken 9367 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 665886 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">     675254 :     if (_list_empty(victim-&gt;cleanlist) &amp;&amp; _tree_empty(victim-&gt;tree)) {</span>
+<span class="lineNum">     511 </span>[<span class="branchCov" title="Branch 0 was taken 828745 times"> + </span><span class="branchCov" title="Branch 1 was taken 6374 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 828744 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">     835119 :     if (_list_empty(victim-&gt;cleanlist) &amp;&amp; _tree_empty(victim-&gt;tree)) {</span>
 <span class="lineNum">     512 </span>                :            :         // remove from FILE_LRU and insert into FILE_EMPTY
-<span class="lineNum">     513 </span>                :<span class="lineCov">     665886 :         _bcache_move_fname_list(victim, &amp;file_empty);</span>
+<span class="lineNum">     513 </span>                :<span class="lineCov">     828744 :         _bcache_move_fname_list(victim, &amp;file_empty);</span>
 <span class="lineNum">     514 </span>                :            :     }
 <span class="lineNum">     515 </span>                :            : 
-<span class="lineNum">     516 </span>                :<span class="lineCov">     675254 :     spin_unlock(&amp;victim-&gt;lock);</span>
+<span class="lineNum">     516 </span>                :<span class="lineCov">     835119 :     spin_unlock(&amp;victim-&gt;lock);</span>
 <span class="lineNum">     517 </span>                :            : 
-<span class="lineNum">     518 </span>                :<span class="lineCov">     675254 :     return &amp;item-&gt;list_elem;</span>
+<span class="lineNum">     518 </span>                :<span class="lineCov">     835119 :     return &amp;item-&gt;list_elem;</span>
 <a name="519"><span class="lineNum">     519 </span>                :            : }</a>
 <span class="lineNum">     520 </span>                :            : 
-<span class="lineNum">     521 </span>                :<span class="lineCov">         88 : struct fnamedic_item * _fname_create(struct filemgr *file) {</span>
+<span class="lineNum">     521 </span>                :<span class="lineCov">         87 : struct fnamedic_item * _fname_create(struct filemgr *file) {</span>
 <span class="lineNum">     522 </span>                :            :     // TODO: we MUST NOT directly read file sturcture
 <span class="lineNum">     523 </span>                :            : 
 <span class="lineNum">     524 </span>                :            :     struct fnamedic_item *fname_new;
-<span class="lineNum">     525 </span>                :<span class="lineCov">         88 :     fname_new = (struct fnamedic_item *)malloc(sizeof(struct fnamedic_item));</span>
+<span class="lineNum">     525 </span>                :<span class="lineCov">         87 :     fname_new = (struct fnamedic_item *)malloc(sizeof(struct fnamedic_item));</span>
 <span class="lineNum">     526 </span>                :            : 
-<span class="lineNum">     527 </span>                :<span class="lineCov">         88 :     fname_new-&gt;filename_len = strlen(file-&gt;filename);</span>
-<span class="lineNum">     528 </span>                :<span class="lineCov">         88 :     fname_new-&gt;filename = (char *)malloc(fname_new-&gt;filename_len + 1);</span>
-<span class="lineNum">     529 </span>                :<span class="lineCov">         88 :     memcpy(fname_new-&gt;filename, file-&gt;filename, fname_new-&gt;filename_len);</span>
+<span class="lineNum">     527 </span>                :<span class="lineCov">         87 :     fname_new-&gt;filename_len = strlen(file-&gt;filename);</span>
+<span class="lineNum">     528 </span>                :<span class="lineCov">         87 :     fname_new-&gt;filename = (char *)malloc(fname_new-&gt;filename_len + 1);</span>
+<span class="lineNum">     529 </span>                :<span class="lineCov">         87 :     memcpy(fname_new-&gt;filename, file-&gt;filename, fname_new-&gt;filename_len);</span>
 <span class="lineNum">     530 </span>                :            :     //strcpy(fname_new-&gt;filename, file-&gt;filename);
-<span class="lineNum">     531 </span>                :<span class="lineCov">         88 :     fname_new-&gt;filename[fname_new-&gt;filename_len] = 0;</span>
+<span class="lineNum">     531 </span>                :<span class="lineCov">         87 :     fname_new-&gt;filename[fname_new-&gt;filename_len] = 0;</span>
 <span class="lineNum">     532 </span>                :            : 
 <span class="lineNum">     533 </span>                :            :     // calculate hash value
-<span class="lineNum">     534 </span>                :<span class="lineCov">         88 :     fname_new-&gt;hash = chksum((void *)fname_new-&gt;filename,</span>
-<span class="lineNum">     535 </span>                :<span class="lineCov">         88 :                              fname_new-&gt;filename_len);</span>
-<span class="lineNum">     536 </span>                :<span class="lineCov">         88 :     spin_init(&amp;fname_new-&gt;lock);</span>
-<span class="lineNum">     537 </span>                :<span class="lineCov">         88 :     fname_new-&gt;curlist = NULL;</span>
-<span class="lineNum">     538 </span>                :<span class="lineCov">         88 :     fname_new-&gt;curfile = file;</span>
-<span class="lineNum">     539 </span>                :<span class="lineCov">         88 :     fname_new-&gt;nvictim = 0;</span>
-<span class="lineNum">     540 </span>                :<span class="lineCov">         88 :     fname_new-&gt;nitems = 0;</span>
+<span class="lineNum">     534 </span>                :<span class="lineCov">         87 :     fname_new-&gt;hash = chksum((void *)fname_new-&gt;filename,</span>
+<span class="lineNum">     535 </span>                :<span class="lineCov">         87 :                              fname_new-&gt;filename_len);</span>
+<span class="lineNum">     536 </span>                :<span class="lineCov">         87 :     spin_init(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     537 </span>                :<span class="lineCov">         87 :     fname_new-&gt;curlist = NULL;</span>
+<span class="lineNum">     538 </span>                :<span class="lineCov">         87 :     fname_new-&gt;curfile = file;</span>
+<span class="lineNum">     539 </span>                :<span class="lineCov">         87 :     fname_new-&gt;nvictim = 0;</span>
+<span class="lineNum">     540 </span>                :<span class="lineCov">         87 :     fname_new-&gt;nitems = 0;</span>
 <span class="lineNum">     541 </span>                :            : 
 <span class="lineNum">     542 </span>                :            :     // initialize tree
-<span class="lineNum">     543 </span>                :<span class="lineCov">         88 :     avl_init(&amp;fname_new-&gt;tree, NULL);</span>
+<span class="lineNum">     543 </span>                :<span class="lineCov">         87 :     avl_init(&amp;fname_new-&gt;tree, NULL);</span>
 <span class="lineNum">     544 </span>                :            :     // initialize clean list
-<span class="lineNum">     545 </span>                :<span class="lineCov">         88 :     list_init(&amp;fname_new-&gt;cleanlist);</span>
+<span class="lineNum">     545 </span>                :<span class="lineCov">         87 :     list_init(&amp;fname_new-&gt;cleanlist);</span>
 <span class="lineNum">     546 </span>                :            :     // initialize hash table
-<span class="lineNum">     547 </span>                :<span class="lineCov">         88 :     hash_init(&amp;fname_new-&gt;hashtable, BCACHE_NBUCKET, _bcache_hash, _bcache_cmp);</span>
+<span class="lineNum">     547 </span>                :<span class="lineCov">         87 :     hash_init(&amp;fname_new-&gt;hashtable, BCACHE_NBUCKET, _bcache_hash, _bcache_cmp);</span>
 <span class="lineNum">     548 </span>                :            : 
 <span class="lineNum">     549 </span>                :            :     // insert into fname dictionary
-<span class="lineNum">     550 </span>                :<span class="lineCov">         88 :     hash_insert(&amp;fnamedic, &amp;fname_new-&gt;hash_elem);</span>
-<span class="lineNum">     551 </span>                :<span class="lineCov">         88 :     file-&gt;bcache = fname_new;</span>
+<span class="lineNum">     550 </span>                :<span class="lineCov">         87 :     hash_insert(&amp;fnamedic, &amp;fname_new-&gt;hash_elem);</span>
+<span class="lineNum">     551 </span>                :<span class="lineCov">         87 :     file-&gt;bcache = fname_new;</span>
 <span class="lineNum">     552 </span>                :            : 
-<span class="lineNum">     553 </span>                :<span class="lineCov">         88 :     return fname_new;</span>
+<span class="lineNum">     553 </span>                :<span class="lineCov">         87 :     return fname_new;</span>
 <a name="554"><span class="lineNum">     554 </span>                :            : }</a>
 <span class="lineNum">     555 </span>                :            : 
-<span class="lineNum">     556 </span>                :<span class="lineCov">         88 : void _fname_free(struct fnamedic_item *fname)</span>
+<span class="lineNum">     556 </span>                :<span class="lineCov">         87 : void _fname_free(struct fnamedic_item *fname)</span>
 <span class="lineNum">     557 </span>                :            : {
 <span class="lineNum">     558 </span>                :            :     // remove from corresponding list
-<span class="lineNum">     559 </span>                :<span class="lineCov">         88 :     _bcache_move_fname_list(fname, NULL);</span>
+<span class="lineNum">     559 </span>                :<span class="lineCov">         87 :     _bcache_move_fname_list(fname, NULL);</span>
 <span class="lineNum">     560 </span>                :            : 
 <span class="lineNum">     561 </span>                :            :     // tree must be empty
-<span class="lineNum">     562 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">         88 :     assert(_tree_empty(fname-&gt;tree));</span>
+<span class="lineNum">     562 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">         87 :     assert(_tree_empty(fname-&gt;tree));</span>
 <span class="lineNum">     563 </span>                :            : 
 <span class="lineNum">     564 </span>                :            :     // clean list must be empty
-<span class="lineNum">     565 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">         88 :     assert(_list_empty(fname-&gt;cleanlist));</span>
+<span class="lineNum">     565 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">         87 :     assert(_list_empty(fname-&gt;cleanlist));</span>
 <span class="lineNum">     566 </span>                :            : 
 <span class="lineNum">     567 </span>                :            :     // free hash
-<span class="lineNum">     568 </span>                :<span class="lineCov">         88 :     hash_free(&amp;fname-&gt;hashtable);</span>
+<span class="lineNum">     568 </span>                :<span class="lineCov">         87 :     hash_free(&amp;fname-&gt;hashtable);</span>
 <span class="lineNum">     569 </span>                :            : 
-<span class="lineNum">     570 </span>                :<span class="lineCov">         88 :     free(fname-&gt;filename);</span>
-<span class="lineNum">     571 </span>                :<span class="lineCov">         88 :     spin_destroy(&amp;fname-&gt;lock);</span>
-<a name="572"><span class="lineNum">     572 </span>                :<span class="lineCov">         88 : }</span></a>
+<span class="lineNum">     570 </span>                :<span class="lineCov">         87 :     free(fname-&gt;filename);</span>
+<span class="lineNum">     571 </span>                :<span class="lineCov">         87 :     spin_destroy(&amp;fname-&gt;lock);</span>
+<a name="572"><span class="lineNum">     572 </span>                :<span class="lineCov">         87 : }</span></a>
 <span class="lineNum">     573 </span>                :            : 
-<span class="lineNum">     574 </span>                :<span class="lineCov">   49582656 : INLINE void _bcache_set_score(struct bcache_item *item)</span>
+<span class="lineNum">     574 </span>                :<span class="lineCov">   49354716 : INLINE void _bcache_set_score(struct bcache_item *item)</span>
 <span class="lineNum">     575 </span>                :            : {
 <span class="lineNum">     576 </span>                :            : #ifdef __CRC32
 <span class="lineNum">     577 </span>                :            :     uint8_t marker;
 <span class="lineNum">     578 </span>                :            : 
 <span class="lineNum">     579 </span>                :            :     // set PTR and get block MARKER
-<span class="lineNum">     580 </span>                :<span class="lineCov">   49582656 :     marker = *((uint8_t*)(item-&gt;addr) + bcache_blocksize-1);</span>
-<span class="lineNum">     581 </span>        [<span class="branchCov" title="Branch 0 was taken 37727888 times"> + </span><span class="branchCov" title="Branch 1 was taken 11854768 times"> + </span>]:<span class="lineCov">   49582656 :     if (marker == BLK_MARKER_BNODE ) {</span>
+<span class="lineNum">     580 </span>                :<span class="lineCov">   49354716 :     marker = *((uint8_t*)(item-&gt;addr) + bcache_blocksize-1);</span>
+<span class="lineNum">     581 </span>        [<span class="branchCov" title="Branch 0 was taken 37095503 times"> + </span><span class="branchCov" title="Branch 1 was taken 12259213 times"> + </span>]:<span class="lineCov">   49354716 :     if (marker == BLK_MARKER_BNODE ) {</span>
 <span class="lineNum">     582 </span>                :            :         // b-tree node .. set item's score to 1
-<span class="lineNum">     583 </span>                :<span class="lineCov">   37727888 :         item-&gt;score = 1;</span>
+<span class="lineNum">     583 </span>                :<span class="lineCov">   37095503 :         item-&gt;score = 1;</span>
 <span class="lineNum">     584 </span>                :            :     } else {
-<span class="lineNum">     585 </span>                :<span class="lineCov">   11854768 :         item-&gt;score = 0;</span>
+<span class="lineNum">     585 </span>                :<span class="lineCov">   12259213 :         item-&gt;score = 0;</span>
 <span class="lineNum">     586 </span>                :            :     }
 <span class="lineNum">     587 </span>                :            : #endif
-<a name="588"><span class="lineNum">     588 </span>                :<span class="lineCov">   49582656 : }</span></a>
+<a name="588"><span class="lineNum">     588 </span>                :<span class="lineCov">   49354716 : }</span></a>
 <span class="lineNum">     589 </span>                :            : 
-<span class="lineNum">     590 </span>                :<span class="lineCov">   33376996 : int bcache_read(struct filemgr *file, bid_t bid, void *buf)</span>
+<span class="lineNum">     590 </span>                :<span class="lineCov">   33568762 : int bcache_read(struct filemgr *file, bid_t bid, void *buf)</span>
 <span class="lineNum">     591 </span>                :            : {
 <span class="lineNum">     592 </span>                :            :     struct hash_elem *h;
 <span class="lineNum">     593 </span>                :            :     struct bcache_item *item;
 <span class="lineNum">     594 </span>                :            :     struct bcache_item query;
 <span class="lineNum">     595 </span>                :            :     struct fnamedic_item *fname;
 <span class="lineNum">     596 </span>                :            : 
-<span class="lineNum">     597 </span>                :<span class="lineCov">   33376996 :     spin_lock(&amp;bcache_lock);</span>
-<span class="lineNum">     598 </span>                :<span class="lineCov">   33388231 :     fname = file-&gt;bcache;</span>
-<span class="lineNum">     599 </span>                :<span class="lineCov">   33388231 :     spin_unlock(&amp;bcache_lock);</span>
+<span class="lineNum">     597 </span>                :<span class="lineCov">   33568762 :     spin_lock(&amp;bcache_lock);</span>
+<span class="lineNum">     598 </span>                :<span class="lineCov">   33578725 :     fname = file-&gt;bcache;</span>
+<span class="lineNum">     599 </span>                :<span class="lineCov">   33578725 :     spin_unlock(&amp;bcache_lock);</span>
 <span class="lineNum">     600 </span>                :            : 
-<span class="lineNum">     601 </span>        [<span class="branchCov" title="Branch 0 was taken 33383513 times"> + </span><span class="branchCov" title="Branch 1 was taken 4051 times"> + </span>]:<span class="lineCov">   33387564 :     if (fname) {</span>
+<span class="lineNum">     601 </span>        [<span class="branchCov" title="Branch 0 was taken 33577349 times"> + </span><span class="branchCov" title="Branch 1 was taken 1169 times"> + </span>]:<span class="lineCov">   33578518 :     if (fname) {</span>
 <span class="lineNum">     602 </span>                :            :         // file exists
 <span class="lineNum">     603 </span>                :            :         // set query
-<span class="lineNum">     604 </span>                :<span class="lineCov">   33383513 :         query.bid = bid;</span>
-<span class="lineNum">     605 </span>                :<span class="lineCov">   33383513 :         query.fname = fname;</span>
-<span class="lineNum">     606 </span>                :<span class="lineCov">   33383513 :         query.fname-&gt;curfile = file;</span>
+<span class="lineNum">     604 </span>                :<span class="lineCov">   33577349 :         query.bid = bid;</span>
+<span class="lineNum">     605 </span>                :<span class="lineCov">   33577349 :         query.fname = fname;</span>
+<span class="lineNum">     606 </span>                :<span class="lineCov">   33577349 :         query.fname-&gt;curfile = file;</span>
 <span class="lineNum">     607 </span>                :            : 
 <span class="lineNum">     608 </span>                :            :         // relay lock
-<span class="lineNum">     609 </span>                :<span class="lineCov">   33383513 :         spin_lock(&amp;fname-&gt;lock);</span>
+<span class="lineNum">     609 </span>                :<span class="lineCov">   33577349 :         spin_lock(&amp;fname-&gt;lock);</span>
 <span class="lineNum">     610 </span>                :            : 
 <span class="lineNum">     611 </span>                :            :         // move the file to the head of FILE_LRU
-<span class="lineNum">     612 </span>                :<span class="lineCov">   33387757 :         _bcache_move_fname_list(fname, &amp;file_lru);</span>
+<span class="lineNum">     612 </span>                :<span class="lineCov">   33578454 :         _bcache_move_fname_list(fname, &amp;file_lru);</span>
 <span class="lineNum">     613 </span>                :            : 
 <span class="lineNum">     614 </span>                :            :         // search BHASH
-<span class="lineNum">     615 </span>                :<span class="lineCov">   33388190 :         h = hash_find(&amp;fname-&gt;hashtable, &amp;query.hash_elem);</span>
-<span class="lineNum">     616 </span>        [<span class="branchCov" title="Branch 0 was taken 32564892 times"> + </span><span class="branchCov" title="Branch 1 was taken 822951 times"> + </span>]:<span class="lineCov">   33387843 :         if (h) {</span>
+<span class="lineNum">     615 </span>                :<span class="lineCov">   33578693 :         h = hash_find(&amp;fname-&gt;hashtable, &amp;query.hash_elem);</span>
+<span class="lineNum">     616 </span>        [<span class="branchCov" title="Branch 0 was taken 32576047 times"> + </span><span class="branchCov" title="Branch 1 was taken 1002263 times"> + </span>]:<span class="lineCov">   33578310 :         if (h) {</span>
 <span class="lineNum">     617 </span>                :            :             // cache hit
-<span class="lineNum">     618 </span>                :<span class="lineCov">   32564892 :             item = _get_entry(h, struct bcache_item, hash_elem);</span>
-<span class="lineNum">     619 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 32564892 times"> + </span>]:<span class="lineCov">   32564892 :             assert(item-&gt;fname == fname);</span>
-<span class="lineNum">     620 </span>                :<span class="lineCov">   32564892 :             spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     618 </span>                :<span class="lineCov">   32576047 :             item = _get_entry(h, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     619 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 32576047 times"> + </span>]:<span class="lineCov">   32576047 :             assert(item-&gt;fname == fname);</span>
+<span class="lineNum">     620 </span>                :<span class="lineCov">   32576047 :             spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     621 </span>                :            : 
-<span class="lineNum">     622 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 32565234 times"> + </span>]:<span class="lineCov">   32565234 :             assert(!(item-&gt;flag &amp; BCACHE_FREE));</span>
+<span class="lineNum">     622 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 32576425 times"> + </span>]:<span class="lineCov">   32576425 :             assert(!(item-&gt;flag &amp; BCACHE_FREE));</span>
 <span class="lineNum">     623 </span>                :            : 
 <span class="lineNum">     624 </span>                :            :             // move the item to the head of list if the block is clean (don't care if the block is dirty)
-<span class="lineNum">     625 </span>        [<span class="branchCov" title="Branch 0 was taken 6877543 times"> + </span><span class="branchCov" title="Branch 1 was taken 25687691 times"> + </span>]:<span class="lineCov">   32565234 :             if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
-<span class="lineNum">     626 </span>                :<span class="lineCov">    6877543 :                 list_remove(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
-<span class="lineNum">     627 </span>                :<span class="lineCov">    6877050 :                 list_push_front(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     625 </span>        [<span class="branchCov" title="Branch 0 was taken 7409442 times"> + </span><span class="branchCov" title="Branch 1 was taken 25166983 times"> + </span>]:<span class="lineCov">   32576425 :             if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
+<span class="lineNum">     626 </span>                :<span class="lineCov">    7409442 :                 list_remove(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     627 </span>                :<span class="lineCov">    7408886 :                 list_push_front(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
 <span class="lineNum">     628 </span>                :            :             }
 <span class="lineNum">     629 </span>                :            : 
 <span class="lineNum">     630 </span>                :            :             // relay lock
-<span class="lineNum">     631 </span>                :<span class="lineCov">   32564396 :             spin_unlock(&amp;fname-&gt;lock);</span>
+<span class="lineNum">     631 </span>                :<span class="lineCov">   32575711 :             spin_unlock(&amp;fname-&gt;lock);</span>
 <span class="lineNum">     632 </span>                :            : 
-<span class="lineNum">     633 </span>                :<span class="lineCov">   32563039 :             memcpy(buf, item-&gt;addr, bcache_blocksize);</span>
-<span class="lineNum">     634 </span>                :<span class="lineCov">   32563039 :             _bcache_set_score(item);</span>
+<span class="lineNum">     633 </span>                :<span class="lineCov">   32574861 :             memcpy(buf, item-&gt;addr, bcache_blocksize);</span>
+<span class="lineNum">     634 </span>                :<span class="lineCov">   32574861 :             _bcache_set_score(item);</span>
 <span class="lineNum">     635 </span>                :            : 
-<span class="lineNum">     636 </span>                :<span class="lineCov">   32550016 :             spin_unlock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     636 </span>                :<span class="lineCov">   32556212 :             spin_unlock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     637 </span>                :            : 
-<span class="lineNum">     638 </span>                :<span class="lineCov">   32549719 :             return bcache_blocksize;</span>
+<span class="lineNum">     638 </span>                :<span class="lineCov">   32556940 :             return bcache_blocksize;</span>
 <span class="lineNum">     639 </span>                :            :         }else {
 <span class="lineNum">     640 </span>                :            :             // cache miss
-<span class="lineNum">     641 </span>                :<span class="lineCov">     822951 :             spin_unlock(&amp;fname-&gt;lock);</span>
+<span class="lineNum">     641 </span>                :<span class="lineCov">    1002263 :             spin_unlock(&amp;fname-&gt;lock);</span>
 <span class="lineNum">     642 </span>                :            :         }
 <span class="lineNum">     643 </span>                :            :     }
 <span class="lineNum">     644 </span>                :            : 
 <span class="lineNum">     645 </span>                :            :     // does not exist .. cache miss
-<span class="lineNum">     646 </span>                :<span class="lineCov">   33372686 :     return 0;</span>
+<span class="lineNum">     646 </span>                :<span class="lineCov">   33556728 :     return 0;</span>
 <a name="647"><span class="lineNum">     647 </span>                :            : }</a>
 <span class="lineNum">     648 </span>                :            : 
-<span class="lineNum">     649 </span>                :<span class="lineCov">      36577 : void bcache_invalidate_block(struct filemgr *file, bid_t bid)</span>
+<span class="lineNum">     649 </span>                :<span class="lineCov">      36042 : void bcache_invalidate_block(struct filemgr *file, bid_t bid)</span>
 <span class="lineNum">     650 </span>                :            : {
 <span class="lineNum">     651 </span>                :            :     struct hash_elem *h;
 <span class="lineNum">     652 </span>                :            :     struct bcache_item *item;
 <span class="lineNum">     653 </span>                :            :     struct bcache_item query;
 <span class="lineNum">     654 </span>                :            :     struct fnamedic_item *fname;
 <span class="lineNum">     655 </span>                :            : 
-<span class="lineNum">     656 </span>                :<span class="lineCov">      36577 :     fname = file-&gt;bcache;</span>
-<span class="lineNum">     657 </span>        [<span class="branchCov" title="Branch 0 was taken 36577 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      36577 :     if (fname) {</span>
+<span class="lineNum">     656 </span>                :<span class="lineCov">      36042 :     fname = file-&gt;bcache;</span>
+<span class="lineNum">     657 </span>        [<span class="branchCov" title="Branch 0 was taken 36042 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      36042 :     if (fname) {</span>
 <span class="lineNum">     658 </span>                :            :         // file exists
 <span class="lineNum">     659 </span>                :            :         // set query
-<span class="lineNum">     660 </span>                :<span class="lineCov">      36577 :         query.bid = bid;</span>
-<span class="lineNum">     661 </span>                :<span class="lineCov">      36577 :         query.fname = fname;</span>
-<span class="lineNum">     662 </span>                :<span class="lineCov">      36577 :         query.fname-&gt;curfile = file;</span>
+<span class="lineNum">     660 </span>                :<span class="lineCov">      36042 :         query.bid = bid;</span>
+<span class="lineNum">     661 </span>                :<span class="lineCov">      36042 :         query.fname = fname;</span>
+<span class="lineNum">     662 </span>                :<span class="lineCov">      36042 :         query.fname-&gt;curfile = file;</span>
 <span class="lineNum">     663 </span>                :            : 
 <span class="lineNum">     664 </span>                :            :         // relay lock
-<span class="lineNum">     665 </span>                :<span class="lineCov">      36577 :         spin_lock(&amp;fname-&gt;lock);</span>
+<span class="lineNum">     665 </span>                :<span class="lineCov">      36042 :         spin_lock(&amp;fname-&gt;lock);</span>
 <span class="lineNum">     666 </span>                :            : 
 <span class="lineNum">     667 </span>                :            :         // move the file to the head of FILE_LRU
-<span class="lineNum">     668 </span>                :<span class="lineCov">      36577 :         _bcache_move_fname_list(fname, &amp;file_lru);</span>
+<span class="lineNum">     668 </span>                :<span class="lineCov">      36042 :         _bcache_move_fname_list(fname, &amp;file_lru);</span>
 <span class="lineNum">     669 </span>                :            : 
 <span class="lineNum">     670 </span>                :            :         // search BHASH
-<span class="lineNum">     671 </span>                :<span class="lineCov">      36577 :         h = hash_find(&amp;fname-&gt;hashtable, &amp;query.hash_elem);</span>
-<span class="lineNum">     672 </span>        [<span class="branchCov" title="Branch 0 was taken 36577 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      36577 :         if (h) {</span>
+<span class="lineNum">     671 </span>                :<span class="lineCov">      36042 :         h = hash_find(&amp;fname-&gt;hashtable, &amp;query.hash_elem);</span>
+<span class="lineNum">     672 </span>        [<span class="branchCov" title="Branch 0 was taken 36042 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      36042 :         if (h) {</span>
 <span class="lineNum">     673 </span>                :            :             // cache hit
-<span class="lineNum">     674 </span>                :<span class="lineCov">      36577 :             item = _get_entry(h, struct bcache_item, hash_elem);</span>
-<span class="lineNum">     675 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 36577 times"> + </span>]:<span class="lineCov">      36577 :             assert(item-&gt;fname == fname);</span>
-<span class="lineNum">     676 </span>                :<span class="lineCov">      36577 :             spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     674 </span>                :<span class="lineCov">      36042 :             item = _get_entry(h, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     675 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 36042 times"> + </span>]:<span class="lineCov">      36042 :             assert(item-&gt;fname == fname);</span>
+<span class="lineNum">     676 </span>                :<span class="lineCov">      36042 :             spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     677 </span>                :            : 
-<span class="lineNum">     678 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 36577 times"> + </span>]:<span class="lineCov">      36577 :             assert(!(item-&gt;flag &amp; BCACHE_FREE));</span>
+<span class="lineNum">     678 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 36042 times"> + </span>]:<span class="lineCov">      36042 :             assert(!(item-&gt;flag &amp; BCACHE_FREE));</span>
 <span class="lineNum">     679 </span>                :            : 
-<span class="lineNum">     680 </span>                :<span class="lineCov">      36577 :             fname-&gt;nitems--;</span>
+<span class="lineNum">     680 </span>                :<span class="lineCov">      36042 :             fname-&gt;nitems--;</span>
 <span class="lineNum">     681 </span>                :            : 
-<span class="lineNum">     682 </span>        [<span class="branchCov" title="Branch 0 was taken 36577 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      36577 :             if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
+<span class="lineNum">     682 </span>        [<span class="branchCov" title="Branch 0 was taken 36042 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      36042 :             if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
 <span class="lineNum">     683 </span>                :            :                 // only for clean blocks
 <span class="lineNum">     684 </span>                :            :                 // remove from hash and insert into freelist
-<span class="lineNum">     685 </span>                :<span class="lineCov">      36577 :                 hash_remove(&amp;fname-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
+<span class="lineNum">     685 </span>                :<span class="lineCov">      36042 :                 hash_remove(&amp;fname-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
 <span class="lineNum">     686 </span>                :            :                 // remove from clean list
-<span class="lineNum">     687 </span>                :<span class="lineCov">      36577 :                 list_remove(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     687 </span>                :<span class="lineCov">      36042 :                 list_remove(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
 <span class="lineNum">     688 </span>                :            : 
 <span class="lineNum">     689 </span>                :            :                 // add to freelist
-<span class="lineNum">     690 </span>                :<span class="lineCov">      36577 :                 _bcache_release_freeblock(item);</span>
+<span class="lineNum">     690 </span>                :<span class="lineCov">      36042 :                 _bcache_release_freeblock(item);</span>
 <span class="lineNum">     691 </span>                :            : 
 <span class="lineNum">     692 </span>                :            :                 // check whether the victim file has no cached block
-<span class="lineNum">     693 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 36577 times"> + </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineCov">      36577 :                 if (_list_empty(fname-&gt;cleanlist) &amp;&amp; _tree_empty(fname-&gt;tree)) {</span>
+<span class="lineNum">     693 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 36042 times"> + </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineCov">      36042 :                 if (_list_empty(fname-&gt;cleanlist) &amp;&amp; _tree_empty(fname-&gt;tree)) {</span>
 <span class="lineNum">     694 </span>                :            :                     // remove from FILE_LRU and insert into FILE_EMPTY
 <span class="lineNum">     695 </span>                :<span class="lineNoCov">          0 :                     _bcache_move_fname_list(fname, &amp;file_empty);</span>
 <span class="lineNum">     696 </span>                :            :                 }
 <span class="lineNum">     697 </span>                :            :             }
 <span class="lineNum">     698 </span>                :            : 
-<span class="lineNum">     699 </span>                :<span class="lineCov">      36577 :             spin_unlock(&amp;item-&gt;lock);</span>
-<span class="lineNum">     700 </span>                :<span class="lineCov">      36577 :             spin_unlock(&amp;fname-&gt;lock);</span>
+<span class="lineNum">     699 </span>                :<span class="lineCov">      36042 :             spin_unlock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     700 </span>                :<span class="lineCov">      36042 :             spin_unlock(&amp;fname-&gt;lock);</span>
 <span class="lineNum">     701 </span>                :            :         }else {
 <span class="lineNum">     702 </span>                :            :             // cache miss
 <span class="lineNum">     703 </span>                :<span class="lineNoCov">          0 :             spin_unlock(&amp;fname-&gt;lock);</span>
@@ -777,58 +777,58 @@
 <span class="lineNum">     705 </span>                :            :     }
 <span class="lineNum">     706 </span>                :            : 
 <span class="lineNum">     707 </span>                :            :     // does not exist .. cache miss
-<a name="708"><span class="lineNum">     708 </span>                :<span class="lineCov">      36577 : }</span></a>
+<a name="708"><span class="lineNum">     708 </span>                :<span class="lineCov">      36042 : }</span></a>
 <span class="lineNum">     709 </span>                :            : 
-<span class="lineNum">     710 </span>                :<span class="lineCov">    8876483 : int bcache_write(struct filemgr *file, bid_t bid, void *buf, bcache_dirty_t dirty)</span>
+<span class="lineNum">     710 </span>                :<span class="lineCov">    8844572 : int bcache_write(struct filemgr *file, bid_t bid, void *buf, bcache_dirty_t dirty)</span>
 <span class="lineNum">     711 </span>                :            : {
-<span class="lineNum">     712 </span>                :<span class="lineCov">    8876483 :     struct hash_elem *h = NULL;</span>
+<span class="lineNum">     712 </span>                :<span class="lineCov">    8844572 :     struct hash_elem *h = NULL;</span>
 <span class="lineNum">     713 </span>                :            :     struct bcache_item *item;
 <span class="lineNum">     714 </span>                :            :     struct bcache_item query;
 <span class="lineNum">     715 </span>                :            :     struct fnamedic_item *fname_new;
 <span class="lineNum">     716 </span>                :            : 
-<span class="lineNum">     717 </span>                :<span class="lineCov">    8876483 :     spin_lock(&amp;bcache_lock);</span>
-<span class="lineNum">     718 </span>                :<span class="lineCov">    8878541 :     fname_new = file-&gt;bcache;</span>
-<span class="lineNum">     719 </span>        [<span class="branchCov" title="Branch 0 was taken 62 times"> + </span><span class="branchCov" title="Branch 1 was taken 8878479 times"> + </span>]:<span class="lineCov">    8878541 :     if (fname_new == NULL) {</span>
+<span class="lineNum">     717 </span>                :<span class="lineCov">    8844572 :     spin_lock(&amp;bcache_lock);</span>
+<span class="lineNum">     718 </span>                :<span class="lineCov">    8845972 :     fname_new = file-&gt;bcache;</span>
+<span class="lineNum">     719 </span>        [<span class="branchCov" title="Branch 0 was taken 62 times"> + </span><span class="branchCov" title="Branch 1 was taken 8845910 times"> + </span>]:<span class="lineCov">    8845972 :     if (fname_new == NULL) {</span>
 <span class="lineNum">     720 </span>                :            :         // filename doesn't exist in filename dictionary .. create
 <span class="lineNum">     721 </span>                :<span class="lineCov">         62 :         fname_new = _fname_create(file);</span>
 <span class="lineNum">     722 </span>                :            :     }
-<span class="lineNum">     723 </span>                :<span class="lineCov">    8878541 :     spin_unlock(&amp;bcache_lock);</span>
+<span class="lineNum">     723 </span>                :<span class="lineCov">    8845972 :     spin_unlock(&amp;bcache_lock);</span>
 <span class="lineNum">     724 </span>                :            : 
 <span class="lineNum">     725 </span>                :            :     // acquire lock
-<span class="lineNum">     726 </span>                :<span class="lineCov">    8878416 :     spin_lock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     726 </span>                :<span class="lineCov">    8845892 :     spin_lock(&amp;fname_new-&gt;lock);</span>
 <span class="lineNum">     727 </span>                :            : 
 <span class="lineNum">     728 </span>                :            :     // move to the head of FILE_LRU
-<span class="lineNum">     729 </span>                :<span class="lineCov">    8878541 :     _bcache_move_fname_list(fname_new, &amp;file_lru);</span>
+<span class="lineNum">     729 </span>                :<span class="lineCov">    8845972 :     _bcache_move_fname_list(fname_new, &amp;file_lru);</span>
 <span class="lineNum">     730 </span>                :            : 
 <span class="lineNum">     731 </span>                :            :     // set query
-<span class="lineNum">     732 </span>                :<span class="lineCov">    8878541 :     query.bid = bid;</span>
-<span class="lineNum">     733 </span>                :<span class="lineCov">    8878541 :     query.fname = fname_new;</span>
-<span class="lineNum">     734 </span>                :<span class="lineCov">    8878541 :     query.fname-&gt;curfile = file;</span>
+<span class="lineNum">     732 </span>                :<span class="lineCov">    8845972 :     query.bid = bid;</span>
+<span class="lineNum">     733 </span>                :<span class="lineCov">    8845972 :     query.fname = fname_new;</span>
+<span class="lineNum">     734 </span>                :<span class="lineCov">    8845972 :     query.fname-&gt;curfile = file;</span>
 <span class="lineNum">     735 </span>                :            : 
 <span class="lineNum">     736 </span>                :            :     // search hash table
-<span class="lineNum">     737 </span>                :<span class="lineCov">    8878541 :     h = hash_find(&amp;fname_new-&gt;hashtable, &amp;query.hash_elem);</span>
-<span class="lineNum">     738 </span>        [<span class="branchCov" title="Branch 0 was taken 1037143 times"> + </span><span class="branchCov" title="Branch 1 was taken 7841398 times"> + </span>]:<span class="lineCov">    8878541 :     if (h == NULL) {</span>
+<span class="lineNum">     737 </span>                :<span class="lineCov">    8845972 :     h = hash_find(&amp;fname_new-&gt;hashtable, &amp;query.hash_elem);</span>
+<span class="lineNum">     738 </span>        [<span class="branchCov" title="Branch 0 was taken 1189757 times"> + </span><span class="branchCov" title="Branch 1 was taken 7656215 times"> + </span>]:<span class="lineCov">    8845972 :     if (h == NULL) {</span>
 <span class="lineNum">     739 </span>                :            :         // cache miss
 <span class="lineNum">     740 </span>                :            :         // get a free block
-<span class="lineNum">     741 </span>        [<span class="branchCov" title="Branch 1 was taken 675254 times"> + </span><span class="branchCov" title="Branch 2 was taken 1037143 times"> + </span>]:<span class="lineCov">    1712397 :         while ((item = _bcache_alloc_freeblock()) == NULL) {</span>
+<span class="lineNum">     741 </span>        [<span class="branchCov" title="Branch 1 was taken 835119 times"> + </span><span class="branchCov" title="Branch 2 was taken 1189757 times"> + </span>]:<span class="lineCov">    2024876 :         while ((item = _bcache_alloc_freeblock()) == NULL) {</span>
 <span class="lineNum">     742 </span>                :            :             // no free block .. perform eviction
-<span class="lineNum">     743 </span>                :<span class="lineCov">     675254 :             spin_unlock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     743 </span>                :<span class="lineCov">     835119 :             spin_unlock(&amp;fname_new-&gt;lock);</span>
 <span class="lineNum">     744 </span>                :            : 
-<span class="lineNum">     745 </span>                :<span class="lineCov">     675254 :             _bcache_evict(fname_new);</span>
+<span class="lineNum">     745 </span>                :<span class="lineCov">     835119 :             _bcache_evict(fname_new);</span>
 <span class="lineNum">     746 </span>                :            : 
-<span class="lineNum">     747 </span>                :<span class="lineCov">     673056 :             spin_lock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     747 </span>                :<span class="lineCov">     831128 :             spin_lock(&amp;fname_new-&gt;lock);</span>
 <span class="lineNum">     748 </span>                :            :         }
 <span class="lineNum">     749 </span>                :            : 
 <span class="lineNum">     750 </span>                :            :         // re-search hash table
-<span class="lineNum">     751 </span>                :<span class="lineCov">    1037143 :         h = hash_find(&amp;fname_new-&gt;hashtable, &amp;query.hash_elem);</span>
-<span class="lineNum">     752 </span>        [<span class="branchCov" title="Branch 0 was taken 1037143 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    1037143 :         if (h == NULL) {</span>
+<span class="lineNum">     751 </span>                :<span class="lineCov">    1189757 :         h = hash_find(&amp;fname_new-&gt;hashtable, &amp;query.hash_elem);</span>
+<span class="lineNum">     752 </span>        [<span class="branchCov" title="Branch 0 was taken 1189757 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    1189757 :         if (h == NULL) {</span>
 <span class="lineNum">     753 </span>                :            :             // insert into hash table
-<span class="lineNum">     754 </span>                :<span class="lineCov">    1037143 :             item-&gt;bid = bid;</span>
-<span class="lineNum">     755 </span>                :<span class="lineCov">    1037143 :             item-&gt;fname = fname_new;</span>
-<span class="lineNum">     756 </span>                :<span class="lineCov">    1037143 :             item-&gt;flag = BCACHE_FREE;</span>
-<span class="lineNum">     757 </span>                :<span class="lineCov">    1037143 :             hash_insert(&amp;fname_new-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
-<span class="lineNum">     758 </span>                :<span class="lineCov">    1037143 :             h = &amp;item-&gt;hash_elem;</span>
-<span class="lineNum">     759 </span>                :<span class="lineCov">    1037143 :             spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     754 </span>                :<span class="lineCov">    1189757 :             item-&gt;bid = bid;</span>
+<span class="lineNum">     755 </span>                :<span class="lineCov">    1189757 :             item-&gt;fname = fname_new;</span>
+<span class="lineNum">     756 </span>                :<span class="lineCov">    1189757 :             item-&gt;flag = BCACHE_FREE;</span>
+<span class="lineNum">     757 </span>                :<span class="lineCov">    1189757 :             hash_insert(&amp;fname_new-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
+<span class="lineNum">     758 </span>                :<span class="lineCov">    1189757 :             h = &amp;item-&gt;hash_elem;</span>
+<span class="lineNum">     759 </span>                :<span class="lineCov">    1189757 :             spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     760 </span>                :            :         }else{
 <span class="lineNum">     761 </span>                :            :             // insert into freelist again
 <span class="lineNum">     762 </span>                :<span class="lineNoCov">          0 :             _bcache_release_freeblock(item);</span>
@@ -836,236 +836,236 @@
 <span class="lineNum">     764 </span>                :<span class="lineNoCov">          0 :             spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     765 </span>                :            :         }
 <span class="lineNum">     766 </span>                :            :     }else{
-<span class="lineNum">     767 </span>                :<span class="lineCov">    7841398 :         item = _get_entry(h, struct bcache_item, hash_elem);</span>
-<span class="lineNum">     768 </span>                :<span class="lineCov">    7841398 :         spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     767 </span>                :<span class="lineCov">    7656215 :         item = _get_entry(h, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     768 </span>                :<span class="lineCov">    7656215 :         spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     769 </span>                :            :     }
 <span class="lineNum">     770 </span>                :            : 
-<span class="lineNum">     771 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8878541 times"> + </span>]:<span class="lineCov">    8878541 :     assert(h);</span>
+<span class="lineNum">     771 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8845972 times"> + </span>]:<span class="lineCov">    8845972 :     assert(h);</span>
 <span class="lineNum">     772 </span>                :            : 
-<span class="lineNum">     773 </span>        [<span class="branchCov" title="Branch 0 was taken 1037143 times"> + </span><span class="branchCov" title="Branch 1 was taken 7841398 times"> + </span>]:<span class="lineCov">    8878541 :     if (item-&gt;flag &amp; BCACHE_FREE) {</span>
-<span class="lineNum">     774 </span>                :<span class="lineCov">    1037143 :         fname_new-&gt;nitems++;</span>
+<span class="lineNum">     773 </span>        [<span class="branchCov" title="Branch 0 was taken 1189757 times"> + </span><span class="branchCov" title="Branch 1 was taken 7656215 times"> + </span>]:<span class="lineCov">    8845972 :     if (item-&gt;flag &amp; BCACHE_FREE) {</span>
+<span class="lineNum">     774 </span>                :<span class="lineCov">    1189757 :         fname_new-&gt;nitems++;</span>
 <span class="lineNum">     775 </span>                :            :     }
 <span class="lineNum">     776 </span>                :            : 
 <span class="lineNum">     777 </span>                :            :     // remove from the list if the block is in clean list
-<span class="lineNum">     778 </span>[<span class="branchCov" title="Branch 0 was taken 1138654 times"> + </span><span class="branchCov" title="Branch 1 was taken 7739887 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 101511 times"> + </span><span class="branchCov" title="Branch 3 was taken 1037143 times"> + </span>]:<span class="lineCov">    8878541 :     if (!(item-&gt;flag &amp; BCACHE_DIRTY) &amp;&amp; !(item-&gt;flag &amp; BCACHE_FREE)) {</span>
-<span class="lineNum">     779 </span>                :<span class="lineCov">     101511 :         list_remove(&amp;fname_new-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     778 </span>[<span class="branchCov" title="Branch 0 was taken 1313291 times"> + </span><span class="branchCov" title="Branch 1 was taken 7532681 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 123534 times"> + </span><span class="branchCov" title="Branch 3 was taken 1189757 times"> + </span>]:<span class="lineCov">    8845972 :     if (!(item-&gt;flag &amp; BCACHE_DIRTY) &amp;&amp; !(item-&gt;flag &amp; BCACHE_FREE)) {</span>
+<span class="lineNum">     779 </span>                :<span class="lineCov">     123534 :         list_remove(&amp;fname_new-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
 <span class="lineNum">     780 </span>                :            :     }
-<span class="lineNum">     781 </span>                :<span class="lineCov">    8878541 :     item-&gt;flag &amp;= ~BCACHE_FREE;</span>
+<span class="lineNum">     781 </span>                :<span class="lineCov">    8845972 :     item-&gt;flag &amp;= ~BCACHE_FREE;</span>
 <span class="lineNum">     782 </span>                :            : 
-<span class="lineNum">     783 </span>        [<span class="branchCov" title="Branch 0 was taken 8055564 times"> + </span><span class="branchCov" title="Branch 1 was taken 822977 times"> + </span>]:<span class="lineCov">    8878541 :     if (dirty == BCACHE_REQ_DIRTY) {</span>
+<span class="lineNum">     783 </span>        [<span class="branchCov" title="Branch 0 was taken 7843683 times"> + </span><span class="branchCov" title="Branch 1 was taken 1002289 times"> + </span>]:<span class="lineCov">    8845972 :     if (dirty == BCACHE_REQ_DIRTY) {</span>
 <span class="lineNum">     784 </span>                :            :         // DIRTY request
 <span class="lineNum">     785 </span>                :            :         // to avoid re-insert already existing item into tree
-<span class="lineNum">     786 </span>        [<span class="branchCov" title="Branch 0 was taken 316161 times"> + </span><span class="branchCov" title="Branch 1 was taken 7739403 times"> + </span>]:<span class="lineCov">    8055564 :         if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
+<span class="lineNum">     786 </span>        [<span class="branchCov" title="Branch 0 was taken 311610 times"> + </span><span class="branchCov" title="Branch 1 was taken 7532073 times"> + </span>]:<span class="lineCov">    7843683 :         if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
 <span class="lineNum">     787 </span>                :            :             // dirty block
 <span class="lineNum">     788 </span>                :            :             // insert into tree
 <span class="lineNum">     789 </span>                :            :             struct dirty_item *ditem;
 <span class="lineNum">     790 </span>                :            : 
-<span class="lineNum">     791 </span>                :<span class="lineCov">     316161 :             ditem = (struct dirty_item *)mempool_alloc(sizeof(struct dirty_item));</span>
-<span class="lineNum">     792 </span>                :<span class="lineCov">     316161 :             ditem-&gt;item = item;</span>
+<span class="lineNum">     791 </span>                :<span class="lineCov">     311610 :             ditem = (struct dirty_item *)mempool_alloc(sizeof(struct dirty_item));</span>
+<span class="lineNum">     792 </span>                :<span class="lineCov">     311610 :             ditem-&gt;item = item;</span>
 <span class="lineNum">     793 </span>                :            : 
-<span class="lineNum">     794 </span>                :<span class="lineCov">     316161 :             avl_insert(&amp;item-&gt;fname-&gt;tree, &amp;ditem-&gt;avl, _dirty_cmp);</span>
+<span class="lineNum">     794 </span>                :<span class="lineCov">     311610 :             avl_insert(&amp;item-&gt;fname-&gt;tree, &amp;ditem-&gt;avl, _dirty_cmp);</span>
 <span class="lineNum">     795 </span>                :            :         }
-<span class="lineNum">     796 </span>                :<span class="lineCov">    8055564 :         item-&gt;flag |= BCACHE_DIRTY;</span>
+<span class="lineNum">     796 </span>                :<span class="lineCov">    7843683 :         item-&gt;flag |= BCACHE_DIRTY;</span>
 <span class="lineNum">     797 </span>                :            :     }else{
 <span class="lineNum">     798 </span>                :            :         // CLEAN request
 <span class="lineNum">     799 </span>                :            :         // insert into clean list only when it was originally clean
-<span class="lineNum">     800 </span>        [<span class="branchCov" title="Branch 0 was taken 822493 times"> + </span><span class="branchCov" title="Branch 1 was taken 484 times"> + </span>]:<span class="lineCov">     822977 :         if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
-<span class="lineNum">     801 </span>                :<span class="lineCov">     822493 :             list_push_front(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
-<span class="lineNum">     802 </span>                :<span class="lineCov">     822493 :             item-&gt;flag &amp;= ~(BCACHE_DIRTY);</span>
+<span class="lineNum">     800 </span>        [<span class="branchCov" title="Branch 0 was taken 1001681 times"> + </span><span class="branchCov" title="Branch 1 was taken 608 times"> + </span>]:<span class="lineCov">    1002289 :         if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
+<span class="lineNum">     801 </span>                :<span class="lineCov">    1001681 :             list_push_front(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     802 </span>                :<span class="lineCov">    1001681 :             item-&gt;flag &amp;= ~(BCACHE_DIRTY);</span>
 <span class="lineNum">     803 </span>                :            :         }
 <span class="lineNum">     804 </span>                :            :     }
 <span class="lineNum">     805 </span>                :            : 
-<span class="lineNum">     806 </span>                :<span class="lineCov">    8878541 :     spin_unlock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     806 </span>                :<span class="lineCov">    8845972 :     spin_unlock(&amp;fname_new-&gt;lock);</span>
 <span class="lineNum">     807 </span>                :            : 
-<span class="lineNum">     808 </span>                :<span class="lineCov">    8878539 :     memcpy(item-&gt;addr, buf, bcache_blocksize);</span>
-<span class="lineNum">     809 </span>                :<span class="lineCov">    8878539 :     _bcache_set_score(item);</span>
+<span class="lineNum">     808 </span>                :<span class="lineCov">    8845972 :     memcpy(item-&gt;addr, buf, bcache_blocksize);</span>
+<span class="lineNum">     809 </span>                :<span class="lineCov">    8845972 :     _bcache_set_score(item);</span>
 <span class="lineNum">     810 </span>                :            : 
-<span class="lineNum">     811 </span>                :<span class="lineCov">    8878318 :     spin_unlock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     811 </span>                :<span class="lineCov">    8845807 :     spin_unlock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     812 </span>                :            : 
-<span class="lineNum">     813 </span>                :<span class="lineCov">    8878320 :     return bcache_blocksize;</span>
+<span class="lineNum">     813 </span>                :<span class="lineCov">    8845806 :     return bcache_blocksize;</span>
 <a name="814"><span class="lineNum">     814 </span>                :            : }</a>
 <span class="lineNum">     815 </span>                :            : 
-<span class="lineNum">     816 </span>                :<span class="lineCov">    8337344 : int bcache_write_partial(struct filemgr *file, bid_t bid, void *buf, size_t offset, size_t len)</span>
+<span class="lineNum">     816 </span>                :<span class="lineCov">    8127847 : int bcache_write_partial(struct filemgr *file, bid_t bid, void *buf, size_t offset, size_t len)</span>
 <span class="lineNum">     817 </span>                :            : {
 <span class="lineNum">     818 </span>                :            :     struct hash_elem *h;
 <span class="lineNum">     819 </span>                :            :     struct bcache_item *item;
 <span class="lineNum">     820 </span>                :            :     struct bcache_item query;
 <span class="lineNum">     821 </span>                :            :     struct fnamedic_item *fname_new;
 <span class="lineNum">     822 </span>                :            : 
-<span class="lineNum">     823 </span>                :<span class="lineCov">    8337344 :     spin_lock(&amp;bcache_lock);</span>
-<span class="lineNum">     824 </span>                :<span class="lineCov">    8337344 :     fname_new = file-&gt;bcache;</span>
-<span class="lineNum">     825 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchCov" title="Branch 1 was taken 8337318 times"> + </span>]:<span class="lineCov">    8337344 :     if (fname_new == NULL) {</span>
+<span class="lineNum">     823 </span>                :<span class="lineCov">    8127847 :     spin_lock(&amp;bcache_lock);</span>
+<span class="lineNum">     824 </span>                :<span class="lineCov">    8127847 :     fname_new = file-&gt;bcache;</span>
+<span class="lineNum">     825 </span>        [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchCov" title="Branch 1 was taken 8127822 times"> + </span>]:<span class="lineCov">    8127847 :     if (fname_new == NULL) {</span>
 <span class="lineNum">     826 </span>                :            :         // filename doesn't exist in filename dictionary .. create
-<span class="lineNum">     827 </span>                :<span class="lineCov">         26 :         fname_new = _fname_create(file);</span>
+<span class="lineNum">     827 </span>                :<span class="lineCov">         25 :         fname_new = _fname_create(file);</span>
 <span class="lineNum">     828 </span>                :            :     }
-<span class="lineNum">     829 </span>                :<span class="lineCov">    8337344 :     spin_unlock(&amp;bcache_lock);</span>
+<span class="lineNum">     829 </span>                :<span class="lineCov">    8127847 :     spin_unlock(&amp;bcache_lock);</span>
 <span class="lineNum">     830 </span>                :            : 
 <span class="lineNum">     831 </span>                :            :     // relay lock
-<span class="lineNum">     832 </span>                :<span class="lineCov">    8337344 :     spin_lock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     832 </span>                :<span class="lineCov">    8127847 :     spin_lock(&amp;fname_new-&gt;lock);</span>
 <span class="lineNum">     833 </span>                :            : 
 <span class="lineNum">     834 </span>                :            :     // set query
-<span class="lineNum">     835 </span>                :<span class="lineCov">    8337344 :     query.bid = bid;</span>
-<span class="lineNum">     836 </span>                :<span class="lineCov">    8337344 :     query.fname = fname_new;</span>
-<span class="lineNum">     837 </span>                :<span class="lineCov">    8337344 :     query.fname-&gt;curfile = file;</span>
+<span class="lineNum">     835 </span>                :<span class="lineCov">    8127847 :     query.bid = bid;</span>
+<span class="lineNum">     836 </span>                :<span class="lineCov">    8127847 :     query.fname = fname_new;</span>
+<span class="lineNum">     837 </span>                :<span class="lineCov">    8127847 :     query.fname-&gt;curfile = file;</span>
 <span class="lineNum">     838 </span>                :            : 
 <span class="lineNum">     839 </span>                :            :     // search hash table
-<span class="lineNum">     840 </span>                :<span class="lineCov">    8337344 :     h = hash_find(&amp;fname_new-&gt;hashtable, &amp;query.hash_elem);</span>
-<span class="lineNum">     841 </span>        [<span class="branchCov" title="Branch 0 was taken 188495 times"> + </span><span class="branchCov" title="Branch 1 was taken 8148849 times"> + </span>]:<span class="lineCov">    8337344 :     if (h == NULL) {</span>
+<span class="lineNum">     840 </span>                :<span class="lineCov">    8127847 :     h = hash_find(&amp;fname_new-&gt;hashtable, &amp;query.hash_elem);</span>
+<span class="lineNum">     841 </span>        [<span class="branchCov" title="Branch 0 was taken 183626 times"> + </span><span class="branchCov" title="Branch 1 was taken 7944221 times"> + </span>]:<span class="lineCov">    8127847 :     if (h == NULL) {</span>
 <span class="lineNum">     842 </span>                :            :         // cache miss .. partial write fail .. return 0
-<span class="lineNum">     843 </span>                :<span class="lineCov">     188495 :         spin_unlock(&amp;fname_new-&gt;lock);</span>
-<span class="lineNum">     844 </span>                :<span class="lineCov">     188495 :         return 0;</span>
+<span class="lineNum">     843 </span>                :<span class="lineCov">     183626 :         spin_unlock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     844 </span>                :<span class="lineCov">     183626 :         return 0;</span>
 <span class="lineNum">     845 </span>                :            : 
 <span class="lineNum">     846 </span>                :            :     }else{
 <span class="lineNum">     847 </span>                :            :         // cache hit .. get the block
-<span class="lineNum">     848 </span>                :<span class="lineCov">    8148849 :         item = _get_entry(h, struct bcache_item, hash_elem);</span>
+<span class="lineNum">     848 </span>                :<span class="lineCov">    7944221 :         item = _get_entry(h, struct bcache_item, hash_elem);</span>
 <span class="lineNum">     849 </span>                :            :     }
 <span class="lineNum">     850 </span>                :            : 
 <span class="lineNum">     851 </span>                :            :     // move to the head of FILE_LRU
-<span class="lineNum">     852 </span>                :<span class="lineCov">    8148849 :     _bcache_move_fname_list(fname_new, &amp;file_lru);</span>
+<span class="lineNum">     852 </span>                :<span class="lineCov">    7944221 :     _bcache_move_fname_list(fname_new, &amp;file_lru);</span>
 <span class="lineNum">     853 </span>                :            : 
-<span class="lineNum">     854 </span>                :<span class="lineCov">    8148849 :     spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     854 </span>                :<span class="lineCov">    7944221 :     spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     855 </span>                :            : 
-<span class="lineNum">     856 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8148849 times"> + </span>]:<span class="lineCov">    8148849 :     assert(!(item-&gt;flag &amp; BCACHE_FREE));</span>
+<span class="lineNum">     856 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 7944221 times"> + </span>]:<span class="lineCov">    7944221 :     assert(!(item-&gt;flag &amp; BCACHE_FREE));</span>
 <span class="lineNum">     857 </span>                :            : 
 <span class="lineNum">     858 </span>                :            :     // check whether this is dirty block
 <span class="lineNum">     859 </span>                :            :     // to avoid re-insert already existing item into tree
-<span class="lineNum">     860 </span>        [<span class="branchCov" title="Branch 0 was taken 1831 times"> + </span><span class="branchCov" title="Branch 1 was taken 8147018 times"> + </span>]:<span class="lineCov">    8148849 :     if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
+<span class="lineNum">     860 </span>        [<span class="branchCov" title="Branch 0 was taken 1898 times"> + </span><span class="branchCov" title="Branch 1 was taken 7942323 times"> + </span>]:<span class="lineCov">    7944221 :     if (!(item-&gt;flag &amp; BCACHE_DIRTY)) {</span>
 <span class="lineNum">     861 </span>                :            :         // this block was clean block
 <span class="lineNum">     862 </span>                :            :         struct dirty_item *ditem;
 <span class="lineNum">     863 </span>                :            : 
 <span class="lineNum">     864 </span>                :            :         // remove from clean list
-<span class="lineNum">     865 </span>                :<span class="lineCov">       1831 :         list_remove(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
+<span class="lineNum">     865 </span>                :<span class="lineCov">       1898 :         list_remove(&amp;item-&gt;fname-&gt;cleanlist, &amp;item-&gt;list_elem);</span>
 <span class="lineNum">     866 </span>                :            : 
-<span class="lineNum">     867 </span>                :<span class="lineCov">       1831 :         ditem = (struct dirty_item *)mempool_alloc(sizeof(struct dirty_item));</span>
-<span class="lineNum">     868 </span>                :<span class="lineCov">       1831 :         ditem-&gt;item = item;</span>
+<span class="lineNum">     867 </span>                :<span class="lineCov">       1898 :         ditem = (struct dirty_item *)mempool_alloc(sizeof(struct dirty_item));</span>
+<span class="lineNum">     868 </span>                :<span class="lineCov">       1898 :         ditem-&gt;item = item;</span>
 <span class="lineNum">     869 </span>                :            : 
 <span class="lineNum">     870 </span>                :            :         // insert into tree
-<span class="lineNum">     871 </span>                :<span class="lineCov">       1831 :         avl_insert(&amp;item-&gt;fname-&gt;tree, &amp;ditem-&gt;avl, _dirty_cmp);</span>
+<span class="lineNum">     871 </span>                :<span class="lineCov">       1898 :         avl_insert(&amp;item-&gt;fname-&gt;tree, &amp;ditem-&gt;avl, _dirty_cmp);</span>
 <span class="lineNum">     872 </span>                :            :     }
 <span class="lineNum">     873 </span>                :            : 
 <span class="lineNum">     874 </span>                :            :     // always set this block as dirty
-<span class="lineNum">     875 </span>                :<span class="lineCov">    8148849 :     item-&gt;flag |= BCACHE_DIRTY;</span>
+<span class="lineNum">     875 </span>                :<span class="lineCov">    7944221 :     item-&gt;flag |= BCACHE_DIRTY;</span>
 <span class="lineNum">     876 </span>                :            : 
-<span class="lineNum">     877 </span>                :<span class="lineCov">    8148849 :     spin_unlock(&amp;fname_new-&gt;lock);</span>
+<span class="lineNum">     877 </span>                :<span class="lineCov">    7944221 :     spin_unlock(&amp;fname_new-&gt;lock);</span>
 <span class="lineNum">     878 </span>                :            : 
-<span class="lineNum">     879 </span>                :<span class="lineCov">    8148849 :     memcpy((uint8_t *)(item-&gt;addr) + offset, buf, len);</span>
-<span class="lineNum">     880 </span>                :<span class="lineCov">    8148849 :     _bcache_set_score(item);</span>
+<span class="lineNum">     879 </span>                :<span class="lineCov">    7944221 :     memcpy((uint8_t *)(item-&gt;addr) + offset, buf, len);</span>
+<span class="lineNum">     880 </span>                :<span class="lineCov">    7944221 :     _bcache_set_score(item);</span>
 <span class="lineNum">     881 </span>                :            : 
-<span class="lineNum">     882 </span>                :<span class="lineCov">    8148849 :     spin_unlock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     882 </span>                :<span class="lineCov">    7944221 :     spin_unlock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     883 </span>                :            : 
-<span class="lineNum">     884 </span>                :<span class="lineCov">    8337344 :     return len;</span>
+<span class="lineNum">     884 </span>                :<span class="lineCov">    8127847 :     return len;</span>
 <span class="lineNum">     885 </span>                :            : }
 <a name="886"><span class="lineNum">     886 </span>                :            : </a>
 <span class="lineNum">     887 </span>                :            : // remove all dirty blocks of the FILE (they are only discarded and not written back)
-<span class="lineNum">     888 </span>                :<span class="lineCov">        177 : void bcache_remove_dirty_blocks(struct filemgr *file)</span>
+<span class="lineNum">     888 </span>                :<span class="lineCov">        175 : void bcache_remove_dirty_blocks(struct filemgr *file)</span>
 <span class="lineNum">     889 </span>                :            : {
 <span class="lineNum">     890 </span>                :            :     struct fnamedic_item *fname_item;
 <span class="lineNum">     891 </span>                :            : 
-<span class="lineNum">     892 </span>                :<span class="lineCov">        177 :     fname_item = file-&gt;bcache;</span>
+<span class="lineNum">     892 </span>                :<span class="lineCov">        175 :     fname_item = file-&gt;bcache;</span>
 <span class="lineNum">     893 </span>                :            : 
-<span class="lineNum">     894 </span>        [<span class="branchCov" title="Branch 0 was taken 175 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">        177 :     if (fname_item) {</span>
+<span class="lineNum">     894 </span>        [<span class="branchCov" title="Branch 0 was taken 173 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">        175 :     if (fname_item) {</span>
 <span class="lineNum">     895 </span>                :            :         // acquire lock
-<span class="lineNum">     896 </span>                :<span class="lineCov">        175 :         spin_lock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     896 </span>                :<span class="lineCov">        173 :         spin_lock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     897 </span>                :            : 
 <span class="lineNum">     898 </span>                :            :         // remove all dirty block
-<span class="lineNum">     899 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 175 times"> + </span>]:<span class="lineCov">        177 :         while(!_tree_empty(fname_item-&gt;tree)) {</span>
+<span class="lineNum">     899 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 173 times"> + </span>]:<span class="lineCov">        175 :         while(!_tree_empty(fname_item-&gt;tree)) {</span>
 <span class="lineNum">     900 </span>                :<span class="lineCov">          2 :             _bcache_evict_dirty(fname_item, 0);</span>
 <span class="lineNum">     901 </span>                :            :         }
 <span class="lineNum">     902 </span>                :            : 
 <span class="lineNum">     903 </span>                :            :         // check whether the victim file is empty
-<span class="lineNum">     904 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 175 times"> + </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineCov">        175 :         if (_list_empty(fname_item-&gt;cleanlist) &amp;&amp; _tree_empty(fname_item-&gt;tree)) {</span>
+<span class="lineNum">     904 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 173 times"> + </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineCov">        173 :         if (_list_empty(fname_item-&gt;cleanlist) &amp;&amp; _tree_empty(fname_item-&gt;tree)) {</span>
 <span class="lineNum">     905 </span>                :            :             // remove from FILE_LRU and insert into FILE_EMPTY
 <span class="lineNum">     906 </span>                :<span class="lineNoCov">          0 :             _bcache_move_fname_list(fname_item, &amp;file_empty);</span>
 <span class="lineNum">     907 </span>                :            :         }
 <span class="lineNum">     908 </span>                :            : 
-<span class="lineNum">     909 </span>                :<span class="lineCov">        175 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     909 </span>                :<span class="lineCov">        173 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     910 </span>                :            :     }
-<span class="lineNum">     911 </span>                :<span class="lineCov">        177 : }</span>
+<span class="lineNum">     911 </span>                :<span class="lineCov">        175 : }</span>
 <a name="912"><span class="lineNum">     912 </span>                :            : </a>
 <span class="lineNum">     913 </span>                :            : // remove all clean blocks of the FILE
-<span class="lineNum">     914 </span>                :<span class="lineCov">         89 : void bcache_remove_clean_blocks(struct filemgr *file)</span>
+<span class="lineNum">     914 </span>                :<span class="lineCov">         88 : void bcache_remove_clean_blocks(struct filemgr *file)</span>
 <span class="lineNum">     915 </span>                :            : {
 <span class="lineNum">     916 </span>                :            :     struct list_elem *e;
 <span class="lineNum">     917 </span>                :            :     struct bcache_item *item;
 <span class="lineNum">     918 </span>                :            :     struct fnamedic_item *fname_item;
 <span class="lineNum">     919 </span>                :            : 
-<span class="lineNum">     920 </span>                :<span class="lineCov">         89 :     fname_item = file-&gt;bcache;</span>
+<span class="lineNum">     920 </span>                :<span class="lineCov">         88 :     fname_item = file-&gt;bcache;</span>
 <span class="lineNum">     921 </span>                :            : 
-<span class="lineNum">     922 </span>        [<span class="branchCov" title="Branch 0 was taken 88 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         89 :     if (fname_item) {</span>
+<span class="lineNum">     922 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         88 :     if (fname_item) {</span>
 <span class="lineNum">     923 </span>                :            :         // acquire lock
-<span class="lineNum">     924 </span>                :<span class="lineCov">         88 :         spin_lock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     924 </span>                :<span class="lineCov">         87 :         spin_lock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     925 </span>                :            : 
 <span class="lineNum">     926 </span>                :            :         // remove all clean blocks
-<span class="lineNum">     927 </span>                :<span class="lineCov">         88 :         e = list_begin(&amp;fname_item-&gt;cleanlist);</span>
-<span class="lineNum">     928 </span>        [<span class="branchCov" title="Branch 0 was taken 325312 times"> + </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">     325400 :         while(e){</span>
-<span class="lineNum">     929 </span>                :<span class="lineCov">     325312 :             item = _get_entry(e, struct bcache_item, list_elem);</span>
-<span class="lineNum">     930 </span>                :<span class="lineCov">     325312 :             spin_lock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     927 </span>                :<span class="lineCov">         87 :         e = list_begin(&amp;fname_item-&gt;cleanlist);</span>
+<span class="lineNum">     928 </span>        [<span class="branchCov" title="Branch 0 was taken 318596 times"> + </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">     318683 :         while(e){</span>
+<span class="lineNum">     929 </span>                :<span class="lineCov">     318596 :             item = _get_entry(e, struct bcache_item, list_elem);</span>
+<span class="lineNum">     930 </span>                :<span class="lineCov">     318596 :             spin_lock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     931 </span>                :            : 
 <span class="lineNum">     932 </span>                :            :             // remove from clean list
-<span class="lineNum">     933 </span>                :<span class="lineCov">     325312 :             e = list_remove(&amp;fname_item-&gt;cleanlist, e);</span>
+<span class="lineNum">     933 </span>                :<span class="lineCov">     318596 :             e = list_remove(&amp;fname_item-&gt;cleanlist, e);</span>
 <span class="lineNum">     934 </span>                :            :             // remove from hash table
-<span class="lineNum">     935 </span>                :<span class="lineCov">     325312 :             hash_remove(&amp;fname_item-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
+<span class="lineNum">     935 </span>                :<span class="lineCov">     318596 :             hash_remove(&amp;fname_item-&gt;hashtable, &amp;item-&gt;hash_elem);</span>
 <span class="lineNum">     936 </span>                :            :             // insert into free list
-<span class="lineNum">     937 </span>                :<span class="lineCov">     325312 :             _bcache_release_freeblock(item);</span>
-<span class="lineNum">     938 </span>                :<span class="lineCov">     325312 :             spin_unlock(&amp;item-&gt;lock);</span>
+<span class="lineNum">     937 </span>                :<span class="lineCov">     318596 :             _bcache_release_freeblock(item);</span>
+<span class="lineNum">     938 </span>                :<span class="lineCov">     318596 :             spin_unlock(&amp;item-&gt;lock);</span>
 <span class="lineNum">     939 </span>                :            :         }
 <span class="lineNum">     940 </span>                :            : 
 <span class="lineNum">     941 </span>                :            :         // check whether the victim file is empty
-<span class="lineNum">     942 </span>[<span class="branchCov" title="Branch 0 was taken 88 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 88 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         88 :         if (_list_empty(fname_item-&gt;cleanlist) &amp;&amp; _tree_empty(fname_item-&gt;tree)) {</span>
+<span class="lineNum">     942 </span>[<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         87 :         if (_list_empty(fname_item-&gt;cleanlist) &amp;&amp; _tree_empty(fname_item-&gt;tree)) {</span>
 <span class="lineNum">     943 </span>                :            :             // remove from FILE_LRU and insert into FILE_EMPTY
-<span class="lineNum">     944 </span>                :<span class="lineCov">         88 :             _bcache_move_fname_list(fname_item, &amp;file_empty);</span>
+<span class="lineNum">     944 </span>                :<span class="lineCov">         87 :             _bcache_move_fname_list(fname_item, &amp;file_empty);</span>
 <span class="lineNum">     945 </span>                :            :         }
 <span class="lineNum">     946 </span>                :            : 
-<span class="lineNum">     947 </span>                :<span class="lineCov">         88 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     947 </span>                :<span class="lineCov">         87 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     948 </span>                :            :     }
-<span class="lineNum">     949 </span>                :<span class="lineCov">         89 : }</span>
+<span class="lineNum">     949 </span>                :<span class="lineCov">         88 : }</span>
 <span class="lineNum">     950 </span>                :            : 
 <a name="951"><span class="lineNum">     951 </span>                :            : // remove file from filename dictionary</a>
 <span class="lineNum">     952 </span>                :            : // MUST sure that there is no dirty block belongs to this FILE (or memory leak occurs)
-<span class="lineNum">     953 </span>                :<span class="lineCov">         89 : void bcache_remove_file(struct filemgr *file)</span>
+<span class="lineNum">     953 </span>                :<span class="lineCov">         88 : void bcache_remove_file(struct filemgr *file)</span>
 <span class="lineNum">     954 </span>                :            : {
 <span class="lineNum">     955 </span>                :            :     struct fnamedic_item *fname_item;
 <span class="lineNum">     956 </span>                :            : 
-<span class="lineNum">     957 </span>                :<span class="lineCov">         89 :     fname_item = file-&gt;bcache;</span>
+<span class="lineNum">     957 </span>                :<span class="lineCov">         88 :     fname_item = file-&gt;bcache;</span>
 <span class="lineNum">     958 </span>                :            : 
-<span class="lineNum">     959 </span>        [<span class="branchCov" title="Branch 0 was taken 88 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         89 :     if (fname_item) {</span>
+<span class="lineNum">     959 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         88 :     if (fname_item) {</span>
 <span class="lineNum">     960 </span>                :            :         // acquire lock
-<span class="lineNum">     961 </span>                :<span class="lineCov">         88 :         spin_lock(&amp;bcache_lock);</span>
-<span class="lineNum">     962 </span>                :<span class="lineCov">         88 :         spin_lock(&amp;fname_item-&gt;lock);</span>
-<span class="lineNum">     963 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">         88 :         assert(_tree_empty(fname_item-&gt;tree));</span>
-<span class="lineNum">     964 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 88 times"> + </span>]:<span class="lineCov">         88 :         assert(_list_empty(fname_item-&gt;cleanlist));</span>
+<span class="lineNum">     961 </span>                :<span class="lineCov">         87 :         spin_lock(&amp;bcache_lock);</span>
+<span class="lineNum">     962 </span>                :<span class="lineCov">         87 :         spin_lock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     963 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">         87 :         assert(_tree_empty(fname_item-&gt;tree));</span>
+<span class="lineNum">     964 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span>]:<span class="lineCov">         87 :         assert(_list_empty(fname_item-&gt;cleanlist));</span>
 <span class="lineNum">     965 </span>                :            : 
 <span class="lineNum">     966 </span>                :            :         // remove from fname dictionary hash table
-<span class="lineNum">     967 </span>                :<span class="lineCov">         88 :         hash_remove(&amp;fnamedic, &amp;fname_item-&gt;hash_elem);</span>
-<span class="lineNum">     968 </span>                :<span class="lineCov">         88 :         spin_unlock(&amp;bcache_lock);</span>
+<span class="lineNum">     967 </span>                :<span class="lineCov">         87 :         hash_remove(&amp;fnamedic, &amp;fname_item-&gt;hash_elem);</span>
+<span class="lineNum">     968 </span>                :<span class="lineCov">         87 :         spin_unlock(&amp;bcache_lock);</span>
 <span class="lineNum">     969 </span>                :            : 
-<span class="lineNum">     970 </span>                :<span class="lineCov">         88 :         _fname_free(fname_item);</span>
+<span class="lineNum">     970 </span>                :<span class="lineCov">         87 :         _fname_free(fname_item);</span>
 <span class="lineNum">     971 </span>                :            : 
-<span class="lineNum">     972 </span>                :<span class="lineCov">         88 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     972 </span>                :<span class="lineCov">         87 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     973 </span>                :            : 
-<span class="lineNum">     974 </span>                :<span class="lineCov">         88 :         free(fname_item);</span>
+<span class="lineNum">     974 </span>                :<span class="lineCov">         87 :         free(fname_item);</span>
 <span class="lineNum">     975 </span>                :            :     }
-<span class="lineNum">     976 </span>                :<span class="lineCov">         89 : }</span>
+<span class="lineNum">     976 </span>                :<span class="lineCov">         88 : }</span>
 <span class="lineNum">     977 </span>                :            : 
 <a name="978"><span class="lineNum">     978 </span>                :            : // flush and synchronize all dirty blocks of the FILE</a>
 <span class="lineNum">     979 </span>                :            : // dirty blocks will be changed to clean blocks (not discarded)
-<span class="lineNum">     980 </span>                :<span class="lineCov">       4574 : void bcache_flush(struct filemgr *file)</span>
+<span class="lineNum">     980 </span>                :<span class="lineCov">       4555 : void bcache_flush(struct filemgr *file)</span>
 <span class="lineNum">     981 </span>                :            : {
 <span class="lineNum">     982 </span>                :            :     struct fnamedic_item *fname_item;
 <span class="lineNum">     983 </span>                :            : 
-<span class="lineNum">     984 </span>                :<span class="lineCov">       4574 :     fname_item = file-&gt;bcache;</span>
+<span class="lineNum">     984 </span>                :<span class="lineCov">       4555 :     fname_item = file-&gt;bcache;</span>
 <span class="lineNum">     985 </span>                :            : 
-<span class="lineNum">     986 </span>        [<span class="branchCov" title="Branch 0 was taken 4573 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">       4574 :     if (fname_item) {</span>
+<span class="lineNum">     986 </span>        [<span class="branchCov" title="Branch 0 was taken 4554 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">       4555 :     if (fname_item) {</span>
 <span class="lineNum">     987 </span>                :            :         // acquire lock
-<span class="lineNum">     988 </span>                :<span class="lineCov">       4573 :         spin_lock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     988 </span>                :<span class="lineCov">       4554 :         spin_lock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     989 </span>                :            : 
-<span class="lineNum">     990 </span>        [<span class="branchCov" title="Branch 0 was taken 9625 times"> + </span><span class="branchCov" title="Branch 1 was taken 4573 times"> + </span>]:<span class="lineCov">      14198 :         while(!_tree_empty(fname_item-&gt;tree)) {</span>
-<span class="lineNum">     991 </span>                :<span class="lineCov">       9625 :             _bcache_evict_dirty(fname_item, 1);</span>
+<span class="lineNum">     990 </span>        [<span class="branchCov" title="Branch 0 was taken 9483 times"> + </span><span class="branchCov" title="Branch 1 was taken 4554 times"> + </span>]:<span class="lineCov">      14037 :         while(!_tree_empty(fname_item-&gt;tree)) {</span>
+<span class="lineNum">     991 </span>                :<span class="lineCov">       9483 :             _bcache_evict_dirty(fname_item, 1);</span>
 <span class="lineNum">     992 </span>                :            :         }
 <span class="lineNum">     993 </span>                :            : 
-<span class="lineNum">     994 </span>                :<span class="lineCov">       4573 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
+<span class="lineNum">     994 </span>                :<span class="lineCov">       4554 :         spin_unlock(&amp;fname_item-&gt;lock);</span>
 <span class="lineNum">     995 </span>                :            :     }
-<a name="996"><span class="lineNum">     996 </span>                :<span class="lineCov">       4574 : }</span></a>
+<a name="996"><span class="lineNum">     996 </span>                :<span class="lineCov">       4555 : }</span></a>
 <span class="lineNum">     997 </span>                :            : 
 <span class="lineNum">     998 </span>                :<span class="lineCov">         35 : void bcache_init(int nblock, int blocksize)</span>
 <span class="lineNum">     999 </span>                :            : {
