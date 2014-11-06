@@ -157,33 +157,33 @@
 <span class="lineNum">      86 </span>                :<span class="lineCov">         48 :     return status;</span>
 <a name="87"><span class="lineNum">      87 </span>                :            : }</a>
 <span class="lineNum">      88 </span>                :            : 
-<span class="lineNum">      89 </span>                :<span class="lineCov">     672337 : static void _log_errno_str(struct filemgr_ops *ops,</span>
+<span class="lineNum">      89 </span>                :<span class="lineCov">     541139 : static void _log_errno_str(struct filemgr_ops *ops,</span>
 <span class="lineNum">      90 </span>                :            :                            err_log_callback *log_callback,
 <span class="lineNum">      91 </span>                :            :                            fdb_status io_error,
 <span class="lineNum">      92 </span>                :            :                            const char *what,
 <span class="lineNum">      93 </span>                :            :                            const char *filename)
 <span class="lineNum">      94 </span>                :            : {
-<span class="lineNum">      95 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchCov" title="Branch 1 was taken 672324 times"> + </span>]:<span class="lineCov">     672337 :     if (io_error &lt; 0) {</span>
+<span class="lineNum">      95 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchCov" title="Branch 1 was taken 541126 times"> + </span>]:<span class="lineCov">     541139 :     if (io_error &lt; 0) {</span>
 <span class="lineNum">      96 </span>                :            :         char errno_msg[512];
 <span class="lineNum">      97 </span>                :<span class="lineCov">         13 :         ops-&gt;get_errno_str(errno_msg, 512);</span>
 <span class="lineNum">      98 </span>                :            :         fdb_log(log_callback, io_error,
 <span class="lineNum">      99 </span>                :<span class="lineCov">         13 :                 &quot;Error in %s on a database file '%s', %s&quot;, what, filename, errno_msg);</span>
 <span class="lineNum">     100 </span>                :            :     }
-<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">     672337 : }</span></a>
+<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">     541139 : }</span></a>
 <span class="lineNum">     102 </span>                :            : 
-<span class="lineNum">     103 </span>                :<span class="lineCov">        674 : uint32_t _file_hash(struct hash *hash, struct hash_elem *e)</span>
+<span class="lineNum">     103 </span>                :<span class="lineCov">        675 : uint32_t _file_hash(struct hash *hash, struct hash_elem *e)</span>
 <span class="lineNum">     104 </span>                :            : {
-<span class="lineNum">     105 </span>                :<span class="lineCov">        674 :     struct filemgr *file = _get_entry(e, struct filemgr, e);</span>
-<span class="lineNum">     106 </span>                :<span class="lineCov">        674 :     int len = strlen(file-&gt;filename);</span>
-<span class="lineNum">     107 </span>                :<span class="lineCov">        674 :     return chksum(file-&gt;filename, len) &amp; ((unsigned)(NBUCKET-1));</span>
+<span class="lineNum">     105 </span>                :<span class="lineCov">        675 :     struct filemgr *file = _get_entry(e, struct filemgr, e);</span>
+<span class="lineNum">     106 </span>                :<span class="lineCov">        675 :     int len = strlen(file-&gt;filename);</span>
+<span class="lineNum">     107 </span>                :<span class="lineCov">        675 :     return chksum(file-&gt;filename, len) &amp; ((unsigned)(NBUCKET-1));</span>
 <a name="108"><span class="lineNum">     108 </span>                :            : }</a>
 <span class="lineNum">     109 </span>                :            : 
-<span class="lineNum">     110 </span>                :<span class="lineCov">        307 : int _file_cmp(struct hash_elem *a, struct hash_elem *b)</span>
+<span class="lineNum">     110 </span>                :<span class="lineCov">        308 : int _file_cmp(struct hash_elem *a, struct hash_elem *b)</span>
 <span class="lineNum">     111 </span>                :            : {
 <span class="lineNum">     112 </span>                :            :     struct filemgr *aa, *bb;
-<span class="lineNum">     113 </span>                :<span class="lineCov">        307 :     aa = _get_entry(a, struct filemgr, e);</span>
-<span class="lineNum">     114 </span>                :<span class="lineCov">        307 :     bb = _get_entry(b, struct filemgr, e);</span>
-<span class="lineNum">     115 </span>                :<span class="lineCov">        307 :     return strcmp(aa-&gt;filename, bb-&gt;filename);</span>
+<span class="lineNum">     113 </span>                :<span class="lineCov">        308 :     aa = _get_entry(a, struct filemgr, e);</span>
+<span class="lineNum">     114 </span>                :<span class="lineCov">        308 :     bb = _get_entry(b, struct filemgr, e);</span>
+<span class="lineNum">     115 </span>                :<span class="lineCov">        308 :     return strcmp(aa-&gt;filename, bb-&gt;filename);</span>
 <a name="116"><span class="lineNum">     116 </span>                :            : }</a>
 <span class="lineNum">     117 </span>                :            : 
 <span class="lineNum">     118 </span>                :<span class="lineCov">        379 : void filemgr_init(struct filemgr_config *config)</span>
@@ -228,15 +228,15 @@
 <span class="lineNum">     157 </span>                :            :     }
 <a name="158"><span class="lineNum">     158 </span>                :<span class="lineCov">        379 : }</span></a>
 <span class="lineNum">     159 </span>                :            : 
-<span class="lineNum">     160 </span>                :<span class="lineCov">     198370 : void * _filemgr_get_temp_buf()</span>
+<span class="lineNum">     160 </span>                :<span class="lineCov">     204179 : void * _filemgr_get_temp_buf()</span>
 <span class="lineNum">     161 </span>                :            : {
 <span class="lineNum">     162 </span>                :            :     struct list_elem *e;
 <span class="lineNum">     163 </span>                :            :     struct temp_buf_item *item;
 <span class="lineNum">     164 </span>                :            : 
-<span class="lineNum">     165 </span>                :<span class="lineCov">     198370 :     spin_lock(&amp;temp_buf_lock);</span>
-<span class="lineNum">     166 </span>                :<span class="lineCov">     198370 :     e = list_pop_front(&amp;temp_buf);</span>
-<span class="lineNum">     167 </span>        [<span class="branchCov" title="Branch 0 was taken 198294 times"> + </span><span class="branchCov" title="Branch 1 was taken 76 times"> + </span>]:<span class="lineCov">     198370 :     if (e) {</span>
-<span class="lineNum">     168 </span>                :<span class="lineCov">     198294 :         item = _get_entry(e, struct temp_buf_item, le);</span>
+<span class="lineNum">     165 </span>                :<span class="lineCov">     204179 :     spin_lock(&amp;temp_buf_lock);</span>
+<span class="lineNum">     166 </span>                :<span class="lineCov">     204179 :     e = list_pop_front(&amp;temp_buf);</span>
+<span class="lineNum">     167 </span>        [<span class="branchCov" title="Branch 0 was taken 204103 times"> + </span><span class="branchCov" title="Branch 1 was taken 76 times"> + </span>]:<span class="lineCov">     204179 :     if (e) {</span>
+<span class="lineNum">     168 </span>                :<span class="lineCov">     204103 :         item = _get_entry(e, struct temp_buf_item, le);</span>
 <span class="lineNum">     169 </span>                :            :     }else{
 <span class="lineNum">     170 </span>                :            :         void *addr;
 <span class="lineNum">     171 </span>                :            : 
@@ -245,20 +245,20 @@
 <span class="lineNum">     174 </span>                :<span class="lineCov">         76 :         item = (struct temp_buf_item *)((uint8_t *) addr + global_config.blocksize);</span>
 <span class="lineNum">     175 </span>                :<span class="lineCov">         76 :         item-&gt;addr = addr;</span>
 <span class="lineNum">     176 </span>                :            :     }
-<span class="lineNum">     177 </span>                :<span class="lineCov">     198370 :     spin_unlock(&amp;temp_buf_lock);</span>
+<span class="lineNum">     177 </span>                :<span class="lineCov">     204179 :     spin_unlock(&amp;temp_buf_lock);</span>
 <span class="lineNum">     178 </span>                :            : 
-<span class="lineNum">     179 </span>                :<span class="lineCov">     198370 :     return item-&gt;addr;</span>
+<span class="lineNum">     179 </span>                :<span class="lineCov">     204179 :     return item-&gt;addr;</span>
 <a name="180"><span class="lineNum">     180 </span>                :            : }</a>
 <span class="lineNum">     181 </span>                :            : 
-<span class="lineNum">     182 </span>                :<span class="lineCov">     198370 : void _filemgr_release_temp_buf(void *buf)</span>
+<span class="lineNum">     182 </span>                :<span class="lineCov">     204179 : void _filemgr_release_temp_buf(void *buf)</span>
 <span class="lineNum">     183 </span>                :            : {
 <span class="lineNum">     184 </span>                :            :     struct temp_buf_item *item;
 <span class="lineNum">     185 </span>                :            : 
-<span class="lineNum">     186 </span>                :<span class="lineCov">     198370 :     spin_lock(&amp;temp_buf_lock);</span>
-<span class="lineNum">     187 </span>                :<span class="lineCov">     198370 :     item = (struct temp_buf_item*)((uint8_t *)buf + global_config.blocksize);</span>
-<span class="lineNum">     188 </span>                :<span class="lineCov">     198370 :     list_push_front(&amp;temp_buf, &amp;item-&gt;le);</span>
-<span class="lineNum">     189 </span>                :<span class="lineCov">     198370 :     spin_unlock(&amp;temp_buf_lock);</span>
-<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">     198370 : }</span></a>
+<span class="lineNum">     186 </span>                :<span class="lineCov">     204179 :     spin_lock(&amp;temp_buf_lock);</span>
+<span class="lineNum">     187 </span>                :<span class="lineCov">     204179 :     item = (struct temp_buf_item*)((uint8_t *)buf + global_config.blocksize);</span>
+<span class="lineNum">     188 </span>                :<span class="lineCov">     204179 :     list_push_front(&amp;temp_buf, &amp;item-&gt;le);</span>
+<span class="lineNum">     189 </span>                :<span class="lineCov">     204179 :     spin_unlock(&amp;temp_buf_lock);</span>
+<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">     204179 : }</span></a>
 <span class="lineNum">     191 </span>                :            : 
 <span class="lineNum">     192 </span>                :<span class="lineCov">         74 : void _filemgr_shutdown_temp_buf()</span>
 <span class="lineNum">     193 </span>                :            : {
@@ -397,18 +397,18 @@
 <span class="lineNum">     326 </span>                :<span class="lineCov">        318 :     filemgr_init(config);</span>
 <span class="lineNum">     327 </span>                :            : 
 <span class="lineNum">     328 </span>                :            :     // check whether file is already opened or not
-<span class="lineNum">     329 </span>                :<span class="lineCov">        317 :     query.filename = filename;</span>
-<span class="lineNum">     330 </span>                :<span class="lineCov">        317 :     spin_lock(&amp;filemgr_openlock);</span>
-<span class="lineNum">     331 </span>                :<span class="lineCov">        319 :     e = hash_find(&amp;hash, &amp;query.e);</span>
+<span class="lineNum">     329 </span>                :<span class="lineCov">        318 :     query.filename = filename;</span>
+<span class="lineNum">     330 </span>                :<span class="lineCov">        318 :     spin_lock(&amp;filemgr_openlock);</span>
+<span class="lineNum">     331 </span>                :<span class="lineCov">        320 :     e = hash_find(&amp;hash, &amp;query.e);</span>
 <span class="lineNum">     332 </span>                :            : 
-<span class="lineNum">     333 </span>        [<span class="branchCov" title="Branch 0 was taken 138 times"> + </span><span class="branchCov" title="Branch 1 was taken 181 times"> + </span>]:<span class="lineCov">        319 :     if (e) {</span>
+<span class="lineNum">     333 </span>        [<span class="branchCov" title="Branch 0 was taken 139 times"> + </span><span class="branchCov" title="Branch 1 was taken 181 times"> + </span>]:<span class="lineCov">        320 :     if (e) {</span>
 <span class="lineNum">     334 </span>                :            :         // already opened (return existing structure)
-<span class="lineNum">     335 </span>                :<span class="lineCov">        138 :         file = _get_entry(e, struct filemgr, e);</span>
+<span class="lineNum">     335 </span>                :<span class="lineCov">        139 :         file = _get_entry(e, struct filemgr, e);</span>
 <span class="lineNum">     336 </span>                :            : 
-<span class="lineNum">     337 </span>                :<span class="lineCov">        138 :         spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     338 </span>                :<span class="lineCov">        138 :         file-&gt;ref_count++;</span>
+<span class="lineNum">     337 </span>                :<span class="lineCov">        139 :         spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     338 </span>                :<span class="lineCov">        139 :         file-&gt;ref_count++;</span>
 <span class="lineNum">     339 </span>                :            : 
-<span class="lineNum">     340 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 138 times"> + </span>]:<span class="lineCov">        138 :         if (file-&gt;status == FILE_CLOSED) { // if file was closed before</span>
+<span class="lineNum">     340 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 139 times"> + </span>]:<span class="lineCov">        139 :         if (file-&gt;status == FILE_CLOSED) { // if file was closed before</span>
 <span class="lineNum">     341 </span>                :<span class="lineNoCov">          0 :             file_flag = O_RDWR;</span>
 <span class="lineNum">     342 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             if (create) {</span>
 <span class="lineNum">     343 </span>                :<span class="lineNoCov">          0 :                 file_flag |= O_CREAT;</span>
@@ -451,17 +451,17 @@
 <span class="lineNum">     380 </span>                :            :             }
 <span class="lineNum">     381 </span>                :            :         } else { // file is already opened.
 <span class="lineNum">     382 </span>                :            : 
-<span class="lineNum">     383 </span>        [<span class="branchCov" title="Branch 0 was taken 135 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">        138 :             if (config-&gt;options &amp; FILEMGR_SYNC) {</span>
-<span class="lineNum">     384 </span>                :<span class="lineCov">        135 :                 file-&gt;fflags |= FILEMGR_SYNC;</span>
+<span class="lineNum">     383 </span>        [<span class="branchCov" title="Branch 0 was taken 136 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">        139 :             if (config-&gt;options &amp; FILEMGR_SYNC) {</span>
+<span class="lineNum">     384 </span>                :<span class="lineCov">        136 :                 file-&gt;fflags |= FILEMGR_SYNC;</span>
 <span class="lineNum">     385 </span>                :            :             } else {
 <span class="lineNum">     386 </span>                :<span class="lineCov">          3 :                 file-&gt;fflags &amp;= ~FILEMGR_SYNC;</span>
 <span class="lineNum">     387 </span>                :            :             }
 <span class="lineNum">     388 </span>                :            : 
-<span class="lineNum">     389 </span>                :<span class="lineCov">        138 :             spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     390 </span>                :<span class="lineCov">        138 :             spin_unlock(&amp;filemgr_openlock);</span>
-<span class="lineNum">     391 </span>                :<span class="lineCov">        138 :             result.file = file;</span>
-<span class="lineNum">     392 </span>                :<span class="lineCov">        138 :             result.rv = FDB_RESULT_SUCCESS;</span>
-<span class="lineNum">     393 </span>                :<span class="lineCov">        138 :             return result;</span>
+<span class="lineNum">     389 </span>                :<span class="lineCov">        139 :             spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     390 </span>                :<span class="lineCov">        139 :             spin_unlock(&amp;filemgr_openlock);</span>
+<span class="lineNum">     391 </span>                :<span class="lineCov">        139 :             result.file = file;</span>
+<span class="lineNum">     392 </span>                :<span class="lineCov">        139 :             result.rv = FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">     393 </span>                :<span class="lineCov">        139 :             return result;</span>
 <span class="lineNum">     394 </span>                :            :         }
 <span class="lineNum">     395 </span>                :            :     }
 <span class="lineNum">     396 </span>                :            : 
@@ -559,50 +559,50 @@
 <span class="lineNum">     488 </span>                :            : 
 <span class="lineNum">     489 </span>                :<span class="lineCov">        168 :     result.file = file;</span>
 <span class="lineNum">     490 </span>                :<span class="lineCov">        168 :     result.rv = FDB_RESULT_SUCCESS;</span>
-<span class="lineNum">     491 </span>                :<span class="lineCov">        319 :     return result;</span>
+<span class="lineNum">     491 </span>                :<span class="lineCov">        320 :     return result;</span>
 <a name="492"><span class="lineNum">     492 </span>                :            : }</a>
 <span class="lineNum">     493 </span>                :            : 
-<span class="lineNum">     494 </span>                :<span class="lineCov">      14540 : uint64_t filemgr_update_header(struct filemgr *file, void *buf, size_t len)</span>
+<span class="lineNum">     494 </span>                :<span class="lineCov">      10769 : uint64_t filemgr_update_header(struct filemgr *file, void *buf, size_t len)</span>
 <span class="lineNum">     495 </span>                :            : {
 <span class="lineNum">     496 </span>                :            :     uint64_t ret;
 <span class="lineNum">     497 </span>                :            : 
-<span class="lineNum">     498 </span>                :<span class="lineCov">      14540 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     498 </span>                :<span class="lineCov">      10769 :     spin_lock(&amp;file-&gt;lock);</span>
 <span class="lineNum">     499 </span>                :            : 
-<span class="lineNum">     500 </span>        [<span class="branchCov" title="Branch 0 was taken 105 times"> + </span><span class="branchCov" title="Branch 1 was taken 14435 times"> + </span>]:<span class="lineCov">      14540 :     if (file-&gt;header.data == NULL) {</span>
+<span class="lineNum">     500 </span>        [<span class="branchCov" title="Branch 0 was taken 105 times"> + </span><span class="branchCov" title="Branch 1 was taken 10664 times"> + </span>]:<span class="lineCov">      10769 :     if (file-&gt;header.data == NULL) {</span>
 <span class="lineNum">     501 </span>                :<span class="lineCov">        105 :         file-&gt;header.data = (void *)malloc(len);</span>
-<span class="lineNum">     502 </span>        [<span class="branchCov" title="Branch 0 was taken 46 times"> + </span><span class="branchCov" title="Branch 1 was taken 14389 times"> + </span>]:<span class="lineCov">      14435 :     }else if (file-&gt;header.size &lt; len){</span>
+<span class="lineNum">     502 </span>        [<span class="branchCov" title="Branch 0 was taken 46 times"> + </span><span class="branchCov" title="Branch 1 was taken 10618 times"> + </span>]:<span class="lineCov">      10664 :     }else if (file-&gt;header.size &lt; len){</span>
 <span class="lineNum">     503 </span>                :<span class="lineCov">         46 :         file-&gt;header.data = (void *)realloc(file-&gt;header.data, len);</span>
 <span class="lineNum">     504 </span>                :            :     }
-<span class="lineNum">     505 </span>                :<span class="lineCov">      14540 :     memcpy(file-&gt;header.data, buf, len);</span>
-<span class="lineNum">     506 </span>                :<span class="lineCov">      14540 :     file-&gt;header.size = len;</span>
-<span class="lineNum">     507 </span>                :<span class="lineCov">      14540 :     ++(file-&gt;header.revnum);</span>
-<span class="lineNum">     508 </span>                :<span class="lineCov">      14540 :     ret = file-&gt;header.revnum;</span>
+<span class="lineNum">     505 </span>                :<span class="lineCov">      10769 :     memcpy(file-&gt;header.data, buf, len);</span>
+<span class="lineNum">     506 </span>                :<span class="lineCov">      10769 :     file-&gt;header.size = len;</span>
+<span class="lineNum">     507 </span>                :<span class="lineCov">      10769 :     ++(file-&gt;header.revnum);</span>
+<span class="lineNum">     508 </span>                :<span class="lineCov">      10769 :     ret = file-&gt;header.revnum;</span>
 <span class="lineNum">     509 </span>                :            : 
-<span class="lineNum">     510 </span>                :<span class="lineCov">      14540 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     510 </span>                :<span class="lineCov">      10769 :     spin_unlock(&amp;file-&gt;lock);</span>
 <span class="lineNum">     511 </span>                :            : 
-<span class="lineNum">     512 </span>                :<span class="lineCov">      14540 :     return ret;</span>
+<span class="lineNum">     512 </span>                :<span class="lineCov">      10769 :     return ret;</span>
 <a name="513"><span class="lineNum">     513 </span>                :            : }</a>
 <span class="lineNum">     514 </span>                :            : 
-<span class="lineNum">     515 </span>                :<span class="lineCov">    3329797 : filemgr_header_revnum_t filemgr_get_header_revnum(struct filemgr *file)</span>
+<span class="lineNum">     515 </span>                :<span class="lineCov">    3307936 : filemgr_header_revnum_t filemgr_get_header_revnum(struct filemgr *file)</span>
 <span class="lineNum">     516 </span>                :            : {
 <span class="lineNum">     517 </span>                :            :     filemgr_header_revnum_t ret;
-<span class="lineNum">     518 </span>                :<span class="lineCov">    3329797 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     519 </span>                :<span class="lineCov">    3330037 :     ret = file-&gt;header.revnum;</span>
-<span class="lineNum">     520 </span>                :<span class="lineCov">    3330037 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     521 </span>                :<span class="lineCov">    3329982 :     return ret;</span>
+<span class="lineNum">     518 </span>                :<span class="lineCov">    3307936 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     519 </span>                :<span class="lineCov">    3307968 :     ret = file-&gt;header.revnum;</span>
+<span class="lineNum">     520 </span>                :<span class="lineCov">    3307968 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     521 </span>                :<span class="lineCov">    3307967 :     return ret;</span>
 <span class="lineNum">     522 </span>                :            : }
 <span class="lineNum">     523 </span>                :            : 
 <a name="524"><span class="lineNum">     524 </span>                :            : // 'filemgr_get_seqnum' &amp; 'filemgr_set_seqnum' have to be protected by</a>
 <span class="lineNum">     525 </span>                :            : // 'filemgr_mutex_lock' &amp; 'filemgr_mutex_unlock'.
-<span class="lineNum">     526 </span>                :<span class="lineCov">    3306467 : fdb_seqnum_t filemgr_get_seqnum(struct filemgr *file)</span>
+<span class="lineNum">     526 </span>                :<span class="lineCov">    3289416 : fdb_seqnum_t filemgr_get_seqnum(struct filemgr *file)</span>
 <span class="lineNum">     527 </span>                :            : {
-<span class="lineNum">     528 </span>                :<span class="lineCov">    3306467 :     return file-&gt;header.seqnum;</span>
+<span class="lineNum">     528 </span>                :<span class="lineCov">    3289416 :     return file-&gt;header.seqnum;</span>
 <a name="529"><span class="lineNum">     529 </span>                :            : }</a>
 <span class="lineNum">     530 </span>                :            : 
-<span class="lineNum">     531 </span>                :<span class="lineCov">    2416241 : void filemgr_set_seqnum(struct filemgr *file, fdb_seqnum_t seqnum)</span>
+<span class="lineNum">     531 </span>                :<span class="lineCov">    2411546 : void filemgr_set_seqnum(struct filemgr *file, fdb_seqnum_t seqnum)</span>
 <span class="lineNum">     532 </span>                :            : {
-<span class="lineNum">     533 </span>                :<span class="lineCov">    2416241 :     file-&gt;header.seqnum = seqnum;</span>
-<a name="534"><span class="lineNum">     534 </span>                :<span class="lineCov">    2416241 : }</span></a>
+<span class="lineNum">     533 </span>                :<span class="lineCov">    2411546 :     file-&gt;header.seqnum = seqnum;</span>
+<a name="534"><span class="lineNum">     534 </span>                :<span class="lineCov">    2411546 : }</span></a>
 <span class="lineNum">     535 </span>                :            : 
 <span class="lineNum">     536 </span>                :<span class="lineNoCov">          0 : char* filemgr_get_filename_ptr(struct filemgr *file, char **filename, uint16_t *len)</span>
 <span class="lineNum">     537 </span>                :            : {
@@ -613,33 +613,33 @@
 <span class="lineNum">     542 </span>                :<span class="lineNoCov">          0 :     return *filename;</span>
 <a name="543"><span class="lineNum">     543 </span>                :            : }</a>
 <span class="lineNum">     544 </span>                :            : 
-<span class="lineNum">     545 </span>                :<span class="lineCov">       2404 : bid_t filemgr_get_header_bid(struct filemgr *file)</span>
+<span class="lineNum">     545 </span>                :<span class="lineCov">       2129 : bid_t filemgr_get_header_bid(struct filemgr *file)</span>
 <span class="lineNum">     546 </span>                :            : {
-<span class="lineNum">     547 </span>        [<span class="branchCov" title="Branch 0 was taken 2330 times"> + </span><span class="branchCov" title="Branch 1 was taken 74 times"> + </span>]:<span class="lineCov">       2404 :     if (file-&gt;header.size &gt; 0) {</span>
-<span class="lineNum">     548 </span>                :<span class="lineCov">       2330 :         return file-&gt;header.bid;</span>
+<span class="lineNum">     547 </span>        [<span class="branchCov" title="Branch 0 was taken 2055 times"> + </span><span class="branchCov" title="Branch 1 was taken 74 times"> + </span>]:<span class="lineCov">       2129 :     if (file-&gt;header.size &gt; 0) {</span>
+<span class="lineNum">     548 </span>                :<span class="lineCov">       2055 :         return file-&gt;header.bid;</span>
 <span class="lineNum">     549 </span>                :            :     } else {
-<span class="lineNum">     550 </span>                :<span class="lineCov">       2404 :         return BLK_NOT_FOUND;</span>
+<span class="lineNum">     550 </span>                :<span class="lineCov">       2129 :         return BLK_NOT_FOUND;</span>
 <span class="lineNum">     551 </span>                :            :     }
 <a name="552"><span class="lineNum">     552 </span>                :            : }</a>
 <span class="lineNum">     553 </span>                :            : 
-<span class="lineNum">     554 </span>                :<span class="lineCov">       2446 : void* filemgr_fetch_header(struct filemgr *file, void *buf, size_t *len)</span>
+<span class="lineNum">     554 </span>                :<span class="lineCov">       2169 : void* filemgr_fetch_header(struct filemgr *file, void *buf, size_t *len)</span>
 <span class="lineNum">     555 </span>                :            : {
-<span class="lineNum">     556 </span>                :<span class="lineCov">       2446 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     556 </span>                :<span class="lineCov">       2169 :     spin_lock(&amp;file-&gt;lock);</span>
 <span class="lineNum">     557 </span>                :            : 
-<span class="lineNum">     558 </span>        [<span class="branchCov" title="Branch 0 was taken 2372 times"> + </span><span class="branchCov" title="Branch 1 was taken 74 times"> + </span>]:<span class="lineCov">       2446 :     if (file-&gt;header.size &gt; 0) {</span>
-<span class="lineNum">     559 </span>        [<span class="branchCov" title="Branch 0 was taken 2210 times"> + </span><span class="branchCov" title="Branch 1 was taken 162 times"> + </span>]:<span class="lineCov">       2372 :         if (buf == NULL) {</span>
-<span class="lineNum">     560 </span>                :<span class="lineCov">       2210 :             buf = (void*)malloc(file-&gt;header.size);</span>
+<span class="lineNum">     558 </span>        [<span class="branchCov" title="Branch 0 was taken 2096 times"> + </span><span class="branchCov" title="Branch 1 was taken 74 times"> + </span>]:<span class="lineCov">       2170 :     if (file-&gt;header.size &gt; 0) {</span>
+<span class="lineNum">     559 </span>        [<span class="branchCov" title="Branch 0 was taken 1936 times"> + </span><span class="branchCov" title="Branch 1 was taken 160 times"> + </span>]:<span class="lineCov">       2096 :         if (buf == NULL) {</span>
+<span class="lineNum">     560 </span>                :<span class="lineCov">       1936 :             buf = (void*)malloc(file-&gt;header.size);</span>
 <span class="lineNum">     561 </span>                :            :         }
-<span class="lineNum">     562 </span>                :<span class="lineCov">       2372 :         memcpy(buf, file-&gt;header.data, file-&gt;header.size);</span>
+<span class="lineNum">     562 </span>                :<span class="lineCov">       2096 :         memcpy(buf, file-&gt;header.data, file-&gt;header.size);</span>
 <span class="lineNum">     563 </span>                :            :     }
-<span class="lineNum">     564 </span>                :<span class="lineCov">       2446 :     *len = file-&gt;header.size;</span>
+<span class="lineNum">     564 </span>                :<span class="lineCov">       2170 :     *len = file-&gt;header.size;</span>
 <span class="lineNum">     565 </span>                :            : 
-<span class="lineNum">     566 </span>                :<span class="lineCov">       2446 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     566 </span>                :<span class="lineCov">       2170 :     spin_unlock(&amp;file-&gt;lock);</span>
 <span class="lineNum">     567 </span>                :            : 
-<span class="lineNum">     568 </span>                :<span class="lineCov">       2446 :     return buf;</span>
+<span class="lineNum">     568 </span>                :<span class="lineCov">       2170 :     return buf;</span>
 <a name="569"><span class="lineNum">     569 </span>                :            : }</a>
 <span class="lineNum">     570 </span>                :            : 
-<span class="lineNum">     571 </span>                :<span class="lineCov">         15 : uint64_t filemgr_fetch_prev_header(struct filemgr *file, uint64_t bid,</span>
+<span class="lineNum">     571 </span>                :<span class="lineCov">         17 : uint64_t filemgr_fetch_prev_header(struct filemgr *file, uint64_t bid,</span>
 <span class="lineNum">     572 </span>                :            :                                    void *buf, size_t *len, fdb_seqnum_t *seqnum,
 <span class="lineNum">     573 </span>                :            :                                    err_log_callback *log_callback)
 <span class="lineNum">     574 </span>                :            : {
@@ -649,74 +649,74 @@
 <span class="lineNum">     578 </span>                :            :     filemgr_header_revnum_t _revnum;
 <span class="lineNum">     579 </span>                :            :     filemgr_header_len_t hdr_len;
 <span class="lineNum">     580 </span>                :            :     filemgr_magic_t magic;
-<span class="lineNum">     581 </span>                :<span class="lineCov">         15 :     int found = 0;</span>
+<span class="lineNum">     581 </span>                :<span class="lineCov">         17 :     int found = 0;</span>
 <span class="lineNum">     582 </span>                :            : 
-<span class="lineNum">     583 </span>[<span class="branchCov" title="Branch 0 was taken 15 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 15 times"> + </span>]:<span class="lineCov">         15 :     if (!bid || bid == BLK_NOT_FOUND) {</span>
+<span class="lineNum">     583 </span>[<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 17 times"> + </span>]:<span class="lineCov">         17 :     if (!bid || bid == BLK_NOT_FOUND) {</span>
 <span class="lineNum">     584 </span>                :<span class="lineNoCov">          0 :         *len = 0; // No other header available</span>
 <span class="lineNum">     585 </span>                :<span class="lineNoCov">          0 :         return bid;</span>
 <span class="lineNum">     586 </span>                :            :     }
-<span class="lineNum">     587 </span>                :<span class="lineCov">         15 :     _buf = (uint8_t *)_filemgr_get_temp_buf();</span>
+<span class="lineNum">     587 </span>                :<span class="lineCov">         17 :     _buf = (uint8_t *)_filemgr_get_temp_buf();</span>
 <span class="lineNum">     588 </span>                :            : 
-<span class="lineNum">     589 </span>                :<span class="lineCov">         15 :     bid--;</span>
+<span class="lineNum">     589 </span>                :<span class="lineCov">         17 :     bid--;</span>
 <span class="lineNum">     590 </span>                :            :     // Reverse scan the file for a previous DB header
-<span class="lineNum">     591 </span>        [<span class="branchCov" title="Branch 0 was taken 10034 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      10034 :     do {</span>
-<span class="lineNum">     592 </span>                :<span class="lineCov">      10049 :         filemgr_read(file, (bid_t)bid, _buf, log_callback);</span>
-<span class="lineNum">     593 </span>                :<span class="lineCov">      10049 :         memcpy(marker, _buf + file-&gt;blocksize - BLK_MARKER_SIZE,</span>
-<span class="lineNum">     594 </span>                :<span class="lineCov">      10049 :                 BLK_MARKER_SIZE);</span>
+<span class="lineNum">     591 </span>        [<span class="branchCov" title="Branch 0 was taken 10057 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      10057 :     do {</span>
+<span class="lineNum">     592 </span>                :<span class="lineCov">      10074 :         filemgr_read(file, (bid_t)bid, _buf, log_callback);</span>
+<span class="lineNum">     593 </span>                :<span class="lineCov">      10074 :         memcpy(marker, _buf + file-&gt;blocksize - BLK_MARKER_SIZE,</span>
+<span class="lineNum">     594 </span>                :<span class="lineCov">      10074 :                 BLK_MARKER_SIZE);</span>
 <span class="lineNum">     595 </span>                :            : 
-<span class="lineNum">     596 </span>        [<span class="branchCov" title="Branch 0 was taken 10034 times"> + </span><span class="branchCov" title="Branch 1 was taken 15 times"> + </span>]:<span class="lineCov">      10049 :         if (marker[0] != BLK_MARKER_DBHEADER) {</span>
-<span class="lineNum">     597 </span>                :<span class="lineCov">      10034 :             continue;</span>
+<span class="lineNum">     596 </span>        [<span class="branchCov" title="Branch 0 was taken 10057 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">      10074 :         if (marker[0] != BLK_MARKER_DBHEADER) {</span>
+<span class="lineNum">     597 </span>                :<span class="lineCov">      10057 :             continue;</span>
 <span class="lineNum">     598 </span>                :            :         }
 <span class="lineNum">     599 </span>                :            :         memcpy(&amp;magic,
-<span class="lineNum">     600 </span>                :<span class="lineCov">         15 :                _buf + file-&gt;blocksize - BLK_MARKER_SIZE - sizeof(magic),</span>
-<span class="lineNum">     601 </span>                :<span class="lineCov">         15 :                sizeof(magic));</span>
-<span class="lineNum">     602 </span>                :<span class="lineCov">         15 :         magic = _endian_decode(magic);</span>
-<span class="lineNum">     603 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 15 times"> + </span>]:<span class="lineCov">         15 :         if (magic != FILEMGR_MAGIC) {</span>
+<span class="lineNum">     600 </span>                :<span class="lineCov">         17 :                _buf + file-&gt;blocksize - BLK_MARKER_SIZE - sizeof(magic),</span>
+<span class="lineNum">     601 </span>                :<span class="lineCov">         17 :                sizeof(magic));</span>
+<span class="lineNum">     602 </span>                :<span class="lineCov">         17 :         magic = _endian_decode(magic);</span>
+<span class="lineNum">     603 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         17 :         if (magic != FILEMGR_MAGIC) {</span>
 <span class="lineNum">     604 </span>                :<span class="lineNoCov">          0 :             continue;</span>
 <span class="lineNum">     605 </span>                :            :         }
 <span class="lineNum">     606 </span>                :            :         memcpy(&amp;hdr_len,
-<span class="lineNum">     607 </span>                :<span class="lineCov">         15 :                _buf + file-&gt;blocksize - BLK_MARKER_SIZE - sizeof(magic) - sizeof(hdr_len),</span>
-<span class="lineNum">     608 </span>                :<span class="lineCov">         15 :                sizeof(hdr_len));</span>
-<span class="lineNum">     609 </span>                :<span class="lineCov">         15 :         hdr_len = _endian_decode(hdr_len);</span>
+<span class="lineNum">     607 </span>                :<span class="lineCov">         17 :                _buf + file-&gt;blocksize - BLK_MARKER_SIZE - sizeof(magic) - sizeof(hdr_len),</span>
+<span class="lineNum">     608 </span>                :<span class="lineCov">         17 :                sizeof(hdr_len));</span>
+<span class="lineNum">     609 </span>                :<span class="lineCov">         17 :         hdr_len = _endian_decode(hdr_len);</span>
 <span class="lineNum">     610 </span>                :            : 
-<span class="lineNum">     611 </span>                :<span class="lineCov">         15 :         memcpy(buf, _buf, hdr_len);</span>
+<span class="lineNum">     611 </span>                :<span class="lineCov">         17 :         memcpy(buf, _buf, hdr_len);</span>
 <span class="lineNum">     612 </span>                :            :         memcpy(&amp;_revnum, _buf + hdr_len,
-<span class="lineNum">     613 </span>                :<span class="lineCov">         15 :                sizeof(filemgr_header_revnum_t));</span>
+<span class="lineNum">     613 </span>                :<span class="lineCov">         17 :                sizeof(filemgr_header_revnum_t));</span>
 <span class="lineNum">     614 </span>                :            :         memcpy(&amp;_seqnum,
-<span class="lineNum">     615 </span>                :<span class="lineCov">         15 :                _buf + hdr_len + sizeof(filemgr_header_revnum_t),</span>
-<span class="lineNum">     616 </span>                :<span class="lineCov">         15 :                sizeof(fdb_seqnum_t));</span>
-<span class="lineNum">     617 </span>                :<span class="lineCov">         15 :         *seqnum = _endian_decode(_seqnum);</span>
-<span class="lineNum">     618 </span>                :<span class="lineCov">         15 :         *len = hdr_len;</span>
-<span class="lineNum">     619 </span>                :<span class="lineCov">         15 :         found = 1;</span>
-<span class="lineNum">     620 </span>                :<span class="lineCov">         15 :         break;</span>
+<span class="lineNum">     615 </span>                :<span class="lineCov">         17 :                _buf + hdr_len + sizeof(filemgr_header_revnum_t),</span>
+<span class="lineNum">     616 </span>                :<span class="lineCov">         17 :                sizeof(fdb_seqnum_t));</span>
+<span class="lineNum">     617 </span>                :<span class="lineCov">         17 :         *seqnum = _endian_decode(_seqnum);</span>
+<span class="lineNum">     618 </span>                :<span class="lineCov">         17 :         *len = hdr_len;</span>
+<span class="lineNum">     619 </span>                :<span class="lineCov">         17 :         found = 1;</span>
+<span class="lineNum">     620 </span>                :<span class="lineCov">         17 :         break;</span>
 <span class="lineNum">     621 </span>                :            :     } while (bid--); // scan even the first block 0
 <span class="lineNum">     622 </span>                :            : 
-<span class="lineNum">     623 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 15 times"> + </span>]:<span class="lineCov">         15 :     if (!found) { // no other header found till end of file</span>
+<span class="lineNum">     623 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         17 :     if (!found) { // no other header found till end of file</span>
 <span class="lineNum">     624 </span>                :<span class="lineNoCov">          0 :         *len = 0;</span>
 <span class="lineNum">     625 </span>                :            :     }
 <span class="lineNum">     626 </span>                :            : 
-<span class="lineNum">     627 </span>                :<span class="lineCov">         15 :     _filemgr_release_temp_buf(_buf);</span>
+<span class="lineNum">     627 </span>                :<span class="lineCov">         17 :     _filemgr_release_temp_buf(_buf);</span>
 <span class="lineNum">     628 </span>                :            : 
-<span class="lineNum">     629 </span>                :<span class="lineCov">         15 :     return bid;</span>
+<span class="lineNum">     629 </span>                :<span class="lineCov">         17 :     return bid;</span>
 <a name="630"><span class="lineNum">     630 </span>                :            : }</a>
 <span class="lineNum">     631 </span>                :            : 
-<span class="lineNum">     632 </span>                :<span class="lineCov">        304 : fdb_status filemgr_close(struct filemgr *file, bool cleanup_cache_onclose,</span>
+<span class="lineNum">     632 </span>                :<span class="lineCov">        305 : fdb_status filemgr_close(struct filemgr *file, bool cleanup_cache_onclose,</span>
 <span class="lineNum">     633 </span>                :            :                          const char *orig_file_name,
 <span class="lineNum">     634 </span>                :            :                          err_log_callback *log_callback)
 <span class="lineNum">     635 </span>                :            : {
-<span class="lineNum">     636 </span>                :<span class="lineCov">        304 :     int rv = FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">     636 </span>                :<span class="lineCov">        305 :     int rv = FDB_RESULT_SUCCESS;</span>
 <span class="lineNum">     637 </span>                :            : 
-<span class="lineNum">     638 </span>                :<span class="lineCov">        304 :     spin_lock(&amp;filemgr_openlock); // Grab the filemgr lock to avoid the race with</span>
+<span class="lineNum">     638 </span>                :<span class="lineCov">        305 :     spin_lock(&amp;filemgr_openlock); // Grab the filemgr lock to avoid the race with</span>
 <span class="lineNum">     639 </span>                :            :                                   // filemgr_open() because file-&gt;lock won't
 <span class="lineNum">     640 </span>                :            :                                   // prevent the race condition.
 <span class="lineNum">     641 </span>                :            : 
 <span class="lineNum">     642 </span>                :            :     // remove filemgr structure if no thread refers to the file
-<span class="lineNum">     643 </span>                :<span class="lineCov">        304 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     644 </span>        [<span class="branchCov" title="Branch 0 was taken 166 times"> + </span><span class="branchCov" title="Branch 1 was taken 138 times"> + </span>]:<span class="lineCov">        304 :     if (--(file-&gt;ref_count) == 0) {</span>
+<span class="lineNum">     643 </span>                :<span class="lineCov">        305 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     644 </span>        [<span class="branchCov" title="Branch 0 was taken 166 times"> + </span><span class="branchCov" title="Branch 1 was taken 139 times"> + </span>]:<span class="lineCov">        305 :     if (--(file-&gt;ref_count) == 0) {</span>
 <span class="lineNum">     645 </span>                :<span class="lineCov">        166 :         spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     646 </span>        [<span class="branchCov" title="Branch 0 was taken 88 times"> + </span><span class="branchCov" title="Branch 1 was taken 78 times"> + </span>]:<span class="lineCov">        166 :         if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">     646 </span>        [<span class="branchCov" title="Branch 0 was taken 90 times"> + </span><span class="branchCov" title="Branch 1 was taken 76 times"> + </span>]:<span class="lineCov">        166 :         if (global_config.ncacheblock &gt; 0) {</span>
 <span class="lineNum">     647 </span>                :            :             // discard all dirty blocks belonged to this file
-<span class="lineNum">     648 </span>                :<span class="lineCov">         88 :             bcache_remove_dirty_blocks(file);</span>
+<span class="lineNum">     648 </span>                :<span class="lineCov">         90 :             bcache_remove_dirty_blocks(file);</span>
 <span class="lineNum">     649 </span>                :            :         }
 <span class="lineNum">     650 </span>                :            : 
 <span class="lineNum">     651 </span>                :<span class="lineCov">        166 :         spin_lock(&amp;file-&gt;lock);</span>
@@ -766,11 +766,11 @@
 <span class="lineNum">     694 </span>                :            :         }
 <span class="lineNum">     695 </span>                :            :     }
 <span class="lineNum">     696 </span>                :            : 
-<span class="lineNum">     697 </span>                :<span class="lineCov">        138 :     _log_errno_str(file-&gt;ops, log_callback, (fdb_status)rv, &quot;CLOSE&quot;, file-&gt;filename);</span>
+<span class="lineNum">     697 </span>                :<span class="lineCov">        139 :     _log_errno_str(file-&gt;ops, log_callback, (fdb_status)rv, &quot;CLOSE&quot;, file-&gt;filename);</span>
 <span class="lineNum">     698 </span>                :            : 
-<span class="lineNum">     699 </span>                :<span class="lineCov">        138 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     700 </span>                :<span class="lineCov">        138 :     spin_unlock(&amp;filemgr_openlock);</span>
-<span class="lineNum">     701 </span>                :<span class="lineCov">        304 :     return (fdb_status) rv;</span>
+<span class="lineNum">     699 </span>                :<span class="lineCov">        139 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     700 </span>                :<span class="lineCov">        139 :     spin_unlock(&amp;filemgr_openlock);</span>
+<span class="lineNum">     701 </span>                :<span class="lineCov">        305 :     return (fdb_status) rv;</span>
 <a name="702"><span class="lineNum">     702 </span>                :            : }</a>
 <span class="lineNum">     703 </span>                :            : 
 <span class="lineNum">     704 </span>                :<span class="lineCov">        167 : static void _filemgr_free_func(struct hash_elem *h)</span>
@@ -778,10 +778,10 @@
 <span class="lineNum">     706 </span>                :<span class="lineCov">        167 :     struct filemgr *file = _get_entry(h, struct filemgr, e);</span>
 <span class="lineNum">     707 </span>                :            : 
 <span class="lineNum">     708 </span>                :            :     // remove all cached blocks
-<span class="lineNum">     709 </span>        [<span class="branchCov" title="Branch 0 was taken 88 times"> + </span><span class="branchCov" title="Branch 1 was taken 79 times"> + </span>]:<span class="lineCov">        167 :     if (global_config.ncacheblock &gt; 0) {</span>
-<span class="lineNum">     710 </span>                :<span class="lineCov">         88 :         bcache_remove_dirty_blocks(file);</span>
-<span class="lineNum">     711 </span>                :<span class="lineCov">         88 :         bcache_remove_clean_blocks(file);</span>
-<span class="lineNum">     712 </span>                :<span class="lineCov">         88 :         bcache_remove_file(file);</span>
+<span class="lineNum">     709 </span>        [<span class="branchCov" title="Branch 0 was taken 90 times"> + </span><span class="branchCov" title="Branch 1 was taken 77 times"> + </span>]:<span class="lineCov">        167 :     if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">     710 </span>                :<span class="lineCov">         90 :         bcache_remove_dirty_blocks(file);</span>
+<span class="lineNum">     711 </span>                :<span class="lineCov">         90 :         bcache_remove_clean_blocks(file);</span>
+<span class="lineNum">     712 </span>                :<span class="lineCov">         90 :         bcache_remove_file(file);</span>
 <span class="lineNum">     713 </span>                :            :     }
 <span class="lineNum">     714 </span>                :            : 
 <span class="lineNum">     715 </span>                :            :     // free global transaction
@@ -860,225 +860,225 @@
 <span class="lineNum">     788 </span>                :            :     }
 <a name="789"><span class="lineNum">     789 </span>                :<span class="lineCov">         74 : }</span></a>
 <span class="lineNum">     790 </span>                :            : 
-<span class="lineNum">     791 </span>                :<span class="lineCov">      14493 : bid_t filemgr_get_next_alloc_block(struct filemgr *file)</span>
+<span class="lineNum">     791 </span>                :<span class="lineCov">      10722 : bid_t filemgr_get_next_alloc_block(struct filemgr *file)</span>
 <span class="lineNum">     792 </span>                :            : {
-<span class="lineNum">     793 </span>                :<span class="lineCov">      14493 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     794 </span>                :<span class="lineCov">      14493 :     bid_t bid = file-&gt;pos / file-&gt;blocksize;</span>
-<span class="lineNum">     795 </span>                :<span class="lineCov">      14493 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     796 </span>                :<span class="lineCov">      14493 :     return bid;</span>
+<span class="lineNum">     793 </span>                :<span class="lineCov">      10722 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     794 </span>                :<span class="lineCov">      10722 :     bid_t bid = file-&gt;pos / file-&gt;blocksize;</span>
+<span class="lineNum">     795 </span>                :<span class="lineCov">      10722 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     796 </span>                :<span class="lineCov">      10722 :     return bid;</span>
 <a name="797"><span class="lineNum">     797 </span>                :            : }</a>
 <span class="lineNum">     798 </span>                :            : 
-<span class="lineNum">     799 </span>                :<span class="lineCov">     102062 : bid_t filemgr_alloc(struct filemgr *file, err_log_callback *log_callback)</span>
+<span class="lineNum">     799 </span>                :<span class="lineCov">     102701 : bid_t filemgr_alloc(struct filemgr *file, err_log_callback *log_callback)</span>
 <span class="lineNum">     800 </span>                :            : {
-<span class="lineNum">     801 </span>                :<span class="lineCov">     102062 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     802 </span>                :<span class="lineCov">     102062 :     bid_t bid = file-&gt;pos / file-&gt;blocksize;</span>
-<span class="lineNum">     803 </span>                :<span class="lineCov">     102062 :     file-&gt;pos += file-&gt;blocksize;</span>
+<span class="lineNum">     801 </span>                :<span class="lineCov">     102701 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     802 </span>                :<span class="lineCov">     102701 :     bid_t bid = file-&gt;pos / file-&gt;blocksize;</span>
+<span class="lineNum">     803 </span>                :<span class="lineCov">     102701 :     file-&gt;pos += file-&gt;blocksize;</span>
 <span class="lineNum">     804 </span>                :            : 
-<span class="lineNum">     805 </span>        [<span class="branchCov" title="Branch 0 was taken 17189 times"> + </span><span class="branchCov" title="Branch 1 was taken 84873 times"> + </span>]:<span class="lineCov">     102062 :     if (global_config.ncacheblock &lt;= 0) {</span>
+<span class="lineNum">     805 </span>        [<span class="branchCov" title="Branch 0 was taken 12930 times"> + </span><span class="branchCov" title="Branch 1 was taken 89771 times"> + </span>]:<span class="lineCov">     102701 :     if (global_config.ncacheblock &lt;= 0) {</span>
 <span class="lineNum">     806 </span>                :            :         // if block cache is turned off, write the allocated block before use
-<span class="lineNum">     807 </span>                :<span class="lineCov">      17189 :         uint8_t _buf = 0x0;</span>
-<span class="lineNum">     808 </span>                :<span class="lineCov">      17189 :         ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, &amp;_buf, 1, file-&gt;pos-1);</span>
-<span class="lineNum">     809 </span>                :<span class="lineCov">      17189 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
+<span class="lineNum">     807 </span>                :<span class="lineCov">      12930 :         uint8_t _buf = 0x0;</span>
+<span class="lineNum">     808 </span>                :<span class="lineCov">      12930 :         ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, &amp;_buf, 1, file-&gt;pos-1);</span>
+<span class="lineNum">     809 </span>                :<span class="lineCov">      12930 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
 <span class="lineNum">     810 </span>                :            :     }
-<span class="lineNum">     811 </span>                :<span class="lineCov">     102062 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     811 </span>                :<span class="lineCov">     102701 :     spin_unlock(&amp;file-&gt;lock);</span>
 <span class="lineNum">     812 </span>                :            : 
-<span class="lineNum">     813 </span>                :<span class="lineCov">     102062 :     return bid;</span>
+<span class="lineNum">     813 </span>                :<span class="lineCov">     102701 :     return bid;</span>
 <a name="814"><span class="lineNum">     814 </span>                :            : }</a>
 <span class="lineNum">     815 </span>                :            : 
-<span class="lineNum">     816 </span>                :<span class="lineCov">       1045 : void filemgr_alloc_multiple(struct filemgr *file, int nblock, bid_t *begin,</span>
+<span class="lineNum">     816 </span>                :<span class="lineCov">        717 : void filemgr_alloc_multiple(struct filemgr *file, int nblock, bid_t *begin,</span>
 <span class="lineNum">     817 </span>                :            :                             bid_t *end, err_log_callback *log_callback)
 <span class="lineNum">     818 </span>                :            : {
-<span class="lineNum">     819 </span>                :<span class="lineCov">       1045 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     820 </span>                :<span class="lineCov">       1045 :     *begin = file-&gt;pos / file-&gt;blocksize;</span>
-<span class="lineNum">     821 </span>                :<span class="lineCov">       1045 :     *end = *begin + nblock - 1;</span>
-<span class="lineNum">     822 </span>                :<span class="lineCov">       1045 :     file-&gt;pos += file-&gt;blocksize * nblock;</span>
+<span class="lineNum">     819 </span>                :<span class="lineCov">        717 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     820 </span>                :<span class="lineCov">        717 :     *begin = file-&gt;pos / file-&gt;blocksize;</span>
+<span class="lineNum">     821 </span>                :<span class="lineCov">        717 :     *end = *begin + nblock - 1;</span>
+<span class="lineNum">     822 </span>                :<span class="lineCov">        717 :     file-&gt;pos += file-&gt;blocksize * nblock;</span>
 <span class="lineNum">     823 </span>                :            : 
-<span class="lineNum">     824 </span>        [<span class="branchCov" title="Branch 0 was taken 47 times"> + </span><span class="branchCov" title="Branch 1 was taken 998 times"> + </span>]:<span class="lineCov">       1045 :     if (global_config.ncacheblock &lt;= 0) {</span>
+<span class="lineNum">     824 </span>        [<span class="branchCov" title="Branch 0 was taken 34 times"> + </span><span class="branchCov" title="Branch 1 was taken 683 times"> + </span>]:<span class="lineCov">        717 :     if (global_config.ncacheblock &lt;= 0) {</span>
 <span class="lineNum">     825 </span>                :            :         // if block cache is turned off, write the allocated block before use
-<span class="lineNum">     826 </span>                :<span class="lineCov">         47 :         uint8_t _buf = 0x0;</span>
-<span class="lineNum">     827 </span>                :<span class="lineCov">         47 :         ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, &amp;_buf, 1, file-&gt;pos-1);</span>
-<span class="lineNum">     828 </span>                :<span class="lineCov">         47 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
+<span class="lineNum">     826 </span>                :<span class="lineCov">         34 :         uint8_t _buf = 0x0;</span>
+<span class="lineNum">     827 </span>                :<span class="lineCov">         34 :         ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, &amp;_buf, 1, file-&gt;pos-1);</span>
+<span class="lineNum">     828 </span>                :<span class="lineCov">         34 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
 <span class="lineNum">     829 </span>                :            :     }
-<span class="lineNum">     830 </span>                :<span class="lineCov">       1045 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     831 </span>                :<span class="lineCov">       1045 : }</span>
+<span class="lineNum">     830 </span>                :<span class="lineCov">        717 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     831 </span>                :<span class="lineCov">        717 : }</span>
 <a name="832"><span class="lineNum">     832 </span>                :            : </a>
 <span class="lineNum">     833 </span>                :            : // atomically allocate NBLOCK blocks only when current file position is same to nextbid
-<span class="lineNum">     834 </span>                :<span class="lineCov">     188402 : bid_t filemgr_alloc_multiple_cond(struct filemgr *file, bid_t nextbid, int nblock,</span>
+<span class="lineNum">     834 </span>                :<span class="lineCov">     197606 : bid_t filemgr_alloc_multiple_cond(struct filemgr *file, bid_t nextbid, int nblock,</span>
 <span class="lineNum">     835 </span>                :            :                                   bid_t *begin, bid_t *end,
 <span class="lineNum">     836 </span>                :            :                                   err_log_callback *log_callback)
 <span class="lineNum">     837 </span>                :            : {
 <span class="lineNum">     838 </span>                :            :     bid_t bid;
-<span class="lineNum">     839 </span>                :<span class="lineCov">     188402 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     840 </span>                :<span class="lineCov">     188402 :     bid = file-&gt;pos / file-&gt;blocksize;</span>
-<span class="lineNum">     841 </span>        [<span class="branchCov" title="Branch 0 was taken 187357 times"> + </span><span class="branchCov" title="Branch 1 was taken 1045 times"> + </span>]:<span class="lineCov">     188402 :     if (bid == nextbid) {</span>
-<span class="lineNum">     842 </span>                :<span class="lineCov">     187357 :         *begin = file-&gt;pos / file-&gt;blocksize;</span>
-<span class="lineNum">     843 </span>                :<span class="lineCov">     187357 :         *end = *begin + nblock - 1;</span>
-<span class="lineNum">     844 </span>                :<span class="lineCov">     187357 :         file-&gt;pos += file-&gt;blocksize * nblock;</span>
+<span class="lineNum">     839 </span>                :<span class="lineCov">     197606 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     840 </span>                :<span class="lineCov">     197606 :     bid = file-&gt;pos / file-&gt;blocksize;</span>
+<span class="lineNum">     841 </span>        [<span class="branchCov" title="Branch 0 was taken 196889 times"> + </span><span class="branchCov" title="Branch 1 was taken 717 times"> + </span>]:<span class="lineCov">     197606 :     if (bid == nextbid) {</span>
+<span class="lineNum">     842 </span>                :<span class="lineCov">     196889 :         *begin = file-&gt;pos / file-&gt;blocksize;</span>
+<span class="lineNum">     843 </span>                :<span class="lineCov">     196889 :         *end = *begin + nblock - 1;</span>
+<span class="lineNum">     844 </span>                :<span class="lineCov">     196889 :         file-&gt;pos += file-&gt;blocksize * nblock;</span>
 <span class="lineNum">     845 </span>                :            : 
-<span class="lineNum">     846 </span>        [<span class="branchCov" title="Branch 0 was taken 7472 times"> + </span><span class="branchCov" title="Branch 1 was taken 179885 times"> + </span>]:<span class="lineCov">     187357 :         if (global_config.ncacheblock &lt;= 0) {</span>
+<span class="lineNum">     846 </span>        [<span class="branchCov" title="Branch 0 was taken 7125 times"> + </span><span class="branchCov" title="Branch 1 was taken 189764 times"> + </span>]:<span class="lineCov">     196889 :         if (global_config.ncacheblock &lt;= 0) {</span>
 <span class="lineNum">     847 </span>                :            :             // if block cache is turned off, write the allocated block before use
-<span class="lineNum">     848 </span>                :<span class="lineCov">       7472 :             uint8_t _buf = 0x0;</span>
-<span class="lineNum">     849 </span>                :<span class="lineCov">       7472 :             ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, &amp;_buf, 1, file-&gt;pos-1);</span>
-<span class="lineNum">     850 </span>                :<span class="lineCov">       7472 :             _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
+<span class="lineNum">     848 </span>                :<span class="lineCov">       7125 :             uint8_t _buf = 0x0;</span>
+<span class="lineNum">     849 </span>                :<span class="lineCov">       7125 :             ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, &amp;_buf, 1, file-&gt;pos-1);</span>
+<span class="lineNum">     850 </span>                :<span class="lineCov">       7125 :             _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
 <span class="lineNum">     851 </span>                :            :         }
 <span class="lineNum">     852 </span>                :            :     }else{
-<span class="lineNum">     853 </span>                :<span class="lineCov">       1045 :         *begin = BLK_NOT_FOUND;</span>
-<span class="lineNum">     854 </span>                :<span class="lineCov">       1045 :         *end = BLK_NOT_FOUND;</span>
+<span class="lineNum">     853 </span>                :<span class="lineCov">        717 :         *begin = BLK_NOT_FOUND;</span>
+<span class="lineNum">     854 </span>                :<span class="lineCov">        717 :         *end = BLK_NOT_FOUND;</span>
 <span class="lineNum">     855 </span>                :            :     }
-<span class="lineNum">     856 </span>                :<span class="lineCov">     188402 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     857 </span>                :<span class="lineCov">     188402 :     return bid;</span>
+<span class="lineNum">     856 </span>                :<span class="lineCov">     197606 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     857 </span>                :<span class="lineCov">     197606 :     return bid;</span>
 <span class="lineNum">     858 </span>                :            : }
 <a name="859"><span class="lineNum">     859 </span>                :            : </a>
 <span class="lineNum">     860 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     861 </span>                :<span class="lineCov">    1070022 : INLINE void _filemgr_crc32_check(struct filemgr *file, void *buf)</span>
+<span class="lineNum">     861 </span>                :<span class="lineCov">     939291 : INLINE void _filemgr_crc32_check(struct filemgr *file, void *buf)</span>
 <span class="lineNum">     862 </span>                :            : {
-<span class="lineNum">     863 </span>        [<span class="branchCov" title="Branch 0 was taken 937912 times"> + </span><span class="branchCov" title="Branch 1 was taken 132110 times"> + </span>]:<span class="lineCov">    1070022 :     if ( *((uint8_t*)buf + file-&gt;blocksize-1) == BLK_MARKER_BNODE ) {</span>
+<span class="lineNum">     863 </span>        [<span class="branchCov" title="Branch 0 was taken 813113 times"> + </span><span class="branchCov" title="Branch 1 was taken 126178 times"> + </span>]:<span class="lineCov">     939291 :     if ( *((uint8_t*)buf + file-&gt;blocksize-1) == BLK_MARKER_BNODE ) {</span>
 <span class="lineNum">     864 </span>                :            :         uint32_t crc_file, crc;
-<span class="lineNum">     865 </span>                :<span class="lineCov">     937912 :         memcpy(&amp;crc_file, (uint8_t *) buf + BTREE_CRC_OFFSET, sizeof(crc_file));</span>
-<span class="lineNum">     866 </span>                :<span class="lineCov">     937912 :         crc_file = _endian_decode(crc_file);</span>
-<span class="lineNum">     867 </span>                :<span class="lineCov">     937912 :         memset((uint8_t *) buf + BTREE_CRC_OFFSET, 0xff, BTREE_CRC_FIELD_LEN);</span>
-<span class="lineNum">     868 </span>                :<span class="lineCov">     937912 :         crc = chksum(buf, file-&gt;blocksize);</span>
-<span class="lineNum">     869 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 937861 times"> + </span>]:<span class="lineCov">     937861 :         assert(crc == crc_file);</span>
+<span class="lineNum">     865 </span>                :<span class="lineCov">     813113 :         memcpy(&amp;crc_file, (uint8_t *) buf + BTREE_CRC_OFFSET, sizeof(crc_file));</span>
+<span class="lineNum">     866 </span>                :<span class="lineCov">     813113 :         crc_file = _endian_decode(crc_file);</span>
+<span class="lineNum">     867 </span>                :<span class="lineCov">     813113 :         memset((uint8_t *) buf + BTREE_CRC_OFFSET, 0xff, BTREE_CRC_FIELD_LEN);</span>
+<span class="lineNum">     868 </span>                :<span class="lineCov">     813113 :         crc = chksum(buf, file-&gt;blocksize);</span>
+<span class="lineNum">     869 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 813087 times"> + </span>]:<span class="lineCov">     813087 :         assert(crc == crc_file);</span>
 <span class="lineNum">     870 </span>                :            :     }
-<span class="lineNum">     871 </span>                :<span class="lineCov">    1069971 : }</span>
+<span class="lineNum">     871 </span>                :<span class="lineCov">     939265 : }</span>
 <a name="872"><span class="lineNum">     872 </span>                :            : #endif</a>
 <span class="lineNum">     873 </span>                :            : 
-<span class="lineNum">     874 </span>                :<span class="lineCov">      36832 : void filemgr_invalidate_block(struct filemgr *file, bid_t bid)</span>
+<span class="lineNum">     874 </span>                :<span class="lineCov">      38937 : void filemgr_invalidate_block(struct filemgr *file, bid_t bid)</span>
 <span class="lineNum">     875 </span>                :            : {
-<span class="lineNum">     876 </span>        [<span class="branchCov" title="Branch 0 was taken 34895 times"> + </span><span class="branchCov" title="Branch 1 was taken 1937 times"> + </span>]:<span class="lineCov">      36832 :     if (global_config.ncacheblock &gt; 0) {</span>
-<span class="lineNum">     877 </span>                :<span class="lineCov">      34895 :         bcache_invalidate_block(file, bid);</span>
+<span class="lineNum">     876 </span>        [<span class="branchCov" title="Branch 0 was taken 37021 times"> + </span><span class="branchCov" title="Branch 1 was taken 1916 times"> + </span>]:<span class="lineCov">      38937 :     if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">     877 </span>                :<span class="lineCov">      37021 :         bcache_invalidate_block(file, bid);</span>
 <span class="lineNum">     878 </span>                :            :     }
-<a name="879"><span class="lineNum">     879 </span>                :<span class="lineCov">      36832 : }</span></a>
+<a name="879"><span class="lineNum">     879 </span>                :<span class="lineCov">      38937 : }</span></a>
 <span class="lineNum">     880 </span>                :            : 
-<span class="lineNum">     881 </span>                :<span class="lineCov">   33059640 : void filemgr_read(struct filemgr *file, bid_t bid, void *buf,</span>
+<span class="lineNum">     881 </span>                :<span class="lineCov">   34082240 : void filemgr_read(struct filemgr *file, bid_t bid, void *buf,</span>
 <span class="lineNum">     882 </span>                :            :                   err_log_callback *log_callback)
 <span class="lineNum">     883 </span>                :            : {
 <span class="lineNum">     884 </span>                :            :     size_t lock_no;
 <span class="lineNum">     885 </span>                :            :     ssize_t r;
-<span class="lineNum">     886 </span>                :<span class="lineCov">   33059640 :     uint64_t pos = bid * file-&gt;blocksize;</span>
-<span class="lineNum">     887 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 33059640 times"> + </span>]:<span class="lineCov">   33059640 :     assert(pos &lt; file-&gt;pos);</span>
+<span class="lineNum">     886 </span>                :<span class="lineCov">   34082240 :     uint64_t pos = bid * file-&gt;blocksize;</span>
+<span class="lineNum">     887 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 34082240 times"> + </span>]:<span class="lineCov">   34082240 :     assert(pos &lt; file-&gt;pos);</span>
 <span class="lineNum">     888 </span>                :            : 
-<span class="lineNum">     889 </span>        [<span class="branchCov" title="Branch 0 was taken 32085720 times"> + </span><span class="branchCov" title="Branch 1 was taken 973920 times"> + </span>]:<span class="lineCov">   33059640 :     if (global_config.ncacheblock &gt; 0) {</span>
-<span class="lineNum">     890 </span>                :<span class="lineCov">   32085720 :         lock_no = bid % DLOCK_MAX;</span>
-<span class="lineNum">     891 </span>                :<span class="lineCov">   32085720 :         spin_lock(&amp;file-&gt;datalock[lock_no]);</span>
-<span class="lineNum">     892 </span>                :<span class="lineCov">   32133431 :         r = bcache_read(file, bid, buf);</span>
-<span class="lineNum">     893 </span>        [<span class="branchCov" title="Branch 0 was taken 96018 times"> + </span><span class="branchCov" title="Branch 1 was taken 32030523 times"> + </span>]:<span class="lineCov">   32126541 :         if (r == 0) {</span>
+<span class="lineNum">     889 </span>        [<span class="branchCov" title="Branch 0 was taken 33239287 times"> + </span><span class="branchCov" title="Branch 1 was taken 842953 times"> + </span>]:<span class="lineCov">   34082240 :     if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">     890 </span>                :<span class="lineCov">   33239287 :         lock_no = bid % DLOCK_MAX;</span>
+<span class="lineNum">     891 </span>                :<span class="lineCov">   33239287 :         spin_lock(&amp;file-&gt;datalock[lock_no]);</span>
+<span class="lineNum">     892 </span>                :<span class="lineCov">   33277678 :         r = bcache_read(file, bid, buf);</span>
+<span class="lineNum">     893 </span>        [<span class="branchCov" title="Branch 0 was taken 96394 times"> + </span><span class="branchCov" title="Branch 1 was taken 33178658 times"> + </span>]:<span class="lineCov">   33275052 :         if (r == 0) {</span>
 <span class="lineNum">     894 </span>                :            :             // cache miss
 <span class="lineNum">     895 </span>                :            :             // if normal file, just read a block
-<span class="lineNum">     896 </span>                :<span class="lineCov">      96018 :             r = file-&gt;ops-&gt;pread(file-&gt;fd, buf, file-&gt;blocksize, pos);</span>
-<span class="lineNum">     897 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 95995 times"> + </span>]:<span class="lineCov">      95995 :             if (r != file-&gt;blocksize) {</span>
+<span class="lineNum">     896 </span>                :<span class="lineCov">      96394 :             r = file-&gt;ops-&gt;pread(file-&gt;fd, buf, file-&gt;blocksize, pos);</span>
+<span class="lineNum">     897 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 96367 times"> + </span>]:<span class="lineCov">      96367 :             if (r != file-&gt;blocksize) {</span>
 <span class="lineNum">     898 </span>                :<span class="lineNoCov">          0 :                 _log_errno_str(file-&gt;ops, log_callback, (fdb_status) r, &quot;READ&quot;, file-&gt;filename);</span>
 <span class="lineNum">     899 </span>                :            :                 // TODO: This function should return an appropriate fdb_status.
 <span class="lineNum">     900 </span>                :<span class="lineNoCov">          0 :                 spin_unlock(&amp;file-&gt;datalock[lock_no]);</span>
 <span class="lineNum">     901 </span>                :<span class="lineNoCov">          0 :                 return;</span>
 <span class="lineNum">     902 </span>                :            :             }
 <span class="lineNum">     903 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     904 </span>                :<span class="lineCov">      95995 :             _filemgr_crc32_check(file, buf);</span>
+<span class="lineNum">     904 </span>                :<span class="lineCov">      96367 :             _filemgr_crc32_check(file, buf);</span>
 <span class="lineNum">     905 </span>                :            : #endif
-<span class="lineNum">     906 </span>                :<span class="lineCov">      95980 :             bcache_write(file, bid, buf, BCACHE_REQ_CLEAN);</span>
+<span class="lineNum">     906 </span>                :<span class="lineCov">      96345 :             bcache_write(file, bid, buf, BCACHE_REQ_CLEAN);</span>
 <span class="lineNum">     907 </span>                :            :         }
-<span class="lineNum">     908 </span>                :<span class="lineCov">   32126525 :         spin_unlock(&amp;file-&gt;datalock[lock_no]);</span>
+<span class="lineNum">     908 </span>                :<span class="lineCov">   33275051 :         spin_unlock(&amp;file-&gt;datalock[lock_no]);</span>
 <span class="lineNum">     909 </span>                :            :     } else {
-<span class="lineNum">     910 </span>                :<span class="lineCov">     973920 :         r = file-&gt;ops-&gt;pread(file-&gt;fd, buf, file-&gt;blocksize, pos);</span>
-<span class="lineNum">     911 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 974044 times"> + </span>]:<span class="lineCov">     974044 :         if (r != file-&gt;blocksize) {</span>
+<span class="lineNum">     910 </span>                :<span class="lineCov">     842953 :         r = file-&gt;ops-&gt;pread(file-&gt;fd, buf, file-&gt;blocksize, pos);</span>
+<span class="lineNum">     911 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 842924 times"> + </span>]:<span class="lineCov">     842924 :         if (r != file-&gt;blocksize) {</span>
 <span class="lineNum">     912 </span>                :<span class="lineNoCov">          0 :             _log_errno_str(file-&gt;ops, log_callback, (fdb_status) r, &quot;READ&quot;, file-&gt;filename);</span>
 <span class="lineNum">     913 </span>                :<span class="lineNoCov">          0 :             return;</span>
 <span class="lineNum">     914 </span>                :            :         }
 <span class="lineNum">     915 </span>                :            : 
 <span class="lineNum">     916 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     917 </span>                :<span class="lineCov">   33087336 :         _filemgr_crc32_check(file, buf);</span>
+<span class="lineNum">     917 </span>                :<span class="lineCov">   34104341 :         _filemgr_crc32_check(file, buf);</span>
 <span class="lineNum">     918 </span>                :            : #endif
 <span class="lineNum">     919 </span>                :            :     }
 <a name="920"><span class="lineNum">     920 </span>                :            : }</a>
 <span class="lineNum">     921 </span>                :            : 
-<span class="lineNum">     922 </span>                :<span class="lineCov">   16334619 : void filemgr_write_offset(struct filemgr *file, bid_t bid, uint64_t offset,</span>
+<span class="lineNum">     922 </span>                :<span class="lineCov">   17064688 : void filemgr_write_offset(struct filemgr *file, bid_t bid, uint64_t offset,</span>
 <span class="lineNum">     923 </span>                :            :                           uint64_t len, void *buf, err_log_callback *log_callback)
 <span class="lineNum">     924 </span>                :            : {
-<span class="lineNum">     925 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 16334619 times"> + </span>]:<span class="lineCov">   16334619 :     assert(offset + len &lt;= file-&gt;blocksize);</span>
+<span class="lineNum">     925 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 17064688 times"> + </span>]:<span class="lineCov">   17064688 :     assert(offset + len &lt;= file-&gt;blocksize);</span>
 <span class="lineNum">     926 </span>                :            : 
 <span class="lineNum">     927 </span>                :            :     size_t lock_no;
-<span class="lineNum">     928 </span>                :<span class="lineCov">   16334619 :     ssize_t r = 0;</span>
-<span class="lineNum">     929 </span>                :<span class="lineCov">   16334619 :     uint64_t pos = bid * file-&gt;blocksize + offset;</span>
-<span class="lineNum">     930 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 16334619 times"> + </span>]:<span class="lineCov">   16334619 :     assert(pos &gt;= file-&gt;last_commit);</span>
+<span class="lineNum">     928 </span>                :<span class="lineCov">   17064688 :     ssize_t r = 0;</span>
+<span class="lineNum">     929 </span>                :<span class="lineCov">   17064688 :     uint64_t pos = bid * file-&gt;blocksize + offset;</span>
+<span class="lineNum">     930 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 17064688 times"> + </span>]:<span class="lineCov">   17064688 :     assert(pos &gt;= file-&gt;last_commit);</span>
 <span class="lineNum">     931 </span>                :            : 
-<span class="lineNum">     932 </span>        [<span class="branchCov" title="Branch 0 was taken 15720828 times"> + </span><span class="branchCov" title="Branch 1 was taken 613791 times"> + </span>]:<span class="lineCov">   16334619 :     if (global_config.ncacheblock &gt; 0) {</span>
-<span class="lineNum">     933 </span>                :<span class="lineCov">   15720828 :         lock_no = bid % DLOCK_MAX;</span>
-<span class="lineNum">     934 </span>                :<span class="lineCov">   15720828 :         spin_lock(&amp;file-&gt;datalock[lock_no]);</span>
-<span class="lineNum">     935 </span>        [<span class="branchCov" title="Branch 0 was taken 7593956 times"> + </span><span class="branchCov" title="Branch 1 was taken 8126875 times"> + </span>]:<span class="lineCov">   15720831 :         if (len == file-&gt;blocksize) {</span>
+<span class="lineNum">     932 </span>        [<span class="branchCov" title="Branch 0 was taken 16568804 times"> + </span><span class="branchCov" title="Branch 1 was taken 495884 times"> + </span>]:<span class="lineCov">   17064688 :     if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">     933 </span>                :<span class="lineCov">   16568804 :         lock_no = bid % DLOCK_MAX;</span>
+<span class="lineNum">     934 </span>                :<span class="lineCov">   16568804 :         spin_lock(&amp;file-&gt;datalock[lock_no]);</span>
+<span class="lineNum">     935 </span>        [<span class="branchCov" title="Branch 0 was taken 8022624 times"> + </span><span class="branchCov" title="Branch 1 was taken 8546180 times"> + </span>]:<span class="lineCov">   16568804 :         if (len == file-&gt;blocksize) {</span>
 <span class="lineNum">     936 </span>                :            :             // write entire block .. we don't need to read previous block
-<span class="lineNum">     937 </span>                :<span class="lineCov">    7593956 :             bcache_write(file, bid, buf, BCACHE_REQ_DIRTY);</span>
+<span class="lineNum">     937 </span>                :<span class="lineCov">    8022624 :             bcache_write(file, bid, buf, BCACHE_REQ_DIRTY);</span>
 <span class="lineNum">     938 </span>                :            :         } else {
 <span class="lineNum">     939 </span>                :            :             // partially write buffer cache first
-<span class="lineNum">     940 </span>                :<span class="lineCov">    8126875 :             r = bcache_write_partial(file, bid, buf, offset, len);</span>
-<span class="lineNum">     941 </span>        [<span class="branchCov" title="Branch 0 was taken 183647 times"> + </span><span class="branchCov" title="Branch 1 was taken 7943228 times"> + </span>]:<span class="lineCov">    8126875 :             if (r == 0) {</span>
+<span class="lineNum">     940 </span>                :<span class="lineCov">    8546180 :             r = bcache_write_partial(file, bid, buf, offset, len);</span>
+<span class="lineNum">     941 </span>        [<span class="branchCov" title="Branch 0 was taken 193225 times"> + </span><span class="branchCov" title="Branch 1 was taken 8352955 times"> + </span>]:<span class="lineCov">    8546180 :             if (r == 0) {</span>
 <span class="lineNum">     942 </span>                :            :                 // cache miss
 <span class="lineNum">     943 </span>                :            :                 // write partially .. we have to read previous contents of the block
-<span class="lineNum">     944 </span>                :<span class="lineCov">     183647 :                 void *_buf = _filemgr_get_temp_buf();</span>
+<span class="lineNum">     944 </span>                :<span class="lineCov">     193225 :                 void *_buf = _filemgr_get_temp_buf();</span>
 <span class="lineNum">     945 </span>                :            : 
-<span class="lineNum">     946 </span>                :<span class="lineCov">     183647 :                 r = file-&gt;ops-&gt;pread(file-&gt;fd, _buf, file-&gt;blocksize, bid * file-&gt;blocksize);</span>
-<span class="lineNum">     947 </span>                :<span class="lineCov">     183647 :                 memcpy((uint8_t *)_buf + offset, buf, len);</span>
-<span class="lineNum">     948 </span>                :<span class="lineCov">     183647 :                 bcache_write(file, bid, _buf, BCACHE_REQ_DIRTY);</span>
+<span class="lineNum">     946 </span>                :<span class="lineCov">     193225 :                 r = file-&gt;ops-&gt;pread(file-&gt;fd, _buf, file-&gt;blocksize, bid * file-&gt;blocksize);</span>
+<span class="lineNum">     947 </span>                :<span class="lineCov">     193225 :                 memcpy((uint8_t *)_buf + offset, buf, len);</span>
+<span class="lineNum">     948 </span>                :<span class="lineCov">     193225 :                 bcache_write(file, bid, _buf, BCACHE_REQ_DIRTY);</span>
 <span class="lineNum">     949 </span>                :            : 
-<span class="lineNum">     950 </span>                :<span class="lineCov">     183647 :                 _filemgr_release_temp_buf(_buf);</span>
+<span class="lineNum">     950 </span>                :<span class="lineCov">     193225 :                 _filemgr_release_temp_buf(_buf);</span>
 <span class="lineNum">     951 </span>                :            :             }
 <span class="lineNum">     952 </span>                :            :         }
-<span class="lineNum">     953 </span>                :<span class="lineCov">   15720831 :         spin_unlock(&amp;file-&gt;datalock[lock_no]);</span>
+<span class="lineNum">     953 </span>                :<span class="lineCov">   16568804 :         spin_unlock(&amp;file-&gt;datalock[lock_no]);</span>
 <span class="lineNum">     954 </span>                :            :     } else {
 <span class="lineNum">     955 </span>                :            : 
 <span class="lineNum">     956 </span>                :            : #ifdef __CRC32
-<span class="lineNum">     957 </span>        [<span class="branchCov" title="Branch 0 was taken 303745 times"> + </span><span class="branchCov" title="Branch 1 was taken 310046 times"> + </span>]:<span class="lineCov">     613791 :         if (len == file-&gt;blocksize) {</span>
-<span class="lineNum">     958 </span>                :<span class="lineCov">     303745 :             uint8_t marker = *((uint8_t*)buf + file-&gt;blocksize - 1);</span>
-<span class="lineNum">     959 </span>        [<span class="branchCov" title="Branch 0 was taken 303707 times"> + </span><span class="branchCov" title="Branch 1 was taken 38 times"> + </span>]:<span class="lineCov">     303745 :             if (marker == BLK_MARKER_BNODE) {</span>
-<span class="lineNum">     960 </span>                :<span class="lineCov">     303707 :                 memset((uint8_t *)buf + BTREE_CRC_OFFSET, 0xff, BTREE_CRC_FIELD_LEN);</span>
-<span class="lineNum">     961 </span>                :<span class="lineCov">     303707 :                 uint32_t crc32 = chksum(buf, file-&gt;blocksize);</span>
-<span class="lineNum">     962 </span>                :<span class="lineCov">     303732 :                 crc32 = _endian_encode(crc32);</span>
-<span class="lineNum">     963 </span>                :<span class="lineCov">     303732 :                 memcpy((uint8_t *)buf + BTREE_CRC_OFFSET, &amp;crc32, sizeof(crc32));</span>
+<span class="lineNum">     957 </span>        [<span class="branchCov" title="Branch 0 was taken 244678 times"> + </span><span class="branchCov" title="Branch 1 was taken 251206 times"> + </span>]:<span class="lineCov">     495884 :         if (len == file-&gt;blocksize) {</span>
+<span class="lineNum">     958 </span>                :<span class="lineCov">     244678 :             uint8_t marker = *((uint8_t*)buf + file-&gt;blocksize - 1);</span>
+<span class="lineNum">     959 </span>        [<span class="branchCov" title="Branch 0 was taken 244642 times"> + </span><span class="branchCov" title="Branch 1 was taken 36 times"> + </span>]:<span class="lineCov">     244678 :             if (marker == BLK_MARKER_BNODE) {</span>
+<span class="lineNum">     960 </span>                :<span class="lineCov">     244642 :                 memset((uint8_t *)buf + BTREE_CRC_OFFSET, 0xff, BTREE_CRC_FIELD_LEN);</span>
+<span class="lineNum">     961 </span>                :<span class="lineCov">     244642 :                 uint32_t crc32 = chksum(buf, file-&gt;blocksize);</span>
+<span class="lineNum">     962 </span>                :<span class="lineCov">     244623 :                 crc32 = _endian_encode(crc32);</span>
+<span class="lineNum">     963 </span>                :<span class="lineCov">     244623 :                 memcpy((uint8_t *)buf + BTREE_CRC_OFFSET, &amp;crc32, sizeof(crc32));</span>
 <span class="lineNum">     964 </span>                :            :             }
 <span class="lineNum">     965 </span>                :            :         }
 <span class="lineNum">     966 </span>                :            : #endif
 <span class="lineNum">     967 </span>                :            : 
-<span class="lineNum">     968 </span>                :<span class="lineCov">     613816 :         r = file-&gt;ops-&gt;pwrite(file-&gt;fd, buf, len, pos);</span>
-<span class="lineNum">     969 </span>                :<span class="lineCov">     614020 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) r, &quot;WRITE&quot;, file-&gt;filename);</span>
-<span class="lineNum">     970 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 614020 times"> + </span>]:<span class="lineCov">     614020 :         assert(r == len);</span>
+<span class="lineNum">     968 </span>                :<span class="lineCov">     495865 :         r = file-&gt;ops-&gt;pwrite(file-&gt;fd, buf, len, pos);</span>
+<span class="lineNum">     969 </span>                :<span class="lineCov">     495859 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) r, &quot;WRITE&quot;, file-&gt;filename);</span>
+<span class="lineNum">     970 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 495867 times"> + </span>]:<span class="lineCov">     495867 :         assert(r == len);</span>
 <span class="lineNum">     971 </span>                :            : 
 <span class="lineNum">     972 </span>                :            :     }
-<a name="973"><span class="lineNum">     973 </span>                :<span class="lineCov">   16334849 : }</span></a>
+<a name="973"><span class="lineNum">     973 </span>                :<span class="lineCov">   17064671 : }</span></a>
 <span class="lineNum">     974 </span>                :            : 
-<span class="lineNum">     975 </span>                :<span class="lineCov">    7897701 : void filemgr_write(struct filemgr *file, bid_t bid, void *buf,</span>
+<span class="lineNum">     975 </span>                :<span class="lineCov">    8267302 : void filemgr_write(struct filemgr *file, bid_t bid, void *buf,</span>
 <span class="lineNum">     976 </span>                :            :                    err_log_callback *log_callback)
 <span class="lineNum">     977 </span>                :            : {
-<span class="lineNum">     978 </span>                :<span class="lineCov">    7897701 :     filemgr_write_offset(file, bid, 0, file-&gt;blocksize, buf, log_callback);</span>
-<a name="979"><span class="lineNum">     979 </span>                :<span class="lineCov">    7897734 : }</span></a>
+<span class="lineNum">     978 </span>                :<span class="lineCov">    8267302 :     filemgr_write_offset(file, bid, 0, file-&gt;blocksize, buf, log_callback);</span>
+<a name="979"><span class="lineNum">     979 </span>                :<span class="lineCov">    8267295 : }</span></a>
 <span class="lineNum">     980 </span>                :            : 
-<span class="lineNum">     981 </span>                :<span class="lineCov">   14625732 : int filemgr_is_writable(struct filemgr *file, bid_t bid)</span>
+<span class="lineNum">     981 </span>                :<span class="lineCov">   15286658 : int filemgr_is_writable(struct filemgr *file, bid_t bid)</span>
 <span class="lineNum">     982 </span>                :            : {
-<span class="lineNum">     983 </span>                :<span class="lineCov">   14625732 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">     984 </span>                :<span class="lineCov">   14635009 :     uint64_t pos = bid * file-&gt;blocksize;</span>
-<span class="lineNum">     985 </span>[<span class="branchCov" title="Branch 0 was taken 13145303 times"> + </span><span class="branchCov" title="Branch 1 was taken 1489706 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 13145288 times"> + </span><span class="branchCov" title="Branch 3 was taken 15 times"> + </span>]:<span class="lineCov">   14635009 :     int cond = (pos &gt;= file-&gt;last_commit &amp;&amp; pos &lt; file-&gt;pos);</span>
-<span class="lineNum">     986 </span>                :<span class="lineCov">   14635009 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     983 </span>                :<span class="lineCov">   15286658 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">     984 </span>                :<span class="lineCov">   15296802 :     uint64_t pos = bid * file-&gt;blocksize;</span>
+<span class="lineNum">     985 </span>[<span class="branchCov" title="Branch 0 was taken 13830073 times"> + </span><span class="branchCov" title="Branch 1 was taken 1466729 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 13830056 times"> + </span><span class="branchCov" title="Branch 3 was taken 17 times"> + </span>]:<span class="lineCov">   15296802 :     int cond = (pos &gt;= file-&gt;last_commit &amp;&amp; pos &lt; file-&gt;pos);</span>
+<span class="lineNum">     986 </span>                :<span class="lineCov">   15296802 :     spin_unlock(&amp;file-&gt;lock);</span>
 <span class="lineNum">     987 </span>                :            : 
-<span class="lineNum">     988 </span>                :<span class="lineCov">   14634909 :     return cond;</span>
+<span class="lineNum">     988 </span>                :<span class="lineCov">   15296718 :     return cond;</span>
 <a name="989"><span class="lineNum">     989 </span>                :            : }</a>
 <span class="lineNum">     990 </span>                :            : 
-<span class="lineNum">     991 </span>                :<span class="lineCov">      16076 : fdb_status filemgr_commit(struct filemgr *file,</span>
+<span class="lineNum">     991 </span>                :<span class="lineCov">      12305 : fdb_status filemgr_commit(struct filemgr *file,</span>
 <span class="lineNum">     992 </span>                :            :                           err_log_callback *log_callback)
 <span class="lineNum">     993 </span>                :            : {
-<span class="lineNum">     994 </span>                :<span class="lineCov">      16076 :     uint16_t header_len = file-&gt;header.size;</span>
+<span class="lineNum">     994 </span>                :<span class="lineCov">      12305 :     uint16_t header_len = file-&gt;header.size;</span>
 <span class="lineNum">     995 </span>                :            :     uint16_t _header_len;
 <span class="lineNum">     996 </span>                :            :     fdb_seqnum_t _seqnum;
 <span class="lineNum">     997 </span>                :            :     filemgr_header_revnum_t _revnum;
-<span class="lineNum">     998 </span>                :<span class="lineCov">      16076 :     int result = FDB_RESULT_SUCCESS;</span>
-<span class="lineNum">     999 </span>                :<span class="lineCov">      16076 :     filemgr_magic_t magic = FILEMGR_MAGIC;</span>
+<span class="lineNum">     998 </span>                :<span class="lineCov">      12305 :     int result = FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">     999 </span>                :<span class="lineCov">      12305 :     filemgr_magic_t magic = FILEMGR_MAGIC;</span>
 <span class="lineNum">    1000 </span>                :            :     filemgr_magic_t _magic;
 <span class="lineNum">    1001 </span>                :            : 
-<span class="lineNum">    1002 </span>        [<span class="branchCov" title="Branch 0 was taken 2789 times"> + </span><span class="branchCov" title="Branch 1 was taken 13287 times"> + </span>]:<span class="lineCov">      16076 :     if (global_config.ncacheblock &gt; 0) {</span>
-<span class="lineNum">    1003 </span>                :<span class="lineCov">       2789 :         bcache_flush(file);</span>
+<span class="lineNum">    1002 </span>        [<span class="branchCov" title="Branch 0 was taken 2802 times"> + </span><span class="branchCov" title="Branch 1 was taken 9503 times"> + </span>]:<span class="lineCov">      12305 :     if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">    1003 </span>                :<span class="lineCov">       2802 :         bcache_flush(file);</span>
 <span class="lineNum">    1004 </span>                :            :     }
 <span class="lineNum">    1005 </span>                :            : 
-<span class="lineNum">    1006 </span>                :<span class="lineCov">      16076 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1006 </span>                :<span class="lineCov">      12305 :     spin_lock(&amp;file-&gt;lock);</span>
 <span class="lineNum">    1007 </span>                :            : 
-<span class="lineNum">    1008 </span>[<span class="branchCov" title="Branch 0 was taken 14538 times"> + </span><span class="branchCov" title="Branch 1 was taken 1538 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 14538 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      16076 :     if (file-&gt;header.size &gt; 0 &amp;&amp; file-&gt;header.data) {</span>
-<span class="lineNum">    1009 </span>                :<span class="lineCov">      14538 :         void *buf = _filemgr_get_temp_buf();</span>
+<span class="lineNum">    1008 </span>[<span class="branchCov" title="Branch 0 was taken 10767 times"> + </span><span class="branchCov" title="Branch 1 was taken 1538 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 10767 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      12305 :     if (file-&gt;header.size &gt; 0 &amp;&amp; file-&gt;header.data) {</span>
+<span class="lineNum">    1009 </span>                :<span class="lineCov">      10767 :         void *buf = _filemgr_get_temp_buf();</span>
 <span class="lineNum">    1010 </span>                :            :         uint8_t marker[BLK_MARKER_SIZE];
 <span class="lineNum">    1011 </span>                :            : 
 <span class="lineNum">    1012 </span>                :            :         // &lt;-------------------------- block size ---------------------------&gt;
@@ -1086,84 +1086,84 @@
 <span class="lineNum">    1014 </span>                :            :         // [hdr data][hdr revnum][seqnum] ..(empty).. [hdr len][magic][marker]
 <span class="lineNum">    1015 </span>                :            : 
 <span class="lineNum">    1016 </span>                :            :         // header data
-<span class="lineNum">    1017 </span>                :<span class="lineCov">      14538 :         memcpy(buf, file-&gt;header.data, header_len);</span>
+<span class="lineNum">    1017 </span>                :<span class="lineCov">      10767 :         memcpy(buf, file-&gt;header.data, header_len);</span>
 <span class="lineNum">    1018 </span>                :            :         // header rev number
-<span class="lineNum">    1019 </span>                :<span class="lineCov">      14538 :         _revnum = _endian_encode(file-&gt;header.revnum);</span>
-<span class="lineNum">    1020 </span>                :<span class="lineCov">      14538 :         memcpy((uint8_t *)buf + header_len, &amp;_revnum,</span>
-<span class="lineNum">    1021 </span>                :<span class="lineCov">      29076 :                sizeof(filemgr_header_revnum_t));</span>
+<span class="lineNum">    1019 </span>                :<span class="lineCov">      10767 :         _revnum = _endian_encode(file-&gt;header.revnum);</span>
+<span class="lineNum">    1020 </span>                :<span class="lineCov">      10767 :         memcpy((uint8_t *)buf + header_len, &amp;_revnum,</span>
+<span class="lineNum">    1021 </span>                :<span class="lineCov">      21534 :                sizeof(filemgr_header_revnum_t));</span>
 <span class="lineNum">    1022 </span>                :            :         // file's sequence number
-<span class="lineNum">    1023 </span>                :<span class="lineCov">      14538 :         _seqnum = _endian_encode(file-&gt;header.seqnum);</span>
-<span class="lineNum">    1024 </span>                :<span class="lineCov">      14538 :         memcpy((uint8_t *)buf + header_len + sizeof(filemgr_header_revnum_t),</span>
-<span class="lineNum">    1025 </span>                :<span class="lineCov">      14538 :                &amp;_seqnum, sizeof(fdb_seqnum_t));</span>
+<span class="lineNum">    1023 </span>                :<span class="lineCov">      10767 :         _seqnum = _endian_encode(file-&gt;header.seqnum);</span>
+<span class="lineNum">    1024 </span>                :<span class="lineCov">      10767 :         memcpy((uint8_t *)buf + header_len + sizeof(filemgr_header_revnum_t),</span>
+<span class="lineNum">    1025 </span>                :<span class="lineCov">      10767 :                &amp;_seqnum, sizeof(fdb_seqnum_t));</span>
 <span class="lineNum">    1026 </span>                :            : 
 <span class="lineNum">    1027 </span>                :            :         // header length
-<span class="lineNum">    1028 </span>                :<span class="lineCov">      14538 :         _header_len = _endian_encode(header_len);</span>
+<span class="lineNum">    1028 </span>                :<span class="lineCov">      10767 :         _header_len = _endian_encode(header_len);</span>
 <span class="lineNum">    1029 </span>                :            :         memcpy((uint8_t *)buf + (file-&gt;blocksize - sizeof(filemgr_magic_t)
-<span class="lineNum">    1030 </span>                :<span class="lineCov">      14538 :                - sizeof(header_len) - BLK_MARKER_SIZE),</span>
-<span class="lineNum">    1031 </span>                :<span class="lineCov">      14538 :                &amp;_header_len, sizeof(header_len));</span>
+<span class="lineNum">    1030 </span>                :<span class="lineCov">      10767 :                - sizeof(header_len) - BLK_MARKER_SIZE),</span>
+<span class="lineNum">    1031 </span>                :<span class="lineCov">      10767 :                &amp;_header_len, sizeof(header_len));</span>
 <span class="lineNum">    1032 </span>                :            :         // magic number
-<span class="lineNum">    1033 </span>                :<span class="lineCov">      14538 :         _magic = _endian_encode(magic);</span>
+<span class="lineNum">    1033 </span>                :<span class="lineCov">      10767 :         _magic = _endian_encode(magic);</span>
 <span class="lineNum">    1034 </span>                :            :         memcpy((uint8_t *)buf + (file-&gt;blocksize - sizeof(filemgr_magic_t)
-<span class="lineNum">    1035 </span>                :<span class="lineCov">      14538 :                - BLK_MARKER_SIZE), &amp;_magic, sizeof(magic));</span>
+<span class="lineNum">    1035 </span>                :<span class="lineCov">      10767 :                - BLK_MARKER_SIZE), &amp;_magic, sizeof(magic));</span>
 <span class="lineNum">    1036 </span>                :            : 
 <span class="lineNum">    1037 </span>                :            :         // marker
-<span class="lineNum">    1038 </span>                :<span class="lineCov">      14538 :         memset(marker, BLK_MARKER_DBHEADER, BLK_MARKER_SIZE);</span>
-<span class="lineNum">    1039 </span>                :<span class="lineCov">      14538 :         memcpy((uint8_t *)buf + file-&gt;blocksize - BLK_MARKER_SIZE,</span>
-<span class="lineNum">    1040 </span>                :<span class="lineCov">      14538 :                marker, BLK_MARKER_SIZE);</span>
+<span class="lineNum">    1038 </span>                :<span class="lineCov">      10767 :         memset(marker, BLK_MARKER_DBHEADER, BLK_MARKER_SIZE);</span>
+<span class="lineNum">    1039 </span>                :<span class="lineCov">      10767 :         memcpy((uint8_t *)buf + file-&gt;blocksize - BLK_MARKER_SIZE,</span>
+<span class="lineNum">    1040 </span>                :<span class="lineCov">      10767 :                marker, BLK_MARKER_SIZE);</span>
 <span class="lineNum">    1041 </span>                :            : 
-<span class="lineNum">    1042 </span>                :<span class="lineCov">      14538 :         ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, buf, file-&gt;blocksize, file-&gt;pos);</span>
-<span class="lineNum">    1043 </span>                :<span class="lineCov">      14538 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
-<span class="lineNum">    1044 </span>                :<span class="lineCov">      14538 :         file-&gt;header.bid = file-&gt;pos / file-&gt;blocksize;</span>
-<span class="lineNum">    1045 </span>                :<span class="lineCov">      14538 :         file-&gt;pos += file-&gt;blocksize;</span>
+<span class="lineNum">    1042 </span>                :<span class="lineCov">      10767 :         ssize_t rv = file-&gt;ops-&gt;pwrite(file-&gt;fd, buf, file-&gt;blocksize, file-&gt;pos);</span>
+<span class="lineNum">    1043 </span>                :<span class="lineCov">      10767 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status) rv, &quot;WRITE&quot;, file-&gt;filename);</span>
+<span class="lineNum">    1044 </span>                :<span class="lineCov">      10767 :         file-&gt;header.bid = file-&gt;pos / file-&gt;blocksize;</span>
+<span class="lineNum">    1045 </span>                :<span class="lineCov">      10767 :         file-&gt;pos += file-&gt;blocksize;</span>
 <span class="lineNum">    1046 </span>                :            : 
-<span class="lineNum">    1047 </span>                :<span class="lineCov">      14538 :         file-&gt;header.dirty_idtree_root = BLK_NOT_FOUND;</span>
-<span class="lineNum">    1048 </span>                :<span class="lineCov">      14538 :         file-&gt;header.dirty_seqtree_root = BLK_NOT_FOUND;</span>
+<span class="lineNum">    1047 </span>                :<span class="lineCov">      10767 :         file-&gt;header.dirty_idtree_root = BLK_NOT_FOUND;</span>
+<span class="lineNum">    1048 </span>                :<span class="lineCov">      10767 :         file-&gt;header.dirty_seqtree_root = BLK_NOT_FOUND;</span>
 <span class="lineNum">    1049 </span>                :            : 
-<span class="lineNum">    1050 </span>                :<span class="lineCov">      14538 :         _filemgr_release_temp_buf(buf);</span>
+<span class="lineNum">    1050 </span>                :<span class="lineCov">      10767 :         _filemgr_release_temp_buf(buf);</span>
 <span class="lineNum">    1051 </span>                :            :     }
 <span class="lineNum">    1052 </span>                :            :     // race condition?
-<span class="lineNum">    1053 </span>                :<span class="lineCov">      16076 :     file-&gt;last_commit = file-&gt;pos;</span>
+<span class="lineNum">    1053 </span>                :<span class="lineCov">      12305 :     file-&gt;last_commit = file-&gt;pos;</span>
 <span class="lineNum">    1054 </span>                :            : 
-<span class="lineNum">    1055 </span>                :<span class="lineCov">      16076 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1055 </span>                :<span class="lineCov">      12305 :     spin_unlock(&amp;file-&gt;lock);</span>
 <span class="lineNum">    1056 </span>                :            : 
-<span class="lineNum">    1057 </span>        [<span class="branchCov" title="Branch 0 was taken 14538 times"> + </span><span class="branchCov" title="Branch 1 was taken 1538 times"> + </span>]:<span class="lineCov">      16076 :     if (file-&gt;fflags &amp; FILEMGR_SYNC) {</span>
-<span class="lineNum">    1058 </span>                :<span class="lineCov">      14538 :         result = file-&gt;ops-&gt;fsync(file-&gt;fd);</span>
-<span class="lineNum">    1059 </span>                :<span class="lineCov">      14538 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status)result, &quot;FSYNC&quot;, file-&gt;filename);</span>
+<span class="lineNum">    1057 </span>        [<span class="branchCov" title="Branch 0 was taken 10767 times"> + </span><span class="branchCov" title="Branch 1 was taken 1538 times"> + </span>]:<span class="lineCov">      12305 :     if (file-&gt;fflags &amp; FILEMGR_SYNC) {</span>
+<span class="lineNum">    1058 </span>                :<span class="lineCov">      10767 :         result = file-&gt;ops-&gt;fsync(file-&gt;fd);</span>
+<span class="lineNum">    1059 </span>                :<span class="lineCov">      10767 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status)result, &quot;FSYNC&quot;, file-&gt;filename);</span>
 <span class="lineNum">    1060 </span>                :            :     }
-<span class="lineNum">    1061 </span>                :<span class="lineCov">      16076 :     return (fdb_status) result;</span>
+<span class="lineNum">    1061 </span>                :<span class="lineCov">      12305 :     return (fdb_status) result;</span>
 <a name="1062"><span class="lineNum">    1062 </span>                :            : }</a>
 <span class="lineNum">    1063 </span>                :            : 
-<span class="lineNum">    1064 </span>                :<span class="lineCov">       4262 : fdb_status filemgr_sync(struct filemgr *file, err_log_callback *log_callback)</span>
+<span class="lineNum">    1064 </span>                :<span class="lineCov">       3338 : fdb_status filemgr_sync(struct filemgr *file, err_log_callback *log_callback)</span>
 <span class="lineNum">    1065 </span>                :            : {
-<span class="lineNum">    1066 </span>        [<span class="branchCov" title="Branch 0 was taken 1541 times"> + </span><span class="branchCov" title="Branch 1 was taken 2721 times"> + </span>]:<span class="lineCov">       4262 :     if (global_config.ncacheblock &gt; 0) {</span>
-<span class="lineNum">    1067 </span>                :<span class="lineCov">       1541 :         bcache_flush(file);</span>
+<span class="lineNum">    1066 </span>        [<span class="branchCov" title="Branch 0 was taken 1433 times"> + </span><span class="branchCov" title="Branch 1 was taken 1905 times"> + </span>]:<span class="lineCov">       3338 :     if (global_config.ncacheblock &gt; 0) {</span>
+<span class="lineNum">    1067 </span>                :<span class="lineCov">       1433 :         bcache_flush(file);</span>
 <span class="lineNum">    1068 </span>                :            :     }
 <span class="lineNum">    1069 </span>                :            : 
-<span class="lineNum">    1070 </span>        [<span class="branchCov" title="Branch 0 was taken 4262 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4262 :     if (file-&gt;fflags &amp; FILEMGR_SYNC) {</span>
-<span class="lineNum">    1071 </span>                :<span class="lineCov">       4262 :         int rv = file-&gt;ops-&gt;fsync(file-&gt;fd);</span>
-<span class="lineNum">    1072 </span>                :<span class="lineCov">       4262 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status)rv, &quot;FSYNC&quot;, file-&gt;filename);</span>
-<span class="lineNum">    1073 </span>                :<span class="lineCov">       4262 :         return (fdb_status) rv;</span>
+<span class="lineNum">    1070 </span>        [<span class="branchCov" title="Branch 0 was taken 3338 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3338 :     if (file-&gt;fflags &amp; FILEMGR_SYNC) {</span>
+<span class="lineNum">    1071 </span>                :<span class="lineCov">       3338 :         int rv = file-&gt;ops-&gt;fsync(file-&gt;fd);</span>
+<span class="lineNum">    1072 </span>                :<span class="lineCov">       3338 :         _log_errno_str(file-&gt;ops, log_callback, (fdb_status)rv, &quot;FSYNC&quot;, file-&gt;filename);</span>
+<span class="lineNum">    1073 </span>                :<span class="lineCov">       3338 :         return (fdb_status) rv;</span>
 <span class="lineNum">    1074 </span>                :            :     }
-<span class="lineNum">    1075 </span>                :<span class="lineCov">       4262 :     return FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">    1075 </span>                :<span class="lineCov">       3338 :     return FDB_RESULT_SUCCESS;</span>
 <a name="1076"><span class="lineNum">    1076 </span>                :            : }</a>
 <span class="lineNum">    1077 </span>                :            : 
-<span class="lineNum">    1078 </span>                :<span class="lineCov">        115 : int filemgr_update_file_status(struct filemgr *file, file_status_t status,</span>
+<span class="lineNum">    1078 </span>                :<span class="lineCov">        113 : int filemgr_update_file_status(struct filemgr *file, file_status_t status,</span>
 <span class="lineNum">    1079 </span>                :            :                                 char *old_filename)
 <span class="lineNum">    1080 </span>                :            : {
-<span class="lineNum">    1081 </span>                :<span class="lineCov">        115 :     int ret = 1;</span>
-<span class="lineNum">    1082 </span>                :<span class="lineCov">        115 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1083 </span>                :<span class="lineCov">        115 :     file-&gt;status = status;</span>
-<span class="lineNum">    1084 </span>        [<span class="branchCov" title="Branch 0 was taken 70 times"> + </span><span class="branchCov" title="Branch 1 was taken 45 times"> + </span>]:<span class="lineCov">        115 :     if (old_filename) {</span>
-<span class="lineNum">    1085 </span>        [<span class="branchCov" title="Branch 0 was taken 53 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         70 :         if (!file-&gt;old_filename) {</span>
+<span class="lineNum">    1081 </span>                :<span class="lineCov">        113 :     int ret = 1;</span>
+<span class="lineNum">    1082 </span>                :<span class="lineCov">        113 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1083 </span>                :<span class="lineCov">        113 :     file-&gt;status = status;</span>
+<span class="lineNum">    1084 </span>        [<span class="branchCov" title="Branch 0 was taken 68 times"> + </span><span class="branchCov" title="Branch 1 was taken 45 times"> + </span>]:<span class="lineCov">        113 :     if (old_filename) {</span>
+<span class="lineNum">    1085 </span>        [<span class="branchCov" title="Branch 0 was taken 53 times"> + </span><span class="branchCov" title="Branch 1 was taken 15 times"> + </span>]:<span class="lineCov">         68 :         if (!file-&gt;old_filename) {</span>
 <span class="lineNum">    1086 </span>                :<span class="lineCov">         53 :             file-&gt;old_filename = old_filename;</span>
 <span class="lineNum">    1087 </span>                :            :         } else {
-<span class="lineNum">    1088 </span>                :<span class="lineCov">         17 :             ret = 0;</span>
-<span class="lineNum">    1089 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         17 :             assert(file-&gt;ref_count);</span>
-<span class="lineNum">    1090 </span>                :<span class="lineCov">         17 :             free(old_filename);</span>
+<span class="lineNum">    1088 </span>                :<span class="lineCov">         15 :             ret = 0;</span>
+<span class="lineNum">    1089 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 15 times"> + </span>]:<span class="lineCov">         15 :             assert(file-&gt;ref_count);</span>
+<span class="lineNum">    1090 </span>                :<span class="lineCov">         15 :             free(old_filename);</span>
 <span class="lineNum">    1091 </span>                :            :         }
 <span class="lineNum">    1092 </span>                :            :     }
-<span class="lineNum">    1093 </span>                :<span class="lineCov">        115 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1094 </span>                :<span class="lineCov">        115 :     return ret;</span>
+<span class="lineNum">    1093 </span>                :<span class="lineCov">        113 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1094 </span>                :<span class="lineCov">        113 :     return ret;</span>
 <a name="1095"><span class="lineNum">    1095 </span>                :            : }</a>
 <span class="lineNum">    1096 </span>                :            : 
 <span class="lineNum">    1097 </span>                :<span class="lineCov">         45 : void filemgr_set_compaction_old(struct filemgr *old_file, struct filemgr *new_file)</span>
@@ -1316,25 +1316,25 @@
 <span class="lineNum">    1244 </span>                :<span class="lineCov">          6 :     return status;</span>
 <a name="1245"><span class="lineNum">    1245 </span>                :            : }</a>
 <span class="lineNum">    1246 </span>                :            : 
-<span class="lineNum">    1247 </span>                :<span class="lineCov">   63098621 : file_status_t filemgr_get_file_status(struct filemgr *file)</span>
+<span class="lineNum">    1247 </span>                :<span class="lineCov">   63826057 : file_status_t filemgr_get_file_status(struct filemgr *file)</span>
 <span class="lineNum">    1248 </span>                :            : {
-<span class="lineNum">    1249 </span>                :<span class="lineCov">   63098621 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1250 </span>                :<span class="lineCov">   63130956 :     file_status_t status = file-&gt;status;</span>
-<span class="lineNum">    1251 </span>                :<span class="lineCov">   63130956 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1252 </span>                :<span class="lineCov">   63130500 :     return status;</span>
+<span class="lineNum">    1249 </span>                :<span class="lineCov">   63826057 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1250 </span>                :<span class="lineCov">   63860161 :     file_status_t status = file-&gt;status;</span>
+<span class="lineNum">    1251 </span>                :<span class="lineCov">   63860161 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1252 </span>                :<span class="lineCov">   63859660 :     return status;</span>
 <a name="1253"><span class="lineNum">    1253 </span>                :            : }</a>
 <span class="lineNum">    1254 </span>                :            : 
-<span class="lineNum">    1255 </span>                :<span class="lineCov">   10896438 : uint64_t filemgr_get_pos(struct filemgr *file)</span>
+<span class="lineNum">    1255 </span>                :<span class="lineCov">   11204450 : uint64_t filemgr_get_pos(struct filemgr *file)</span>
 <span class="lineNum">    1256 </span>                :            : {
-<span class="lineNum">    1257 </span>                :<span class="lineCov">   10896438 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1258 </span>                :<span class="lineCov">   10938905 :     uint64_t pos = file-&gt;pos;</span>
-<span class="lineNum">    1259 </span>                :<span class="lineCov">   10938905 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1260 </span>                :<span class="lineCov">   10937911 :     return pos;</span>
+<span class="lineNum">    1257 </span>                :<span class="lineCov">   11204450 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1258 </span>                :<span class="lineCov">   11242248 :     uint64_t pos = file-&gt;pos;</span>
+<span class="lineNum">    1259 </span>                :<span class="lineCov">   11242248 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1260 </span>                :<span class="lineCov">   11241740 :     return pos;</span>
 <a name="1261"><span class="lineNum">    1261 </span>                :            : }</a>
 <span class="lineNum">    1262 </span>                :            : 
-<span class="lineNum">    1263 </span>                :<span class="lineCov">    2436207 : uint8_t filemgr_is_rollback_on(struct filemgr *file)</span>
+<span class="lineNum">    1263 </span>                :<span class="lineCov">    2426818 : uint8_t filemgr_is_rollback_on(struct filemgr *file)</span>
 <span class="lineNum">    1264 </span>                :            : {
-<span class="lineNum">    1265 </span>                :<span class="lineCov">    2436207 :     return (file-&gt;fflags &amp; FILEMGR_ROLLBACK_IN_PROG);</span>
+<span class="lineNum">    1265 </span>                :<span class="lineCov">    2426818 :     return (file-&gt;fflags &amp; FILEMGR_ROLLBACK_IN_PROG);</span>
 <a name="1266"><span class="lineNum">    1266 </span>                :            : }</a>
 <span class="lineNum">    1267 </span>                :            : 
 <span class="lineNum">    1268 </span>                :<span class="lineCov">         12 : void filemgr_set_rollback(struct filemgr *file, uint8_t new_val)</span>
@@ -1367,43 +1367,43 @@
 <span class="lineNum">    1295 </span>                :<span class="lineCov">          5 :     spin_unlock(&amp;filemgr_openlock);</span>
 <a name="1296"><span class="lineNum">    1296 </span>                :<span class="lineCov">          5 : }</span></a>
 <span class="lineNum">    1297 </span>                :            : 
-<span class="lineNum">    1298 </span>                :<span class="lineCov">    2455758 : void filemgr_mutex_lock(struct filemgr *file)</span>
+<span class="lineNum">    1298 </span>                :<span class="lineCov">    2446717 : void filemgr_mutex_lock(struct filemgr *file)</span>
 <span class="lineNum">    1299 </span>                :            : {
 <span class="lineNum">    1300 </span>                :            : #ifdef __FILEMGR_MUTEX_LOCK
-<span class="lineNum">    1301 </span>                :<span class="lineCov">    2455758 :     mutex_lock(&amp;file-&gt;mutex);</span>
+<span class="lineNum">    1301 </span>                :<span class="lineCov">    2446717 :     mutex_lock(&amp;file-&gt;mutex);</span>
 <span class="lineNum">    1302 </span>                :            : #else
 <span class="lineNum">    1303 </span>                :            :     spin_lock(&amp;file-&gt;mutex);
 <span class="lineNum">    1304 </span>                :            : #endif
-<a name="1305"><span class="lineNum">    1305 </span>                :<span class="lineCov">    2455758 : }</span></a>
+<a name="1305"><span class="lineNum">    1305 </span>                :<span class="lineCov">    2446717 : }</span></a>
 <span class="lineNum">    1306 </span>                :            : 
-<span class="lineNum">    1307 </span>                :<span class="lineCov">    2455758 : void filemgr_mutex_unlock(struct filemgr *file)</span>
+<span class="lineNum">    1307 </span>                :<span class="lineCov">    2446717 : void filemgr_mutex_unlock(struct filemgr *file)</span>
 <span class="lineNum">    1308 </span>                :            : {
 <span class="lineNum">    1309 </span>                :            : #ifdef __FILEMGR_MUTEX_LOCK
-<span class="lineNum">    1310 </span>                :<span class="lineCov">    2455758 :     mutex_unlock(&amp;file-&gt;mutex);</span>
+<span class="lineNum">    1310 </span>                :<span class="lineCov">    2446717 :     mutex_unlock(&amp;file-&gt;mutex);</span>
 <span class="lineNum">    1311 </span>                :            : #else
 <span class="lineNum">    1312 </span>                :            :     spin_unlock(&amp;file-&gt;mutex);
 <span class="lineNum">    1313 </span>                :            : #endif
-<a name="1314"><span class="lineNum">    1314 </span>                :<span class="lineCov">    2455758 : }</span></a>
+<a name="1314"><span class="lineNum">    1314 </span>                :<span class="lineCov">    2446717 : }</span></a>
 <span class="lineNum">    1315 </span>                :            : 
-<span class="lineNum">    1316 </span>                :<span class="lineCov">        588 : void filemgr_set_dirty_root(struct filemgr *file,</span>
+<span class="lineNum">    1316 </span>                :<span class="lineCov">        586 : void filemgr_set_dirty_root(struct filemgr *file,</span>
 <span class="lineNum">    1317 </span>                :            :                             bid_t dirty_idtree_root,
 <span class="lineNum">    1318 </span>                :            :                             bid_t dirty_seqtree_root)
 <span class="lineNum">    1319 </span>                :            : {
-<span class="lineNum">    1320 </span>                :<span class="lineCov">        588 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1321 </span>                :<span class="lineCov">        588 :     file-&gt;header.dirty_idtree_root = dirty_idtree_root;</span>
-<span class="lineNum">    1322 </span>                :<span class="lineCov">        588 :     file-&gt;header.dirty_seqtree_root = dirty_seqtree_root;</span>
-<span class="lineNum">    1323 </span>                :<span class="lineCov">        588 :     spin_unlock(&amp;file-&gt;lock);</span>
-<a name="1324"><span class="lineNum">    1324 </span>                :<span class="lineCov">        588 : }</span></a>
+<span class="lineNum">    1320 </span>                :<span class="lineCov">        586 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1321 </span>                :<span class="lineCov">        586 :     file-&gt;header.dirty_idtree_root = dirty_idtree_root;</span>
+<span class="lineNum">    1322 </span>                :<span class="lineCov">        586 :     file-&gt;header.dirty_seqtree_root = dirty_seqtree_root;</span>
+<span class="lineNum">    1323 </span>                :<span class="lineCov">        586 :     spin_unlock(&amp;file-&gt;lock);</span>
+<a name="1324"><span class="lineNum">    1324 </span>                :<span class="lineCov">        586 : }</span></a>
 <span class="lineNum">    1325 </span>                :            : 
-<span class="lineNum">    1326 </span>                :<span class="lineCov">    2414964 : void filemgr_get_dirty_root(struct filemgr *file,</span>
+<span class="lineNum">    1326 </span>                :<span class="lineCov">    2411733 : void filemgr_get_dirty_root(struct filemgr *file,</span>
 <span class="lineNum">    1327 </span>                :            :                             bid_t *dirty_idtree_root,
 <span class="lineNum">    1328 </span>                :            :                             bid_t *dirty_seqtree_root)
 <span class="lineNum">    1329 </span>                :            : {
-<span class="lineNum">    1330 </span>                :<span class="lineCov">    2414964 :     spin_lock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1331 </span>                :<span class="lineCov">    2414964 :     *dirty_idtree_root = file-&gt;header.dirty_idtree_root;</span>
-<span class="lineNum">    1332 </span>                :<span class="lineCov">    2414964 :     *dirty_seqtree_root= file-&gt;header.dirty_seqtree_root;</span>
-<span class="lineNum">    1333 </span>                :<span class="lineCov">    2414964 :     spin_unlock(&amp;file-&gt;lock);</span>
-<span class="lineNum">    1334 </span>                :<span class="lineCov">    2414964 : }</span>
+<span class="lineNum">    1330 </span>                :<span class="lineCov">    2411733 :     spin_lock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1331 </span>                :<span class="lineCov">    2411733 :     *dirty_idtree_root = file-&gt;header.dirty_idtree_root;</span>
+<span class="lineNum">    1332 </span>                :<span class="lineCov">    2411733 :     *dirty_seqtree_root= file-&gt;header.dirty_seqtree_root;</span>
+<span class="lineNum">    1333 </span>                :<span class="lineCov">    2411733 :     spin_unlock(&amp;file-&gt;lock);</span>
+<span class="lineNum">    1334 </span>                :<span class="lineCov">    2411733 : }</span>
 <span class="lineNum">    1335 </span>                :            : 
 </pre>
       </td>
