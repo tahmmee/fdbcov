@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">503</td>
+            <td class="headerCovTableEntry">502</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-11-10</td>
+            <td class="headerValue">2014-11-18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -927,133 +927,132 @@
 <span class="lineNum">     845 </span>                :            :     key_len_t key1_len, key2_len, prefix_len;
 <span class="lineNum">     846 </span>                :            :     key_len_t _key1_len, _key2_len;
 <span class="lineNum">     847 </span>                :            : 
-<span class="lineNum">     848 </span>                :<span class="lineNoCov">          0 :     key1_len = key2_len = 0;</span>
-<span class="lineNum">     849 </span>                :<span class="lineNoCov">          0 :     memset(key1, 0, ksize);</span>
-<span class="lineNum">     850 </span>                :<span class="lineNoCov">          0 :     memset(key2, 0, ksize);</span>
-<span class="lineNum">     851 </span>                :            : 
-<span class="lineNum">     852 </span>                :            :     // key1: the greatest key in 'prev_node'
-<span class="lineNum">     853 </span>                :<span class="lineNoCov">          0 :     _get_prefix_kv(prev_node, prev_node-&gt;nentry-1, key1, NULL);</span>
-<span class="lineNum">     854 </span>                :            :     // key2: the smallest key in 'node'
-<span class="lineNum">     855 </span>                :<span class="lineNoCov">          0 :     _get_prefix_kv(node, 0, key2, NULL);</span>
-<span class="lineNum">     856 </span>                :            : 
-<span class="lineNum">     857 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key1_ptr, key1, sizeof(void *));</span>
-<span class="lineNum">     858 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key2_ptr, key2, sizeof(void *));</span>
-<span class="lineNum">     859 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_key1_len, key1_ptr, sizeof(key_len_t));</span>
-<span class="lineNum">     860 </span>                :<span class="lineNoCov">          0 :     key1_len = _endian_decode(_key1_len);</span>
-<span class="lineNum">     861 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_key2_len, key2_ptr, sizeof(key_len_t));</span>
-<span class="lineNum">     862 </span>                :<span class="lineNoCov">          0 :     key2_len = _endian_decode(_key2_len);</span>
-<span class="lineNum">     863 </span>                :            : 
-<span class="lineNum">     864 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (node-&gt;level == 1) {</span>
-<span class="lineNum">     865 </span>                :            :         // leaf nodes
-<span class="lineNum">     866 </span>                :            : 
-<span class="lineNum">     867 </span>                :            :         // find longest prefix between key1 &amp; key2
-<span class="lineNum">     868 </span>                :            :         _get_common_prefix(
-<span class="lineNum">     869 </span>                :<span class="lineNoCov">          0 :            (uint8_t*)key1_ptr + sizeof(key_len_t), key1_len,</span>
-<span class="lineNum">     870 </span>                :<span class="lineNoCov">          0 :            (uint8_t*)key2_ptr + sizeof(key_len_t), key2_len, &amp;prefix_len);</span>
-<span class="lineNum">     871 </span>                :            : 
-<span class="lineNum">     872 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (key) {</span>
-<span class="lineNum">     873 </span>                :            :             // if key already points to another memory space, free it
-<span class="lineNum">     874 </span>                :<span class="lineNoCov">          0 :             btree_prefix_kv_free_key(key);</span>
-<span class="lineNum">     875 </span>                :            :         }
-<span class="lineNum">     876 </span>                :            :         // set longest prefix + one more chr in key2 as splitter
-<span class="lineNum">     877 </span>                :            :         btree_prefix_kv_set_key(key,
-<span class="lineNum">     878 </span>                :<span class="lineNoCov">          0 :                                 (uint8_t*)key2_ptr + sizeof(key_len_t),</span>
-<span class="lineNum">     879 </span>                :<span class="lineNoCov">          0 :                                 prefix_len+1);</span>
-<span class="lineNum">     880 </span>                :            :     } else {
-<span class="lineNum">     881 </span>                :            :         // index nodes
-<span class="lineNum">     882 </span>                :            :         // Note that setting the longest prefix as parent node's splitter can be used
-<span class="lineNum">     883 </span>                :            :         // only for leaf nodes. In index nodes, there can be keys that equal to or
-<span class="lineNum">     884 </span>                :            :         // greater than the longest common prefix and smaller than the smallest key
-<span class="lineNum">     885 </span>                :            :         // in 'node'.
-<span class="lineNum">     886 </span>                :            :         // Since they are pointed to by the greatest key in 'prev_node', they will be
-<span class="lineNum">     887 </span>                :            :         // lost if we set the common prefix as splitter.
-<span class="lineNum">     888 </span>                :            :         // To avoid this problem, index nodes always use key2 as splitter.
-<span class="lineNum">     889 </span>                :            :         btree_prefix_kv_set_key(key,
-<span class="lineNum">     890 </span>                :<span class="lineNoCov">          0 :                                 (uint8_t*)key2_ptr + sizeof(key_len_t),</span>
-<span class="lineNum">     891 </span>                :<span class="lineNoCov">          0 :                                 key2_len);</span>
-<span class="lineNum">     892 </span>                :            :     }
-<span class="lineNum">     893 </span>                :<span class="lineNoCov">          0 :     btree_prefix_kv_free_key(key1);</span>
-<span class="lineNum">     894 </span>                :<span class="lineNoCov">          0 :     btree_prefix_kv_free_key(key2);</span>
-<a name="895"><span class="lineNum">     895 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<span class="lineNum">     896 </span>                :            : 
-<span class="lineNum">     897 </span>                :<span class="lineNoCov">          0 : INLINE bid_t _prefix_value_to_bid_64(void *value)</span>
-<span class="lineNum">     898 </span>                :            : {
-<span class="lineNum">     899 </span>                :<span class="lineNoCov">          0 :     return *((bid_t *)value);</span>
-<a name="900"><span class="lineNum">     900 </span>                :            : }</a>
-<span class="lineNum">     901 </span>                :            : 
-<span class="lineNum">     902 </span>                :<span class="lineNoCov">          0 : INLINE void* _prefix_bid_to_value_64(bid_t *bid)</span>
-<span class="lineNum">     903 </span>                :            : {
-<span class="lineNum">     904 </span>                :<span class="lineNoCov">          0 :     return (void *)bid;</span>
-<a name="905"><span class="lineNum">     905 </span>                :            : }</a>
-<span class="lineNum">     906 </span>                :            : 
-<span class="lineNum">     907 </span>                :<span class="lineNoCov">          0 : INLINE int _cmp_prefix64(void *key1, void *key2, void *aux)</span>
-<span class="lineNum">     908 </span>                :            : {
-<span class="lineNum">     909 </span>                :            :     void *key_ptr1, *key_ptr2;
-<span class="lineNum">     910 </span>                :            :     key_len_t keylen1, keylen2;
-<span class="lineNum">     911 </span>                :            :     key_len_t _keylen1, _keylen2;
-<span class="lineNum">     912 </span>                :            : 
-<span class="lineNum">     913 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key_ptr1, key1, sizeof(void *));</span>
-<span class="lineNum">     914 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key_ptr2, key2, sizeof(void *));</span>
-<span class="lineNum">     915 </span>                :            : 
-<span class="lineNum">     916 </span>[<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (key_ptr1 == NULL &amp;&amp; key_ptr2 == NULL) {</span>
-<span class="lineNum">     917 </span>                :<span class="lineNoCov">          0 :         return 0;</span>
-<span class="lineNum">     918 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     } else if (key_ptr1 == NULL) {</span>
-<span class="lineNum">     919 </span>                :<span class="lineNoCov">          0 :         return -1;</span>
-<span class="lineNum">     920 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     } else if (key_ptr2 == NULL) {</span>
-<span class="lineNum">     921 </span>                :<span class="lineNoCov">          0 :         return 1;</span>
-<span class="lineNum">     922 </span>                :            :     }
-<span class="lineNum">     923 </span>                :            : 
-<span class="lineNum">     924 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_keylen1, key_ptr1, sizeof(key_len_t));</span>
-<span class="lineNum">     925 </span>                :<span class="lineNoCov">          0 :     keylen1 = _endian_decode(_keylen1);</span>
-<span class="lineNum">     926 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_keylen2, key_ptr2, sizeof(key_len_t));</span>
-<span class="lineNum">     927 </span>                :<span class="lineNoCov">          0 :     keylen2 = _endian_decode(_keylen2);</span>
-<span class="lineNum">     928 </span>                :            : 
-<span class="lineNum">     929 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (keylen1 == keylen2) {</span>
-<span class="lineNum">     930 </span>                :            :         return memcmp((uint8_t*)key_ptr1 + sizeof(key_len_t),
-<span class="lineNum">     931 </span>                :<span class="lineNoCov">          0 :                       (uint8_t*)key_ptr2 + sizeof(key_len_t), keylen1);</span>
-<span class="lineNum">     932 </span>                :            :     }else{
-<span class="lineNum">     933 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         key_len_t len = MIN(keylen1, keylen2);</span>
-<span class="lineNum">     934 </span>                :            :         int cmp = memcmp((uint8_t*)key_ptr1 + sizeof(key_len_t),
-<span class="lineNum">     935 </span>                :<span class="lineNoCov">          0 :                          (uint8_t*)key_ptr2 + sizeof(key_len_t), len);</span>
-<span class="lineNum">     936 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (cmp != 0) return cmp;</span>
-<span class="lineNum">     937 </span>                :            :         else {
-<span class="lineNum">     938 </span>                :<span class="lineNoCov">          0 :             return (int)((int)keylen1 - (int)keylen2);</span>
-<span class="lineNum">     939 </span>                :            :         }
-<span class="lineNum">     940 </span>                :            :     }
-<a name="941"><span class="lineNum">     941 </span>                :            : }</a>
-<span class="lineNum">     942 </span>                :            : 
-<span class="lineNum">     943 </span>                :<span class="lineNoCov">          0 : struct btree_kv_ops * btree_prefix_kv_get_kb64_vb64(struct btree_kv_ops *kv_ops)</span>
-<span class="lineNum">     944 </span>                :            : {
-<span class="lineNum">     945 </span>                :            :     struct btree_kv_ops *btree_kv_ops;
-<span class="lineNum">     946 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (kv_ops) {</span>
-<span class="lineNum">     947 </span>                :<span class="lineNoCov">          0 :         btree_kv_ops = kv_ops;</span>
-<span class="lineNum">     948 </span>                :            :     }else{
-<span class="lineNum">     949 </span>                :<span class="lineNoCov">          0 :         btree_kv_ops = (struct btree_kv_ops *)malloc(sizeof(struct btree_kv_ops));</span>
-<span class="lineNum">     950 </span>                :            :     }
-<span class="lineNum">     951 </span>                :            : 
-<span class="lineNum">     952 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_kv = _get_prefix_kv;</span>
-<span class="lineNum">     953 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;set_kv = _set_prefix_kv;</span>
-<span class="lineNum">     954 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;ins_kv = _ins_prefix_kv;</span>
-<span class="lineNum">     955 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;copy_kv = _copy_prefix_kv;</span>
-<span class="lineNum">     956 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;set_key = _set_prefix_key;</span>
-<span class="lineNum">     957 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;set_value = _set_prefix_value;</span>
-<span class="lineNum">     958 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_data_size = _get_prefix_data_size;</span>
-<span class="lineNum">     959 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_kv_size = _get_prefix_kv_size;</span>
-<span class="lineNum">     960 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;init_kv_var = _init_prefix_kv_var;</span>
-<span class="lineNum">     961 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;free_kv_var = _free_prefix_kv_var;</span>
-<span class="lineNum">     962 </span>                :            : 
-<span class="lineNum">     963 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_nth_idx = _get_prefix_nth_idx;</span>
-<span class="lineNum">     964 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_nth_splitter = _get_prefix_nth_splitter;</span>
-<span class="lineNum">     965 </span>                :            : 
-<span class="lineNum">     966 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;cmp = _cmp_prefix64;</span>
-<span class="lineNum">     967 </span>                :            : 
-<span class="lineNum">     968 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;bid2value = _prefix_bid_to_value_64;</span>
-<span class="lineNum">     969 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;value2bid = _prefix_value_to_bid_64;</span>
-<span class="lineNum">     970 </span>                :            : 
-<span class="lineNum">     971 </span>                :<span class="lineNoCov">          0 :     return btree_kv_ops;</span>
-<span class="lineNum">     972 </span>                :            : }
+<span class="lineNum">     848 </span>                :<span class="lineNoCov">          0 :     memset(key1, 0, ksize);</span>
+<span class="lineNum">     849 </span>                :<span class="lineNoCov">          0 :     memset(key2, 0, ksize);</span>
+<span class="lineNum">     850 </span>                :            : 
+<span class="lineNum">     851 </span>                :            :     // key1: the greatest key in 'prev_node'
+<span class="lineNum">     852 </span>                :<span class="lineNoCov">          0 :     _get_prefix_kv(prev_node, prev_node-&gt;nentry-1, key1, NULL);</span>
+<span class="lineNum">     853 </span>                :            :     // key2: the smallest key in 'node'
+<span class="lineNum">     854 </span>                :<span class="lineNoCov">          0 :     _get_prefix_kv(node, 0, key2, NULL);</span>
+<span class="lineNum">     855 </span>                :            : 
+<span class="lineNum">     856 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key1_ptr, key1, sizeof(void *));</span>
+<span class="lineNum">     857 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key2_ptr, key2, sizeof(void *));</span>
+<span class="lineNum">     858 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_key1_len, key1_ptr, sizeof(key_len_t));</span>
+<span class="lineNum">     859 </span>                :<span class="lineNoCov">          0 :     key1_len = _endian_decode(_key1_len);</span>
+<span class="lineNum">     860 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_key2_len, key2_ptr, sizeof(key_len_t));</span>
+<span class="lineNum">     861 </span>                :<span class="lineNoCov">          0 :     key2_len = _endian_decode(_key2_len);</span>
+<span class="lineNum">     862 </span>                :            : 
+<span class="lineNum">     863 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (node-&gt;level == 1) {</span>
+<span class="lineNum">     864 </span>                :            :         // leaf nodes
+<span class="lineNum">     865 </span>                :            : 
+<span class="lineNum">     866 </span>                :            :         // find longest prefix between key1 &amp; key2
+<span class="lineNum">     867 </span>                :            :         _get_common_prefix(
+<span class="lineNum">     868 </span>                :<span class="lineNoCov">          0 :            (uint8_t*)key1_ptr + sizeof(key_len_t), key1_len,</span>
+<span class="lineNum">     869 </span>                :<span class="lineNoCov">          0 :            (uint8_t*)key2_ptr + sizeof(key_len_t), key2_len, &amp;prefix_len);</span>
+<span class="lineNum">     870 </span>                :            : 
+<span class="lineNum">     871 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (key) {</span>
+<span class="lineNum">     872 </span>                :            :             // if key already points to another memory space, free it
+<span class="lineNum">     873 </span>                :<span class="lineNoCov">          0 :             btree_prefix_kv_free_key(key);</span>
+<span class="lineNum">     874 </span>                :            :         }
+<span class="lineNum">     875 </span>                :            :         // set longest prefix + one more chr in key2 as splitter
+<span class="lineNum">     876 </span>                :            :         btree_prefix_kv_set_key(key,
+<span class="lineNum">     877 </span>                :<span class="lineNoCov">          0 :                                 (uint8_t*)key2_ptr + sizeof(key_len_t),</span>
+<span class="lineNum">     878 </span>                :<span class="lineNoCov">          0 :                                 prefix_len+1);</span>
+<span class="lineNum">     879 </span>                :            :     } else {
+<span class="lineNum">     880 </span>                :            :         // index nodes
+<span class="lineNum">     881 </span>                :            :         // Note that setting the longest prefix as parent node's splitter can be used
+<span class="lineNum">     882 </span>                :            :         // only for leaf nodes. In index nodes, there can be keys that equal to or
+<span class="lineNum">     883 </span>                :            :         // greater than the longest common prefix and smaller than the smallest key
+<span class="lineNum">     884 </span>                :            :         // in 'node'.
+<span class="lineNum">     885 </span>                :            :         // Since they are pointed to by the greatest key in 'prev_node', they will be
+<span class="lineNum">     886 </span>                :            :         // lost if we set the common prefix as splitter.
+<span class="lineNum">     887 </span>                :            :         // To avoid this problem, index nodes always use key2 as splitter.
+<span class="lineNum">     888 </span>                :            :         btree_prefix_kv_set_key(key,
+<span class="lineNum">     889 </span>                :<span class="lineNoCov">          0 :                                 (uint8_t*)key2_ptr + sizeof(key_len_t),</span>
+<span class="lineNum">     890 </span>                :<span class="lineNoCov">          0 :                                 key2_len);</span>
+<span class="lineNum">     891 </span>                :            :     }
+<span class="lineNum">     892 </span>                :<span class="lineNoCov">          0 :     btree_prefix_kv_free_key(key1);</span>
+<span class="lineNum">     893 </span>                :<span class="lineNoCov">          0 :     btree_prefix_kv_free_key(key2);</span>
+<a name="894"><span class="lineNum">     894 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     895 </span>                :            : 
+<span class="lineNum">     896 </span>                :<span class="lineNoCov">          0 : INLINE bid_t _prefix_value_to_bid_64(void *value)</span>
+<span class="lineNum">     897 </span>                :            : {
+<span class="lineNum">     898 </span>                :<span class="lineNoCov">          0 :     return *((bid_t *)value);</span>
+<a name="899"><span class="lineNum">     899 </span>                :            : }</a>
+<span class="lineNum">     900 </span>                :            : 
+<span class="lineNum">     901 </span>                :<span class="lineNoCov">          0 : INLINE void* _prefix_bid_to_value_64(bid_t *bid)</span>
+<span class="lineNum">     902 </span>                :            : {
+<span class="lineNum">     903 </span>                :<span class="lineNoCov">          0 :     return (void *)bid;</span>
+<a name="904"><span class="lineNum">     904 </span>                :            : }</a>
+<span class="lineNum">     905 </span>                :            : 
+<span class="lineNum">     906 </span>                :<span class="lineNoCov">          0 : INLINE int _cmp_prefix64(void *key1, void *key2, void *aux)</span>
+<span class="lineNum">     907 </span>                :            : {
+<span class="lineNum">     908 </span>                :            :     void *key_ptr1, *key_ptr2;
+<span class="lineNum">     909 </span>                :            :     key_len_t keylen1, keylen2;
+<span class="lineNum">     910 </span>                :            :     key_len_t _keylen1, _keylen2;
+<span class="lineNum">     911 </span>                :            : 
+<span class="lineNum">     912 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key_ptr1, key1, sizeof(void *));</span>
+<span class="lineNum">     913 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;key_ptr2, key2, sizeof(void *));</span>
+<span class="lineNum">     914 </span>                :            : 
+<span class="lineNum">     915 </span>[<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (key_ptr1 == NULL &amp;&amp; key_ptr2 == NULL) {</span>
+<span class="lineNum">     916 </span>                :<span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">     917 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     } else if (key_ptr1 == NULL) {</span>
+<span class="lineNum">     918 </span>                :<span class="lineNoCov">          0 :         return -1;</span>
+<span class="lineNum">     919 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     } else if (key_ptr2 == NULL) {</span>
+<span class="lineNum">     920 </span>                :<span class="lineNoCov">          0 :         return 1;</span>
+<span class="lineNum">     921 </span>                :            :     }
+<span class="lineNum">     922 </span>                :            : 
+<span class="lineNum">     923 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_keylen1, key_ptr1, sizeof(key_len_t));</span>
+<span class="lineNum">     924 </span>                :<span class="lineNoCov">          0 :     keylen1 = _endian_decode(_keylen1);</span>
+<span class="lineNum">     925 </span>                :<span class="lineNoCov">          0 :     memcpy(&amp;_keylen2, key_ptr2, sizeof(key_len_t));</span>
+<span class="lineNum">     926 </span>                :<span class="lineNoCov">          0 :     keylen2 = _endian_decode(_keylen2);</span>
+<span class="lineNum">     927 </span>                :            : 
+<span class="lineNum">     928 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (keylen1 == keylen2) {</span>
+<span class="lineNum">     929 </span>                :            :         return memcmp((uint8_t*)key_ptr1 + sizeof(key_len_t),
+<span class="lineNum">     930 </span>                :<span class="lineNoCov">          0 :                       (uint8_t*)key_ptr2 + sizeof(key_len_t), keylen1);</span>
+<span class="lineNum">     931 </span>                :            :     }else{
+<span class="lineNum">     932 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         key_len_t len = MIN(keylen1, keylen2);</span>
+<span class="lineNum">     933 </span>                :            :         int cmp = memcmp((uint8_t*)key_ptr1 + sizeof(key_len_t),
+<span class="lineNum">     934 </span>                :<span class="lineNoCov">          0 :                          (uint8_t*)key_ptr2 + sizeof(key_len_t), len);</span>
+<span class="lineNum">     935 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (cmp != 0) return cmp;</span>
+<span class="lineNum">     936 </span>                :            :         else {
+<span class="lineNum">     937 </span>                :<span class="lineNoCov">          0 :             return (int)((int)keylen1 - (int)keylen2);</span>
+<span class="lineNum">     938 </span>                :            :         }
+<span class="lineNum">     939 </span>                :            :     }
+<a name="940"><span class="lineNum">     940 </span>                :            : }</a>
+<span class="lineNum">     941 </span>                :            : 
+<span class="lineNum">     942 </span>                :<span class="lineNoCov">          0 : struct btree_kv_ops * btree_prefix_kv_get_kb64_vb64(struct btree_kv_ops *kv_ops)</span>
+<span class="lineNum">     943 </span>                :            : {
+<span class="lineNum">     944 </span>                :            :     struct btree_kv_ops *btree_kv_ops;
+<span class="lineNum">     945 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (kv_ops) {</span>
+<span class="lineNum">     946 </span>                :<span class="lineNoCov">          0 :         btree_kv_ops = kv_ops;</span>
+<span class="lineNum">     947 </span>                :            :     }else{
+<span class="lineNum">     948 </span>                :<span class="lineNoCov">          0 :         btree_kv_ops = (struct btree_kv_ops *)malloc(sizeof(struct btree_kv_ops));</span>
+<span class="lineNum">     949 </span>                :            :     }
+<span class="lineNum">     950 </span>                :            : 
+<span class="lineNum">     951 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_kv = _get_prefix_kv;</span>
+<span class="lineNum">     952 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;set_kv = _set_prefix_kv;</span>
+<span class="lineNum">     953 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;ins_kv = _ins_prefix_kv;</span>
+<span class="lineNum">     954 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;copy_kv = _copy_prefix_kv;</span>
+<span class="lineNum">     955 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;set_key = _set_prefix_key;</span>
+<span class="lineNum">     956 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;set_value = _set_prefix_value;</span>
+<span class="lineNum">     957 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_data_size = _get_prefix_data_size;</span>
+<span class="lineNum">     958 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_kv_size = _get_prefix_kv_size;</span>
+<span class="lineNum">     959 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;init_kv_var = _init_prefix_kv_var;</span>
+<span class="lineNum">     960 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;free_kv_var = _free_prefix_kv_var;</span>
+<span class="lineNum">     961 </span>                :            : 
+<span class="lineNum">     962 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_nth_idx = _get_prefix_nth_idx;</span>
+<span class="lineNum">     963 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;get_nth_splitter = _get_prefix_nth_splitter;</span>
+<span class="lineNum">     964 </span>                :            : 
+<span class="lineNum">     965 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;cmp = _cmp_prefix64;</span>
+<span class="lineNum">     966 </span>                :            : 
+<span class="lineNum">     967 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;bid2value = _prefix_bid_to_value_64;</span>
+<span class="lineNum">     968 </span>                :<span class="lineNoCov">          0 :     btree_kv_ops-&gt;value2bid = _prefix_value_to_bid_64;</span>
+<span class="lineNum">     969 </span>                :            : 
+<span class="lineNum">     970 </span>                :<span class="lineNoCov">          0 :     return btree_kv_ops;</span>
+<span class="lineNum">     971 </span>                :            : }
+<span class="lineNum">     972 </span>                :            : 
 <span class="lineNum">     973 </span>                :            : 
-<span class="lineNum">     974 </span>                :            : 
 </pre>
       </td>
     </tr>
