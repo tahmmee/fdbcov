@@ -1312,28 +1312,28 @@
 <span class="lineNum">    1225 </span>                :            : }
 <a name="1226"><span class="lineNum">    1226 </span>                :            : </a>
 <span class="lineNum">    1227 </span>                :            : // DOC returned by this function must be freed using 'fdb_doc_free'
-<span class="lineNum">    1228 </span>                :<span class="lineCov">     181769 : static fdb_status _fdb_iterator_seq_next(fdb_iterator *iterator,</span>
+<span class="lineNum">    1228 </span>                :<span class="lineCov">     181560 : static fdb_status _fdb_iterator_seq_next(fdb_iterator *iterator,</span>
 <span class="lineNum">    1229 </span>                :            :                                      fdb_doc **doc)
 <span class="lineNum">    1230 </span>                :            : {
 <span class="lineNum">    1231 </span>                :            :     size_t size_id, size_seq, seq_kv_len;
 <span class="lineNum">    1232 </span>                :            :     uint8_t *seq_kv;
-<span class="lineNum">    1233 </span>                :<span class="lineCov">     181769 :     uint64_t offset = BLK_NOT_FOUND;</span>
-<span class="lineNum">    1234 </span>                :<span class="lineCov">     181769 :     btree_result br = BTREE_RESULT_FAIL;</span>
+<span class="lineNum">    1233 </span>                :<span class="lineCov">     181560 :     uint64_t offset = BLK_NOT_FOUND;</span>
+<span class="lineNum">    1234 </span>                :<span class="lineCov">     181560 :     btree_result br = BTREE_RESULT_FAIL;</span>
 <span class="lineNum">    1235 </span>                :            :     hbtrie_result hr;
 <span class="lineNum">    1236 </span>                :            :     struct docio_object _doc;
 <span class="lineNum">    1237 </span>                :            :     struct docio_object _hbdoc;
 <span class="lineNum">    1238 </span>                :            :     struct docio_handle *dhandle;
-<span class="lineNum">    1239 </span>                :<span class="lineCov">     181769 :     struct snap_wal_entry *snap_item = NULL;</span>
+<span class="lineNum">    1239 </span>                :<span class="lineCov">     181560 :     struct snap_wal_entry *snap_item = NULL;</span>
 <span class="lineNum">    1240 </span>                :            :     fdb_seqnum_t seqnum;
 <span class="lineNum">    1241 </span>                :            :     fdb_kvs_id_t kv_id, _kv_id;
-<span class="lineNum">    1242 </span>                :<span class="lineCov">     181769 :     fdb_status ret = FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">    1242 </span>                :<span class="lineCov">     181560 :     fdb_status ret = FDB_RESULT_SUCCESS;</span>
 <span class="lineNum">    1243 </span>                :            :     struct avl_node *cursor;
 <span class="lineNum">    1244 </span>                :            : 
-<span class="lineNum">    1245 </span>                :<span class="lineCov">     181769 :     size_id = sizeof(fdb_kvs_id_t);</span>
-<span class="lineNum">    1246 </span>                :<span class="lineCov">     181769 :     size_seq = sizeof(fdb_seqnum_t);</span>
-<span class="lineNum">    1247 </span>                :<span class="lineCov">     181769 :     seq_kv = alca(uint8_t, size_id + size_seq);</span>
+<span class="lineNum">    1245 </span>                :<span class="lineCov">     181560 :     size_id = sizeof(fdb_kvs_id_t);</span>
+<span class="lineNum">    1246 </span>                :<span class="lineCov">     181560 :     size_seq = sizeof(fdb_seqnum_t);</span>
+<span class="lineNum">    1247 </span>                :<span class="lineCov">     181560 :     seq_kv = alca(uint8_t, size_id + size_seq);</span>
 <span class="lineNum">    1248 </span>                :            : 
-<span class="lineNum">    1249 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 181768 times"> + </span>]:<span class="lineCov">     181769 :     if (iterator-&gt;direction == FDB_ITR_REVERSE) {</span>
+<span class="lineNum">    1249 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 181559 times"> + </span>]:<span class="lineCov">     181560 :     if (iterator-&gt;direction == FDB_ITR_REVERSE) {</span>
 <span class="lineNum">    1250 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         if (iterator-&gt;status == FDB_ITR_IDX) {</span>
 <span class="lineNum">    1251 </span>                :<span class="lineCov">          1 :             iterator-&gt;_offset = BLK_NOT_FOUND; // need to re-examine Trie/trees</span>
 <span class="lineNum">    1252 </span>                :            :         }
@@ -1348,50 +1348,50 @@
 <span class="lineNum">    1261 </span>                :            :         }
 <span class="lineNum">    1262 </span>                :            :     }
 <span class="lineNum">    1263 </span>                :            : 
-<span class="lineNum">    1264 </span>[<span class="branchCov" title="Branch 0 was taken 180897 times"> + </span><span class="branchCov" title="Branch 1 was taken 872 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 21 times"> + </span><span class="branchCov" title="Branch 3 was taken 180876 times"> + </span>]:<span class="lineCov">     181769 :     if (!iterator-&gt;tree_cursor &amp;&amp; iterator-&gt;direction != FDB_ITR_FORWARD) {</span>
+<span class="lineNum">    1264 </span>[<span class="branchCov" title="Branch 0 was taken 180693 times"> + </span><span class="branchCov" title="Branch 1 was taken 867 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 21 times"> + </span><span class="branchCov" title="Branch 3 was taken 180672 times"> + </span>]:<span class="lineCov">     181560 :     if (!iterator-&gt;tree_cursor &amp;&amp; iterator-&gt;direction != FDB_ITR_FORWARD) {</span>
 <span class="lineNum">    1265 </span>                :            :         // In case reverse iteration went past the start, reset the
 <span class="lineNum">    1266 </span>                :            :         // cursor to the start point
 <span class="lineNum">    1267 </span>                :<span class="lineCov">         21 :         iterator-&gt;tree_cursor = iterator-&gt;tree_cursor_start;</span>
 <span class="lineNum">    1268 </span>                :            :     }
 <span class="lineNum">    1269 </span>                :            : 
 <span class="lineNum">    1270 </span>                :            : start_seq:
-<span class="lineNum">    1271 </span>                :<span class="lineCov">     182873 :     seqnum = iterator-&gt;_seqnum;</span>
-<span class="lineNum">    1272 </span>                :<span class="lineCov">     182873 :     dhandle = iterator-&gt;handle.dhandle;</span>
+<span class="lineNum">    1271 </span>                :<span class="lineCov">     182664 :     seqnum = iterator-&gt;_seqnum;</span>
+<span class="lineNum">    1272 </span>                :<span class="lineCov">     182664 :     dhandle = iterator-&gt;handle.dhandle;</span>
 <span class="lineNum">    1273 </span>                :            : 
 <span class="lineNum">    1274 </span>                :            :     // retrieve from sequence b-tree first
-<span class="lineNum">    1275 </span>        [<span class="branchCov" title="Branch 0 was taken 182444 times"> + </span><span class="branchCov" title="Branch 1 was taken 429 times"> + </span>]:<span class="lineCov">     182873 :     if (iterator-&gt;_offset == BLK_NOT_FOUND) {</span>
-<span class="lineNum">    1276 </span>        [<span class="branchCov" title="Branch 0 was taken 182444 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     182444 :         if (iterator-&gt;handle.kvs) { // multi KV instance mode</span>
+<span class="lineNum">    1275 </span>        [<span class="branchCov" title="Branch 0 was taken 182241 times"> + </span><span class="branchCov" title="Branch 1 was taken 423 times"> + </span>]:<span class="lineCov">     182664 :     if (iterator-&gt;_offset == BLK_NOT_FOUND) {</span>
+<span class="lineNum">    1276 </span>        [<span class="branchCov" title="Branch 0 was taken 182241 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     182241 :         if (iterator-&gt;handle.kvs) { // multi KV instance mode</span>
 <span class="lineNum">    1277 </span>                :            :             hr = hbtrie_next(iterator-&gt;seqtrie_iterator, seq_kv, &amp;seq_kv_len,
-<span class="lineNum">    1278 </span>                :<span class="lineCov">     182444 :                              (void *)&amp;offset);</span>
-<span class="lineNum">    1279 </span>        [<span class="branchCov" title="Branch 0 was taken 181990 times"> + </span><span class="branchCov" title="Branch 1 was taken 31 times"> + </span>]:<span class="lineCov">     182021 :             if (hr == HBTRIE_RESULT_SUCCESS) {</span>
-<span class="lineNum">    1280 </span>                :<span class="lineCov">     181990 :                 br = BTREE_RESULT_SUCCESS;</span>
-<span class="lineNum">    1281 </span>                :<span class="lineCov">     181990 :                 memcpy(&amp;_kv_id, seq_kv, size_id);</span>
-<span class="lineNum">    1282 </span>                :<span class="lineCov">     181990 :                 kv_id = _endian_decode(_kv_id);</span>
-<span class="lineNum">    1283 </span>        [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 181984 times"> + </span>]:<span class="lineCov">     181990 :                 if (kv_id != iterator-&gt;handle.kvs-&gt;id) {</span>
+<span class="lineNum">    1278 </span>                :<span class="lineCov">     182241 :                              (void *)&amp;offset);</span>
+<span class="lineNum">    1279 </span>        [<span class="branchCov" title="Branch 0 was taken 182172 times"> + </span><span class="branchCov" title="Branch 1 was taken 31 times"> + </span>]:<span class="lineCov">     182203 :             if (hr == HBTRIE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1280 </span>                :<span class="lineCov">     182172 :                 br = BTREE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1281 </span>                :<span class="lineCov">     182172 :                 memcpy(&amp;_kv_id, seq_kv, size_id);</span>
+<span class="lineNum">    1282 </span>                :<span class="lineCov">     182172 :                 kv_id = _endian_decode(_kv_id);</span>
+<span class="lineNum">    1283 </span>        [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 182166 times"> + </span>]:<span class="lineCov">     182172 :                 if (kv_id != iterator-&gt;handle.kvs-&gt;id) {</span>
 <span class="lineNum">    1284 </span>                :            :                     // iterator is beyond the boundary
 <span class="lineNum">    1285 </span>                :<span class="lineCov">          6 :                     br = BTREE_RESULT_FAIL;</span>
 <span class="lineNum">    1286 </span>                :            :                 }
-<span class="lineNum">    1287 </span>                :<span class="lineCov">     181990 :                 memcpy(&amp;seqnum, seq_kv + size_id, size_seq);</span>
+<span class="lineNum">    1287 </span>                :<span class="lineCov">     182172 :                 memcpy(&amp;seqnum, seq_kv + size_id, size_seq);</span>
 <span class="lineNum">    1288 </span>                :            :             } else {
 <span class="lineNum">    1289 </span>                :<span class="lineCov">         31 :                 br = BTREE_RESULT_FAIL;</span>
 <span class="lineNum">    1290 </span>                :            :             }
 <span class="lineNum">    1291 </span>                :            :         } else {
 <span class="lineNum">    1292 </span>                :<span class="lineNoCov">          0 :             br = btree_next(iterator-&gt;seqtree_iterator, &amp;seqnum, (void *)&amp;offset);</span>
 <span class="lineNum">    1293 </span>                :            :         }
-<span class="lineNum">    1294 </span>                :<span class="lineCov">     182021 :         btreeblk_end(iterator-&gt;handle.bhandle);</span>
-<span class="lineNum">    1295 </span>        [<span class="branchCov" title="Branch 0 was taken 181623 times"> + </span><span class="branchCov" title="Branch 1 was taken 14 times"> + </span>]:<span class="lineCov">     181637 :         if (br == BTREE_RESULT_SUCCESS) {</span>
-<span class="lineNum">    1296 </span>                :<span class="lineCov">     181623 :             seqnum = _endian_decode(seqnum);</span>
-<span class="lineNum">    1297 </span>                :<span class="lineCov">     181623 :             iterator-&gt;_seqnum = seqnum;</span>
-<span class="lineNum">    1298 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181623 times"> + </span>]:<span class="lineCov">     181623 :             if (seqnum &gt; iterator-&gt;end_seqnum) {</span>
+<span class="lineNum">    1294 </span>                :<span class="lineCov">     182203 :         btreeblk_end(iterator-&gt;handle.bhandle);</span>
+<span class="lineNum">    1295 </span>        [<span class="branchCov" title="Branch 0 was taken 181814 times"> + </span><span class="branchCov" title="Branch 1 was taken 28 times"> + </span>]:<span class="lineCov">     181842 :         if (br == BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1296 </span>                :<span class="lineCov">     181814 :             seqnum = _endian_decode(seqnum);</span>
+<span class="lineNum">    1297 </span>                :<span class="lineCov">     181814 :             iterator-&gt;_seqnum = seqnum;</span>
+<span class="lineNum">    1298 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181814 times"> + </span>]:<span class="lineCov">     181814 :             if (seqnum &gt; iterator-&gt;end_seqnum) {</span>
 <span class="lineNum">    1299 </span>                :<span class="lineNoCov">          0 :                 return FDB_RESULT_ITERATOR_FAIL;</span>
 <span class="lineNum">    1300 </span>                :            :             }
-<span class="lineNum">    1301 </span>                :<span class="lineCov">     181623 :             offset = _endian_decode(offset);</span>
-<span class="lineNum">    1302 </span>                :<span class="lineCov">     181623 :             iterator-&gt;_offset = BLK_NOT_FOUND; // continue with B-tree</span>
-<span class="lineNum">    1303 </span>                :<span class="lineCov">     181623 :             iterator-&gt;status = FDB_ITR_IDX;</span>
+<span class="lineNum">    1301 </span>                :<span class="lineCov">     181814 :             offset = _endian_decode(offset);</span>
+<span class="lineNum">    1302 </span>                :<span class="lineCov">     181814 :             iterator-&gt;_offset = BLK_NOT_FOUND; // continue with B-tree</span>
+<span class="lineNum">    1303 </span>                :<span class="lineCov">     181814 :             iterator-&gt;status = FDB_ITR_IDX;</span>
 <span class="lineNum">    1304 </span>                :            :         }
 <span class="lineNum">    1305 </span>                :            :     }
 <span class="lineNum">    1306 </span>                :            : 
-<span class="lineNum">    1307 </span>        [<span class="branchCov" title="Branch 0 was taken 435 times"> + </span><span class="branchCov" title="Branch 1 was taken 181631 times"> + </span>]:<span class="lineCov">     182066 :     if (br == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1307 </span>        [<span class="branchCov" title="Branch 0 was taken 435 times"> + </span><span class="branchCov" title="Branch 1 was taken 181830 times"> + </span>]:<span class="lineCov">     182265 :     if (br == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1308 </span>        [<span class="branchCov" title="Branch 0 was taken 32 times"> + </span><span class="branchCov" title="Branch 1 was taken 403 times"> + </span>]:<span class="lineCov">        435 :         if (iterator-&gt;tree_cursor == NULL) {</span>
 <span class="lineNum">    1309 </span>                :<span class="lineCov">         32 :             return FDB_RESULT_ITERATOR_FAIL;</span>
 <span class="lineNum">    1310 </span>                :            :         } else {
@@ -1434,11 +1434,11 @@
 <span class="lineNum">    1347 </span>                :            :         }
 <span class="lineNum">    1348 </span>                :            :     }
 <span class="lineNum">    1349 </span>                :            : 
-<span class="lineNum">    1350 </span>                :<span class="lineCov">     182029 :     _doc.key = NULL;</span>
-<span class="lineNum">    1351 </span>                :<span class="lineCov">     182029 :     _doc.length.keylen = 0;</span>
-<span class="lineNum">    1352 </span>                :<span class="lineCov">     182029 :     _doc.meta = NULL;</span>
-<span class="lineNum">    1353 </span>                :<span class="lineCov">     182029 :     _doc.body = NULL;</span>
-<span class="lineNum">    1354 </span>        [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchCov" title="Branch 1 was taken 182019 times"> + </span>]:<span class="lineCov">     182029 :     if (iterator-&gt;opt &amp; FDB_ITR_METAONLY) {</span>
+<span class="lineNum">    1350 </span>                :<span class="lineCov">     182228 :     _doc.key = NULL;</span>
+<span class="lineNum">    1351 </span>                :<span class="lineCov">     182228 :     _doc.length.keylen = 0;</span>
+<span class="lineNum">    1352 </span>                :<span class="lineCov">     182228 :     _doc.meta = NULL;</span>
+<span class="lineNum">    1353 </span>                :<span class="lineCov">     182228 :     _doc.body = NULL;</span>
+<span class="lineNum">    1354 </span>        [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchCov" title="Branch 1 was taken 182218 times"> + </span>]:<span class="lineCov">     182228 :     if (iterator-&gt;opt &amp; FDB_ITR_METAONLY) {</span>
 <span class="lineNum">    1355 </span>                :            :         uint64_t _offset = docio_read_doc_key_meta(dhandle,
 <span class="lineNum">    1356 </span>                :<span class="lineCov">         10 :                                                    offset, &amp;_doc);</span>
 <span class="lineNum">    1357 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 10 times"> + </span>]:<span class="lineCov">         10 :         if (_offset == offset) {</span>
@@ -1450,11 +1450,11 @@
 <span class="lineNum">    1363 </span>                :<span class="lineNoCov">          0 :             return FDB_RESULT_KEY_NOT_FOUND;</span>
 <span class="lineNum">    1364 </span>                :            :         }
 <span class="lineNum">    1365 </span>                :            :     } else {
-<span class="lineNum">    1366 </span>                :<span class="lineCov">     182019 :         uint64_t _offset = docio_read_doc(dhandle, offset, &amp;_doc);</span>
-<span class="lineNum">    1367 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 182366 times"> + </span>]:<span class="lineCov">     182366 :         if (_offset == offset) {</span>
+<span class="lineNum">    1366 </span>                :<span class="lineCov">     182218 :         uint64_t _offset = docio_read_doc(dhandle, offset, &amp;_doc);</span>
+<span class="lineNum">    1367 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 182628 times"> + </span>]:<span class="lineCov">     182628 :         if (_offset == offset) {</span>
 <span class="lineNum">    1368 </span>                :<span class="lineNoCov">          0 :             return FDB_RESULT_KEY_NOT_FOUND;</span>
 <span class="lineNum">    1369 </span>                :            :         }
-<span class="lineNum">    1370 </span>[<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 182364 times"> + </span>][<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 2 times"> + </span>]:<span class="lineCov">     182366 :         if (_doc.length.flag &amp; DOCIO_DELETED &amp;&amp; (iterator-&gt;opt &amp; FDB_ITR_NO_DELETES)) {</span>
+<span class="lineNum">    1370 </span>[<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 182626 times"> + </span>][<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 2 times"> + </span>]:<span class="lineCov">     182628 :         if (_doc.length.flag &amp; DOCIO_DELETED &amp;&amp; (iterator-&gt;opt &amp; FDB_ITR_NO_DELETES)) {</span>
 <span class="lineNum">    1371 </span>                :<span class="lineNoCov">          0 :             free(_doc.key);</span>
 <span class="lineNum">    1372 </span>                :<span class="lineNoCov">          0 :             free(_doc.meta);</span>
 <span class="lineNum">    1373 </span>                :<span class="lineNoCov">          0 :             free(_doc.body);</span>
@@ -1464,8 +1464,8 @@
 <span class="lineNum">    1377 </span>                :            : 
 <span class="lineNum">    1378 </span>                :            :     // To prevent returning duplicate items from sequence iterator, only return
 <span class="lineNum">    1379 </span>                :            :     // those b-tree items that exist in HB-trie but not WAL (visit WAL later)
-<span class="lineNum">    1380 </span>        [<span class="branchCov" title="Branch 0 was taken 181962 times"> + </span><span class="branchCov" title="Branch 1 was taken 414 times"> + </span>]:<span class="lineCov">     182376 :     if (br == BTREE_RESULT_SUCCESS) {</span>
-<span class="lineNum">    1381 </span>        [<span class="branchCov" title="Branch 1 was taken 57571 times"> + </span><span class="branchCov" title="Branch 2 was taken 181208 times"> + </span>]:<span class="lineCov">     238779 :         for (cursor = iterator-&gt;tree_cursor; cursor;</span>
+<span class="lineNum">    1380 </span>        [<span class="branchCov" title="Branch 0 was taken 182235 times"> + </span><span class="branchCov" title="Branch 1 was taken 403 times"> + </span>]:<span class="lineCov">     182638 :     if (br == BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1381 </span>        [<span class="branchCov" title="Branch 1 was taken 57571 times"> + </span><span class="branchCov" title="Branch 2 was taken 181481 times"> + </span>]:<span class="lineCov">     239052 :         for (cursor = iterator-&gt;tree_cursor; cursor;</span>
 <span class="lineNum">    1382 </span>                :            :              cursor = avl_next(cursor)) {
 <span class="lineNum">    1383 </span>                :            :             // get the current item of avl tree
 <span class="lineNum">    1384 </span>                :<span class="lineCov">      57571 :             snap_item = _get_entry(cursor, struct snap_wal_entry, avl);</span>
@@ -1485,28 +1485,28 @@
 <span class="lineNum">    1398 </span>                :            :         // Also look in HB-Trie to eliminate duplicates
 <span class="lineNum">    1399 </span>                :            :         uint64_t hboffset;
 <span class="lineNum">    1400 </span>                :            :         hr = hbtrie_find(iterator-&gt;handle.trie, _doc.key, _doc.length.keylen,
-<span class="lineNum">    1401 </span>                :<span class="lineCov">     181208 :                          (void *)&amp;hboffset);</span>
-<span class="lineNum">    1402 </span>                :<span class="lineCov">     181649 :         btreeblk_end(iterator-&gt;handle.bhandle);</span>
+<span class="lineNum">    1401 </span>                :<span class="lineCov">     181481 :                          (void *)&amp;hboffset);</span>
+<span class="lineNum">    1402 </span>                :<span class="lineCov">     181599 :         btreeblk_end(iterator-&gt;handle.bhandle);</span>
 <span class="lineNum">    1403 </span>                :            : 
-<span class="lineNum">    1404 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181554 times"> + </span>]:<span class="lineCov">     181554 :         if (hr == HBTRIE_RESULT_FAIL) {</span>
+<span class="lineNum">    1404 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181474 times"> + </span>]:<span class="lineCov">     181474 :         if (hr == HBTRIE_RESULT_FAIL) {</span>
 <span class="lineNum">    1405 </span>                :<span class="lineNoCov">          0 :             free(_doc.key);</span>
 <span class="lineNum">    1406 </span>                :<span class="lineNoCov">          0 :             free(_doc.meta);</span>
 <span class="lineNum">    1407 </span>                :<span class="lineNoCov">          0 :             free(_doc.body);</span>
 <span class="lineNum">    1408 </span>                :<span class="lineNoCov">          0 :             goto start_seq;</span>
 <span class="lineNum">    1409 </span>                :            :         } else { // If present in HB-trie ensure it's seqnum is in range
 <span class="lineNum">    1410 </span>                :            :             uint64_t _offset;
-<span class="lineNum">    1411 </span>                :<span class="lineCov">     181554 :             _hbdoc.key = _doc.key;</span>
-<span class="lineNum">    1412 </span>                :<span class="lineCov">     181554 :             _hbdoc.meta = NULL;</span>
-<span class="lineNum">    1413 </span>                :<span class="lineCov">     181554 :             hboffset = _endian_decode(hboffset);</span>
+<span class="lineNum">    1411 </span>                :<span class="lineCov">     181474 :             _hbdoc.key = _doc.key;</span>
+<span class="lineNum">    1412 </span>                :<span class="lineCov">     181474 :             _hbdoc.meta = NULL;</span>
+<span class="lineNum">    1413 </span>                :<span class="lineCov">     181474 :             hboffset = _endian_decode(hboffset);</span>
 <span class="lineNum">    1414 </span>                :            :             _offset = docio_read_doc_key_meta(iterator-&gt;handle.dhandle,
-<span class="lineNum">    1415 </span>                :<span class="lineCov">     181554 :                                               hboffset, &amp;_hbdoc);</span>
-<span class="lineNum">    1416 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181752 times"> + </span>]:<span class="lineCov">     181752 :             if (_offset == hboffset) {</span>
+<span class="lineNum">    1415 </span>                :<span class="lineCov">     181474 :                                               hboffset, &amp;_hbdoc);</span>
+<span class="lineNum">    1416 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181730 times"> + </span>]:<span class="lineCov">     181730 :             if (_offset == hboffset) {</span>
 <span class="lineNum">    1417 </span>                :<span class="lineNoCov">          0 :                 free(_doc.key);</span>
 <span class="lineNum">    1418 </span>                :<span class="lineNoCov">          0 :                 free(_doc.meta);</span>
 <span class="lineNum">    1419 </span>                :<span class="lineNoCov">          0 :                 free(_doc.body);</span>
 <span class="lineNum">    1420 </span>                :<span class="lineNoCov">          0 :                 return FDB_RESULT_KEY_NOT_FOUND;</span>
 <span class="lineNum">    1421 </span>                :            :             }
-<span class="lineNum">    1422 </span>[<span class="branchCov" title="Branch 0 was taken 350 times"> + </span><span class="branchCov" title="Branch 1 was taken 181402 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 350 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     181752 :             if (_doc.seqnum &lt; _hbdoc.seqnum &amp;&amp;</span>
+<span class="lineNum">    1422 </span>[<span class="branchCov" title="Branch 0 was taken 350 times"> + </span><span class="branchCov" title="Branch 1 was taken 181380 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 350 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     181730 :             if (_doc.seqnum &lt; _hbdoc.seqnum &amp;&amp;</span>
 <span class="lineNum">    1423 </span>                :            :                 _hbdoc.seqnum &lt;= iterator-&gt;end_seqnum) {
 <span class="lineNum">    1424 </span>                :<span class="lineCov">        350 :                 free(_doc.key);</span>
 <span class="lineNum">    1425 </span>                :<span class="lineCov">        350 :                 free(_doc.meta);</span>
@@ -1514,34 +1514,34 @@
 <span class="lineNum">    1427 </span>                :<span class="lineCov">        350 :                 free(_doc.body);</span>
 <span class="lineNum">    1428 </span>                :<span class="lineCov">        350 :                 goto start_seq;</span>
 <span class="lineNum">    1429 </span>                :            :             }
-<span class="lineNum">    1430 </span>                :<span class="lineCov">     181402 :             free(_hbdoc.meta);</span>
+<span class="lineNum">    1430 </span>                :<span class="lineCov">     181380 :             free(_hbdoc.meta);</span>
 <span class="lineNum">    1431 </span>                :            :         }
 <span class="lineNum">    1432 </span>                :            :     }
 <span class="lineNum">    1433 </span>                :            : 
-<span class="lineNum">    1434 </span>                :<span class="lineCov">     181816 :     ret = fdb_doc_create(doc, NULL, 0, NULL, 0, NULL, 0);</span>
-<span class="lineNum">    1435 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181701 times"> + </span>]:<span class="lineCov">     181701 :     if (ret != FDB_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1434 </span>                :<span class="lineCov">     181783 :     ret = fdb_doc_create(doc, NULL, 0, NULL, 0, NULL, 0);</span>
+<span class="lineNum">    1435 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 181658 times"> + </span>]:<span class="lineCov">     181658 :     if (ret != FDB_RESULT_SUCCESS) {</span>
 <span class="lineNum">    1436 </span>                :<span class="lineNoCov">          0 :         free(_doc.key);</span>
 <span class="lineNum">    1437 </span>                :<span class="lineNoCov">          0 :         free(_doc.meta);</span>
 <span class="lineNum">    1438 </span>                :<span class="lineNoCov">          0 :         free(_doc.body);</span>
 <span class="lineNum">    1439 </span>                :<span class="lineNoCov">          0 :         return ret;</span>
 <span class="lineNum">    1440 </span>                :            :     }
 <span class="lineNum">    1441 </span>                :            : 
-<span class="lineNum">    1442 </span>           [<span class="branchCov" title="Branch 0 was taken 181718 times"> + </span>]:<span class="lineCov">     181701 :     if (iterator-&gt;handle.kvs) {</span>
+<span class="lineNum">    1442 </span>        [<span class="branchCov" title="Branch 0 was taken 181653 times"> + </span><span class="branchCov" title="Branch 1 was taken 5 times"> + </span>]:<span class="lineCov">     181658 :     if (iterator-&gt;handle.kvs) {</span>
 <span class="lineNum">    1443 </span>                :            :         // eliminate KV ID from key
-<span class="lineNum">    1444 </span>                :<span class="lineCov">     181718 :         _doc.length.keylen -= size_id;</span>
-<span class="lineNum">    1445 </span>                :<span class="lineCov">     181718 :         memmove(_doc.key, (uint8_t*)_doc.key + size_id, _doc.length.keylen);</span>
+<span class="lineNum">    1444 </span>                :<span class="lineCov">     181653 :         _doc.length.keylen -= size_id;</span>
+<span class="lineNum">    1445 </span>                :<span class="lineCov">     181653 :         memmove(_doc.key, (uint8_t*)_doc.key + size_id, _doc.length.keylen);</span>
 <span class="lineNum">    1446 </span>                :            :     }
-<span class="lineNum">    1447 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;key = _doc.key;</span>
-<span class="lineNum">    1448 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;keylen = _doc.length.keylen;</span>
-<span class="lineNum">    1449 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;meta = _doc.meta;</span>
-<span class="lineNum">    1450 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;metalen = _doc.length.metalen;</span>
-<span class="lineNum">    1451 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;body = _doc.body;</span>
-<span class="lineNum">    1452 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;bodylen = _doc.length.bodylen;</span>
-<span class="lineNum">    1453 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;seqnum = _doc.seqnum;</span>
-<span class="lineNum">    1454 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;deleted = _doc.length.flag &amp; DOCIO_DELETED;</span>
-<span class="lineNum">    1455 </span>                :<span class="lineCov">     181701 :     (*doc)-&gt;offset = offset;</span>
+<span class="lineNum">    1447 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;key = _doc.key;</span>
+<span class="lineNum">    1448 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;keylen = _doc.length.keylen;</span>
+<span class="lineNum">    1449 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;meta = _doc.meta;</span>
+<span class="lineNum">    1450 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;metalen = _doc.length.metalen;</span>
+<span class="lineNum">    1451 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;body = _doc.body;</span>
+<span class="lineNum">    1452 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;bodylen = _doc.length.bodylen;</span>
+<span class="lineNum">    1453 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;seqnum = _doc.seqnum;</span>
+<span class="lineNum">    1454 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;deleted = _doc.length.flag &amp; DOCIO_DELETED;</span>
+<span class="lineNum">    1455 </span>                :<span class="lineCov">     181658 :     (*doc)-&gt;offset = offset;</span>
 <span class="lineNum">    1456 </span>                :            : 
-<span class="lineNum">    1457 </span>                :<span class="lineCov">     181738 :     return FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">    1457 </span>                :<span class="lineCov">     181695 :     return FDB_RESULT_SUCCESS;</span>
 <a name="1458"><span class="lineNum">    1458 </span>                :            : }</a>
 <span class="lineNum">    1459 </span>                :            : 
 <span class="lineNum">    1460 </span>                :<span class="lineCov">         22 : fdb_status fdb_iterator_next_metaonly(fdb_iterator *iterator,</span>
@@ -1585,18 +1585,18 @@
 <span class="lineNum">    1498 </span>                :<span class="lineCov">       1430 :     return result;</span>
 <a name="1499"><span class="lineNum">    1499 </span>                :            : }</a>
 <span class="lineNum">    1500 </span>                :            : 
-<span class="lineNum">    1501 </span>                :<span class="lineCov">     186563 : fdb_status fdb_iterator_next(fdb_iterator *iterator, fdb_doc **doc)</span>
+<span class="lineNum">    1501 </span>                :<span class="lineCov">     186366 : fdb_status fdb_iterator_next(fdb_iterator *iterator, fdb_doc **doc)</span>
 <span class="lineNum">    1502 </span>                :            : {
-<span class="lineNum">    1503 </span>                :<span class="lineCov">     186563 :     fdb_status result = FDB_RESULT_SUCCESS;</span>
-<span class="lineNum">    1504 </span>[<span class="branchCov" title="Branch 0 was taken 181745 times"> + </span><span class="branchCov" title="Branch 1 was taken 4818 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9 times"> + </span><span class="branchCov" title="Branch 3 was taken 181736 times"> + </span>]:<span class="lineCov">     186563 :     if (iterator-&gt;hbtrie_iterator || iterator-&gt;idtree_iterator) {</span>
+<span class="lineNum">    1503 </span>                :<span class="lineCov">     186366 :     fdb_status result = FDB_RESULT_SUCCESS;</span>
+<span class="lineNum">    1504 </span>[<span class="branchCov" title="Branch 0 was taken 181540 times"> + </span><span class="branchCov" title="Branch 1 was taken 4826 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 181539 times"> + </span>]:<span class="lineCov">     186366 :     if (iterator-&gt;hbtrie_iterator || iterator-&gt;idtree_iterator) {</span>
 <span class="lineNum">    1505 </span>        [<span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 4827 times"> + </span>]:<span class="lineCov">       4827 :         while ((result = _fdb_iterator_next(iterator, doc)) ==</span>
 <span class="lineNum">    1506 </span>                :            :                 FDB_RESULT_KEY_NOT_FOUND);
 <span class="lineNum">    1507 </span>                :            :     } else {
-<span class="lineNum">    1508 </span>        [<span class="branchCov" title="Branch 1 was taken 8 times"> + </span><span class="branchCov" title="Branch 2 was taken 181718 times"> + </span>]:<span class="lineCov">     181744 :         while ((result = _fdb_iterator_seq_next(iterator, doc)) ==</span>
+<span class="lineNum">    1508 </span>           [<span class="branchCov" title="Branch 2 was taken 181668 times"> + </span>]:<span class="lineCov">     181500 :         while ((result = _fdb_iterator_seq_next(iterator, doc)) ==</span>
 <span class="lineNum">    1509 </span>                :            :                 FDB_RESULT_KEY_NOT_FOUND);
 <span class="lineNum">    1510 </span>                :            :     }
-<span class="lineNum">    1511 </span>        [<span class="branchCov" title="Branch 0 was taken 186477 times"> + </span><span class="branchCov" title="Branch 1 was taken 68 times"> + </span>]:<span class="lineCov">     186545 :     if (result == FDB_RESULT_SUCCESS) {</span>
-<span class="lineNum">    1512 </span>                :<span class="lineCov">     186477 :         iterator-&gt;direction = FDB_ITR_FORWARD;</span>
+<span class="lineNum">    1511 </span>        [<span class="branchCov" title="Branch 0 was taken 186427 times"> + </span><span class="branchCov" title="Branch 1 was taken 68 times"> + </span>]:<span class="lineCov">     186495 :     if (result == FDB_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1512 </span>                :<span class="lineCov">     186427 :         iterator-&gt;direction = FDB_ITR_FORWARD;</span>
 <span class="lineNum">    1513 </span>        [<span class="branchCov" title="Branch 0 was taken 66 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">         68 :     } else if (iterator-&gt;direction != FDB_ITR_DIR_NONE) {</span>
 <span class="lineNum">    1514 </span>                :<span class="lineCov">         66 :         iterator-&gt;direction = FDB_ITR_DIR_NONE;</span>
 <span class="lineNum">    1515 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 66 times"> + </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineCov">         66 :         if (iterator-&gt;seqtree_iterator &amp;&amp;</span>
@@ -1612,7 +1612,7 @@
 <span class="lineNum">    1525 </span>                :<span class="lineCov">         10 :             iterator-&gt;tree_cursor_prev = iterator-&gt;tree_cursor;</span>
 <span class="lineNum">    1526 </span>                :            :         }
 <span class="lineNum">    1527 </span>                :            :     }
-<span class="lineNum">    1528 </span>                :<span class="lineCov">     186545 :     return result;</span>
+<span class="lineNum">    1528 </span>                :<span class="lineCov">     186495 :     return result;</span>
 <a name="1529"><span class="lineNum">    1529 </span>                :            : }</a>
 <span class="lineNum">    1530 </span>                :            : 
 <span class="lineNum">    1531 </span>                :<span class="lineCov">         66 : fdb_status fdb_iterator_close(fdb_iterator *iterator)</span>
