@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info.cleaned - forestdb/src/filemgr_ops_anomalous.cc</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">forestdb/src</a> - filemgr_ops_anomalous.cc<span style="font-size: 80%;"> (source / <a href="filemgr_ops_anomalous.cc.func.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info.cleaned</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryMed">87.1 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2014-12-04</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryMed">83.3 %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : /* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */</a>
+<span class="lineNum">       2 </span>                :            : /*
+<span class="lineNum">       3 </span>                :            :  *     Copyright 2010 Couchbase, Inc
+<span class="lineNum">       4 </span>                :            :  *
+<span class="lineNum">       5 </span>                :            :  *   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+<span class="lineNum">       6 </span>                :            :  *   you may not use this file except in compliance with the License.
+<span class="lineNum">       7 </span>                :            :  *   You may obtain a copy of the License at
+<span class="lineNum">       8 </span>                :            :  *
+<span class="lineNum">       9 </span>                :            :  *       http://www.apache.org/licenses/LICENSE-2.0
+<span class="lineNum">      10 </span>                :            :  *
+<span class="lineNum">      11 </span>                :            :  *   Unless required by applicable law or agreed to in writing, software
+<span class="lineNum">      12 </span>                :            :  *   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+<span class="lineNum">      13 </span>                :            :  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class="lineNum">      14 </span>                :            :  *   See the License for the specific language governing permissions and
+<span class="lineNum">      15 </span>                :            :  *   limitations under the License.
+<span class="lineNum">      16 </span>                :            :  */
+<span class="lineNum">      17 </span>                :            : 
+<span class="lineNum">      18 </span>                :            : #include &lt;sys/types.h&gt;
+<span class="lineNum">      19 </span>                :            : #include &lt;sys/stat.h&gt;
+<span class="lineNum">      20 </span>                :            : #include &lt;unistd.h&gt;
+<span class="lineNum">      21 </span>                :            : #include &lt;stdint.h&gt;
+<span class="lineNum">      22 </span>                :            : #include &lt;fcntl.h&gt;
+<span class="lineNum">      23 </span>                :            : #include &lt;stdio.h&gt;
+<span class="lineNum">      24 </span>                :            : #include &lt;errno.h&gt;
+<span class="lineNum">      25 </span>                :            : #include &lt;string.h&gt;
+<span class="lineNum">      26 </span>                :            : 
+<span class="lineNum">      27 </span>                :            : #include &quot;filemgr.h&quot;
+<span class="lineNum">      28 </span>                :            : #include &quot;filemgr_ops.h&quot;
+<span class="lineNum">      29 </span>                :            : #include &quot;libforestdb/forestdb.h&quot;
+<span class="lineNum">      30 </span>                :            : 
+<span class="lineNum">      31 </span>                :            : static struct filemgr_ops *normal_filemgr_ops;
+<span class="lineNum">      32 </span>                :            : static int _write_fails;
+<a name="33"><span class="lineNum">      33 </span>                :            : </a>
+<span class="lineNum">      34 </span>                :            : LIBFDB_API
+<span class="lineNum">      35 </span>                :<span class="lineCov">          1 : void filemgr_ops_anomalous_init() {</span>
+<span class="lineNum">      36 </span>                :<span class="lineCov">          1 :     filemgr_ops_set_anomalous(0);</span>
+<span class="lineNum">      37 </span>                :<span class="lineCov">          1 :     normal_filemgr_ops = get_filemgr_ops();</span>
+<span class="lineNum">      38 </span>                :<span class="lineCov">          1 :     filemgr_ops_set_anomalous(1);</span>
+<span class="lineNum">      39 </span>                :<span class="lineCov">          1 :     _write_fails = 0;</span>
+<span class="lineNum">      40 </span>                :<span class="lineCov">          1 : }</span>
+<a name="41"><span class="lineNum">      41 </span>                :            : </a>
+<span class="lineNum">      42 </span>                :            : LIBFDB_API
+<span class="lineNum">      43 </span>                :<span class="lineCov">          4 : void filemgr_anomalous_writes_set(int behavior) {</span>
+<span class="lineNum">      44 </span>                :<span class="lineCov">          4 :     _write_fails = behavior;</span>
+<a name="45"><span class="lineNum">      45 </span>                :<span class="lineCov">          4 : }</span></a>
+<span class="lineNum">      46 </span>                :            : 
+<span class="lineNum">      47 </span>                :<span class="lineCov">          6 : int _filemgr_anomalous_open(const char *pathname, int flags, mode_t mode)</span>
+<span class="lineNum">      48 </span>                :            : {
+<span class="lineNum">      49 </span>                :<span class="lineCov">          6 :     return normal_filemgr_ops-&gt;open(pathname, flags, mode);</span>
+<a name="50"><span class="lineNum">      50 </span>                :            : }</a>
+<span class="lineNum">      51 </span>                :            : 
+<span class="lineNum">      52 </span>                :<span class="lineCov">         14 : ssize_t _filemgr_anomalous_pwrite(int fd, void *buf, size_t count, cs_off_t offset)</span>
+<span class="lineNum">      53 </span>                :            : {
+<span class="lineNum">      54 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 11 times"> + </span>]:<span class="lineCov">         14 :     if (_write_fails) {</span>
+<span class="lineNum">      55 </span>                :<span class="lineCov">          3 :         return -1;</span>
+<span class="lineNum">      56 </span>                :            :     }
+<span class="lineNum">      57 </span>                :            : 
+<span class="lineNum">      58 </span>                :<span class="lineCov">         14 :     return normal_filemgr_ops-&gt;pwrite(fd, buf, count, offset);</span>
+<a name="59"><span class="lineNum">      59 </span>                :            : }</a>
+<span class="lineNum">      60 </span>                :            : 
+<span class="lineNum">      61 </span>                :<span class="lineCov">          1 : ssize_t _filemgr_anomalous_pread(int fd, void *buf, size_t count, cs_off_t offset)</span>
+<span class="lineNum">      62 </span>                :            : {
+<span class="lineNum">      63 </span>                :<span class="lineCov">          1 :     return normal_filemgr_ops-&gt;pread(fd, buf, count, offset);</span>
+<a name="64"><span class="lineNum">      64 </span>                :            : }</a>
+<span class="lineNum">      65 </span>                :            : 
+<span class="lineNum">      66 </span>                :<span class="lineCov">          2 : int _filemgr_anomalous_close(int fd)</span>
+<span class="lineNum">      67 </span>                :            : {
+<span class="lineNum">      68 </span>                :<span class="lineCov">          2 :     return normal_filemgr_ops-&gt;close(fd);</span>
+<a name="69"><span class="lineNum">      69 </span>                :            : }</a>
+<span class="lineNum">      70 </span>                :            : 
+<span class="lineNum">      71 </span>                :<span class="lineCov">          2 : cs_off_t _filemgr_anomalous_goto_eof(int fd)</span>
+<span class="lineNum">      72 </span>                :            : {
+<span class="lineNum">      73 </span>                :<span class="lineCov">          2 :     return normal_filemgr_ops-&gt;goto_eof(fd);</span>
+<a name="74"><span class="lineNum">      74 </span>                :            : }</a>
+<span class="lineNum">      75 </span>                :            : 
+<span class="lineNum">      76 </span>                :<span class="lineNoCov">          0 : cs_off_t _filemgr_anomalous_file_size(const char *filename)</span>
+<span class="lineNum">      77 </span>                :            : {
+<span class="lineNum">      78 </span>                :<span class="lineNoCov">          0 :     return normal_filemgr_ops-&gt;file_size(filename);</span>
+<a name="79"><span class="lineNum">      79 </span>                :            : }</a>
+<span class="lineNum">      80 </span>                :            : 
+<span class="lineNum">      81 </span>                :<span class="lineCov">          1 : int _filemgr_anomalous_fsync(int fd)</span>
+<span class="lineNum">      82 </span>                :            : {
+<span class="lineNum">      83 </span>                :<span class="lineCov">          1 :     return normal_filemgr_ops-&gt;fsync(fd);</span>
+<a name="84"><span class="lineNum">      84 </span>                :            : }</a>
+<span class="lineNum">      85 </span>                :            : 
+<span class="lineNum">      86 </span>                :<span class="lineNoCov">          0 : int _filemgr_anomalous_fdatasync(int fd)</span>
+<span class="lineNum">      87 </span>                :            : {
+<span class="lineNum">      88 </span>                :<span class="lineNoCov">          0 :     return normal_filemgr_ops-&gt;fdatasync(fd);</span>
+<a name="89"><span class="lineNum">      89 </span>                :            : }</a>
+<span class="lineNum">      90 </span>                :            : 
+<span class="lineNum">      91 </span>                :<span class="lineCov">          3 : void _filemgr_anomalous_get_errno_str(char *buf, size_t size) {</span>
+<span class="lineNum">      92 </span>                :<span class="lineCov">          3 :     return normal_filemgr_ops-&gt;get_errno_str(buf, size);</span>
+<span class="lineNum">      93 </span>                :            : }
+<span class="lineNum">      94 </span>                :            : 
+<span class="lineNum">      95 </span>                :            : struct filemgr_ops anomalous_ops = {
+<span class="lineNum">      96 </span>                :            :     _filemgr_anomalous_open,
+<span class="lineNum">      97 </span>                :            :     _filemgr_anomalous_pwrite,
+<span class="lineNum">      98 </span>                :            :     _filemgr_anomalous_pread,
+<span class="lineNum">      99 </span>                :            :     _filemgr_anomalous_close,
+<span class="lineNum">     100 </span>                :            :     _filemgr_anomalous_goto_eof,
+<span class="lineNum">     101 </span>                :            :     _filemgr_anomalous_file_size,
+<span class="lineNum">     102 </span>                :            :     _filemgr_anomalous_fdatasync,
+<span class="lineNum">     103 </span>                :            :     _filemgr_anomalous_fsync,
+<span class="lineNum">     104 </span>                :            :     _filemgr_anomalous_get_errno_str
+<a name="105"><span class="lineNum">     105 </span>                :            : };</a>
+<span class="lineNum">     106 </span>                :            : 
+<span class="lineNum">     107 </span>                :<span class="lineCov">          6 : struct filemgr_ops * get_anomalous_filemgr_ops()</span>
+<span class="lineNum">     108 </span>                :            : {
+<span class="lineNum">     109 </span>                :<span class="lineCov">          6 :     return &amp;anomalous_ops;</span>
+<span class="lineNum">     110 </span>                :            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.9</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
