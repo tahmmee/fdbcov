@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-12-17</td>
+            <td class="headerValue">2014-12-18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">36</td>
@@ -125,68 +125,67 @@
 <span class="lineNum">      54 </span>                :            : #define _l2c(trie, len) ( ( (len) + ((trie)-&gt;chunksize-1) ) / (trie)-&gt;chunksize )
 <a name="55"><span class="lineNum">      55 </span>                :            : </a>
 <span class="lineNum">      56 </span>                :            : // MUST return same value to '_get_nchunk(_hbtrie_reform_key(RAWKEY))'
-<span class="lineNum">      57 </span>                :<span class="lineCov">   30835757 : INLINE int _get_nchunk_raw(struct hbtrie *trie, void *rawkey, int rawkeylen)</span>
+<span class="lineNum">      57 </span>                :<span class="lineCov">   28696371 : INLINE int _get_nchunk_raw(struct hbtrie *trie, void *rawkey, int rawkeylen)</span>
 <span class="lineNum">      58 </span>                :            : {
-<span class="lineNum">      59 </span>                :<span class="lineCov">   30835757 :     return _l2c(trie, rawkeylen) + 1;</span>
+<span class="lineNum">      59 </span>                :<span class="lineCov">   28696371 :     return _l2c(trie, rawkeylen) + 1;</span>
 <a name="60"><span class="lineNum">      60 </span>                :            : }</a>
 <span class="lineNum">      61 </span>                :            : 
-<span class="lineNum">      62 </span>                :<span class="lineCov">    7457199 : INLINE int _get_nchunk(struct hbtrie *trie, void *key, int keylen)</span>
+<span class="lineNum">      62 </span>                :<span class="lineCov">    7058005 : INLINE int _get_nchunk(struct hbtrie *trie, void *key, int keylen)</span>
 <span class="lineNum">      63 </span>                :            : {
-<span class="lineNum">      64 </span>                :<span class="lineCov">    7457199 :     return (keylen-1) / trie-&gt;chunksize + 1;</span>
+<span class="lineNum">      64 </span>                :<span class="lineCov">    7058005 :     return (keylen-1) / trie-&gt;chunksize + 1;</span>
 <a name="65"><span class="lineNum">      65 </span>                :            : }</a>
 <span class="lineNum">      66 </span>                :            : 
-<span class="lineNum">      67 </span>                :<span class="lineCov">   16432210 : int _hbtrie_reform_key(struct hbtrie *trie, void *rawkey,</span>
+<span class="lineNum">      67 </span>                :<span class="lineCov">   15354574 : int _hbtrie_reform_key(struct hbtrie *trie, void *rawkey,</span>
 <span class="lineNum">      68 </span>                :            :                        int rawkeylen, void *outkey)
 <span class="lineNum">      69 </span>                :            : {
 <span class="lineNum">      70 </span>                :            :     int outkeylen;
 <span class="lineNum">      71 </span>                :            :     int nchunk;
 <span class="lineNum">      72 </span>                :            :     int i;
 <span class="lineNum">      73 </span>                :            :     uint8_t rsize;
-<span class="lineNum">      74 </span>                :<span class="lineCov">   16432210 :     size_t csize = trie-&gt;chunksize;</span>
+<span class="lineNum">      74 </span>                :<span class="lineCov">   15354574 :     size_t csize = trie-&gt;chunksize;</span>
 <span class="lineNum">      75 </span>                :            : 
-<span class="lineNum">      76 </span>                :<span class="lineCov">   16432210 :     nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
-<span class="lineNum">      77 </span>                :<span class="lineCov">   16434141 :     outkeylen = nchunk * csize;</span>
+<span class="lineNum">      76 </span>                :<span class="lineCov">   15354574 :     nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
+<span class="lineNum">      77 </span>                :<span class="lineCov">   15351426 :     outkeylen = nchunk * csize;</span>
 <span class="lineNum">      78 </span>                :            : 
-<span class="lineNum">      79 </span>        [<span class="branchCov" title="Branch 0 was taken 16433955 times"> + </span><span class="branchCov" title="Branch 1 was taken 186 times"> + </span>]:<span class="lineCov">   16434141 :     if (nchunk &gt; 2) {</span>
+<span class="lineNum">      79 </span>        [<span class="branchCov" title="Branch 0 was taken 15351240 times"> + </span><span class="branchCov" title="Branch 1 was taken 186 times"> + </span>]:<span class="lineCov">   15351426 :     if (nchunk &gt; 2) {</span>
 <span class="lineNum">      80 </span>                :            :         // copy chunk[0] ~ chunk[nchunk-2]
-<span class="lineNum">      81 </span>                :<span class="lineCov">   16433955 :         rsize = rawkeylen - ((nchunk - 2) * csize);</span>
+<span class="lineNum">      81 </span>                :<span class="lineCov">   15351240 :         rsize = rawkeylen - ((nchunk - 2) * csize);</span>
 <span class="lineNum">      82 </span>                :            :     } else {
 <span class="lineNum">      83 </span>                :<span class="lineCov">        186 :         rsize = rawkeylen;</span>
 <span class="lineNum">      84 </span>                :            :     }
-<span class="lineNum">      85 </span>   [<span class="branchCov" title="Branch 0 was taken 16434267 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 459 times"> + </span><span class="branchCov" title="Branch 3 was taken 16433808 times"> + </span>]:<span class="lineCov">   16434141 :     assert(rsize &amp;&amp; rsize &lt;= trie-&gt;chunksize);</span>
-<span class="lineNum">         </span>           [<span class="branchNoCov" title="Branch 1 was not taken"> - </span>]
-<span class="lineNum">      86 </span>                :<span class="lineCov">   16433808 :     memcpy((uint8_t*)outkey, (uint8_t*)rawkey, rawkeylen);</span>
+<span class="lineNum">      85 </span>[<span class="branchCov" title="Branch 0 was taken 15351545 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 2363 times"> + </span><span class="branchCov" title="Branch 3 was taken 15349182 times"> + </span>]:<span class="lineCov">   15351426 :     assert(rsize &amp;&amp; rsize &lt;= trie-&gt;chunksize);</span>
+<span class="lineNum">      86 </span>                :<span class="lineCov">   15349182 :     memcpy((uint8_t*)outkey, (uint8_t*)rawkey, rawkeylen);</span>
 <span class="lineNum">      87 </span>                :            : 
-<span class="lineNum">      88 </span>        [<span class="branchCov" title="Branch 0 was taken 1053883 times"> + </span><span class="branchCov" title="Branch 1 was taken 15379925 times"> + </span>]:<span class="lineCov">   16433808 :     if (rsize &lt; csize) {</span>
+<span class="lineNum">      88 </span>        [<span class="branchCov" title="Branch 0 was taken 979384 times"> + </span><span class="branchCov" title="Branch 1 was taken 14369798 times"> + </span>]:<span class="lineCov">   15349182 :     if (rsize &lt; csize) {</span>
 <span class="lineNum">      89 </span>                :            :         // zero-fill rest space
-<span class="lineNum">      90 </span>                :<span class="lineCov">    1053883 :         i = nchunk - 2;</span>
-<span class="lineNum">      91 </span>                :<span class="lineCov">    1053883 :         memset((uint8_t*)outkey + (i*csize) + rsize, 0x0, 2*csize - rsize);</span>
+<span class="lineNum">      90 </span>                :<span class="lineCov">     979384 :         i = nchunk - 2;</span>
+<span class="lineNum">      91 </span>                :<span class="lineCov">     979384 :         memset((uint8_t*)outkey + (i*csize) + rsize, 0x0, 2*csize - rsize);</span>
 <span class="lineNum">      92 </span>                :            :     } else {
 <span class="lineNum">      93 </span>                :            :         // zero-fill the last chunk
-<span class="lineNum">      94 </span>                :<span class="lineCov">   15379925 :         i = nchunk - 1;</span>
-<span class="lineNum">      95 </span>                :<span class="lineCov">   15379925 :         memset((uint8_t*)outkey + i * csize, 0x0, csize);</span>
+<span class="lineNum">      94 </span>                :<span class="lineCov">   14369798 :         i = nchunk - 1;</span>
+<span class="lineNum">      95 </span>                :<span class="lineCov">   14369798 :         memset((uint8_t*)outkey + i * csize, 0x0, csize);</span>
 <span class="lineNum">      96 </span>                :            :     }
 <span class="lineNum">      97 </span>                :            : 
 <span class="lineNum">      98 </span>                :            :     // assign rsize at the end of the outkey
-<span class="lineNum">      99 </span>                :<span class="lineCov">   16433808 :     *((uint8_t*)outkey + outkeylen - 1) = rsize;</span>
+<span class="lineNum">      99 </span>                :<span class="lineCov">   15349182 :     *((uint8_t*)outkey + outkeylen - 1) = rsize;</span>
 <span class="lineNum">     100 </span>                :            : 
-<span class="lineNum">     101 </span>                :<span class="lineCov">   16433808 :     return outkeylen;</span>
+<span class="lineNum">     101 </span>                :<span class="lineCov">   15349182 :     return outkeylen;</span>
 <span class="lineNum">     102 </span>                :            : }
 <a name="103"><span class="lineNum">     103 </span>                :            : </a>
 <span class="lineNum">     104 </span>                :            : // this function only returns (raw) key length
-<span class="lineNum">     105 </span>                :<span class="lineCov">    7280573 : int _hbtrie_reform_key_reverse(struct hbtrie *trie,</span>
+<span class="lineNum">     105 </span>                :<span class="lineCov">    7212267 : int _hbtrie_reform_key_reverse(struct hbtrie *trie,</span>
 <span class="lineNum">     106 </span>                :            :                                void *key,
 <span class="lineNum">     107 </span>                :            :                                int keylen)
 <span class="lineNum">     108 </span>                :            : {
 <span class="lineNum">     109 </span>                :            :     uint8_t rsize;
-<span class="lineNum">     110 </span>                :<span class="lineCov">    7280573 :     rsize = *((uint8_t*)key + keylen - 1);</span>
-<span class="lineNum">     111 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 7280573 times"> + </span>]:<span class="lineCov">    7280573 :     assert(rsize);</span>
+<span class="lineNum">     110 </span>                :<span class="lineCov">    7212267 :     rsize = *((uint8_t*)key + keylen - 1);</span>
+<span class="lineNum">     111 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 7212267 times"> + </span>]:<span class="lineCov">    7212267 :     assert(rsize);</span>
 <span class="lineNum">     112 </span>                :            : 
-<span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 6445097 times"> + </span><span class="branchCov" title="Branch 1 was taken 835476 times"> + </span>]:<span class="lineCov">    7280573 :     if (rsize == trie-&gt;chunksize) {</span>
-<span class="lineNum">     114 </span>                :<span class="lineCov">    6445097 :         return keylen - trie-&gt;chunksize;</span>
+<span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 6453422 times"> + </span><span class="branchCov" title="Branch 1 was taken 758845 times"> + </span>]:<span class="lineCov">    7212267 :     if (rsize == trie-&gt;chunksize) {</span>
+<span class="lineNum">     114 </span>                :<span class="lineCov">    6453422 :         return keylen - trie-&gt;chunksize;</span>
 <span class="lineNum">     115 </span>                :            :     } else {
 <span class="lineNum">     116 </span>                :            :         // rsize: 1 ~ chunksize-1
-<span class="lineNum">     117 </span>                :<span class="lineCov">    7280573 :         return keylen - (trie-&gt;chunksize * 2) + rsize;</span>
+<span class="lineNum">     117 </span>                :<span class="lineCov">    7212267 :         return keylen - (trie-&gt;chunksize * 2) + rsize;</span>
 <span class="lineNum">     118 </span>                :            :     }
 <span class="lineNum">     119 </span>                :            : }
 <span class="lineNum">     120 </span>                :            : 
@@ -223,7 +222,7 @@
 <span class="lineNum">     151 </span>                :            : 
 <span class="lineNum">     152 </span>[<span class="branchCov" title="Branch 0 was taken 920 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 920 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        920 :     if (chunksize == 8 &amp;&amp; valuelen == 8){</span>
 <span class="lineNum">     153 </span>                :<span class="lineCov">        920 :         btree_kv_ops = btree_kv_get_kb64_vb64(btree_kv_ops);</span>
-<span class="lineNum">     154 </span>                :<span class="lineCov">        920 :         btree_leaf_kv_ops = _get_leaf_kv_ops(btree_leaf_kv_ops);</span>
+<span class="lineNum">     154 </span>                :<span class="lineCov">        919 :         btree_leaf_kv_ops = _get_leaf_kv_ops(btree_leaf_kv_ops);</span>
 <span class="lineNum">     155 </span>[<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>][<span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     }else if (chunksize == 4 &amp;&amp; valuelen == 8) {</span>
 <span class="lineNum">     156 </span>                :<span class="lineNoCov">          0 :         btree_kv_ops = btree_kv_get_kb32_vb64(btree_kv_ops);</span>
 <span class="lineNum">     157 </span>                :<span class="lineNoCov">          0 :         btree_leaf_kv_ops = _get_leaf_kv_ops(btree_leaf_kv_ops);</span>
@@ -252,10 +251,10 @@
 <span class="lineNum">     180 </span>                :            :     }
 <a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">          1 : }</span></a>
 <span class="lineNum">     182 </span>                :            : 
-<span class="lineNum">     183 </span>                :<span class="lineCov">        409 : void hbtrie_set_leaf_height_limit(struct hbtrie *trie, uint8_t limit)</span>
+<span class="lineNum">     183 </span>                :<span class="lineCov">        410 : void hbtrie_set_leaf_height_limit(struct hbtrie *trie, uint8_t limit)</span>
 <span class="lineNum">     184 </span>                :            : {
-<span class="lineNum">     185 </span>                :<span class="lineCov">        409 :     trie-&gt;leaf_height_limit = limit;</span>
-<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">        409 : }</span></a>
+<span class="lineNum">     185 </span>                :<span class="lineCov">        410 :     trie-&gt;leaf_height_limit = limit;</span>
+<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">        410 : }</span></a>
 <span class="lineNum">     187 </span>                :            : 
 <span class="lineNum">     188 </span>                :<span class="lineCov">        460 : void hbtrie_set_leaf_cmp(struct hbtrie *trie,</span>
 <span class="lineNum">     189 </span>                :            :                          int (*cmp)(void *key1, void *key2, void* aux))
@@ -263,43 +262,43 @@
 <span class="lineNum">     191 </span>                :<span class="lineCov">        460 :     trie-&gt;btree_leaf_kv_ops-&gt;cmp = cmp;</span>
 <a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">        460 : }</span></a>
 <span class="lineNum">     193 </span>                :            : 
-<span class="lineNum">     194 </span>                :<span class="lineCov">        406 : void hbtrie_set_map_function(struct hbtrie *trie,</span>
+<span class="lineNum">     194 </span>                :<span class="lineCov">        407 : void hbtrie_set_map_function(struct hbtrie *trie,</span>
 <span class="lineNum">     195 </span>                :            :                              hbtrie_cmp_map *map_func)
 <span class="lineNum">     196 </span>                :            : {
-<span class="lineNum">     197 </span>                :<span class="lineCov">        406 :     trie-&gt;map = map_func;</span>
-<span class="lineNum">     198 </span>                :<span class="lineCov">        406 : }</span>
+<span class="lineNum">     197 </span>                :<span class="lineCov">        407 :     trie-&gt;map = map_func;</span>
+<span class="lineNum">     198 </span>                :<span class="lineCov">        407 : }</span>
 <a name="199"><span class="lineNum">     199 </span>                :            : </a>
 <span class="lineNum">     200 </span>                :            : // IMPORTANT: hbmeta doesn't have own allocated memory space (pointers only)
-<span class="lineNum">     201 </span>                :<span class="lineCov">   24786753 : void _hbtrie_fetch_meta(struct hbtrie *trie, int metasize,</span>
+<span class="lineNum">     201 </span>                :<span class="lineCov">   23353649 : void _hbtrie_fetch_meta(struct hbtrie *trie, int metasize,</span>
 <span class="lineNum">     202 </span>                :            :                         struct hbtrie_meta *hbmeta, void *buf)
 <span class="lineNum">     203 </span>                :            : {
 <span class="lineNum">     204 </span>                :            :     // read hbmeta from buf
-<span class="lineNum">     205 </span>                :<span class="lineCov">   24786753 :     int offset = 0;</span>
-<span class="lineNum">     206 </span>                :<span class="lineCov">   24786753 :     uint32_t valuelen = 0;</span>
+<span class="lineNum">     205 </span>                :<span class="lineCov">   23353649 :     int offset = 0;</span>
+<span class="lineNum">     206 </span>                :<span class="lineCov">   23353649 :     uint32_t valuelen = 0;</span>
 <span class="lineNum">     207 </span>                :            : 
-<span class="lineNum">     208 </span>                :<span class="lineCov">   24786753 :     memcpy(&amp;hbmeta-&gt;chunkno, buf, sizeof(hbmeta-&gt;chunkno));</span>
-<span class="lineNum">     209 </span>                :<span class="lineCov">   24786753 :     hbmeta-&gt;chunkno = _endian_decode(hbmeta-&gt;chunkno);</span>
-<span class="lineNum">     210 </span>                :<span class="lineCov">   24786753 :     offset += sizeof(hbmeta-&gt;chunkno);</span>
+<span class="lineNum">     208 </span>                :<span class="lineCov">   23353649 :     memcpy(&amp;hbmeta-&gt;chunkno, buf, sizeof(hbmeta-&gt;chunkno));</span>
+<span class="lineNum">     209 </span>                :<span class="lineCov">   23353649 :     hbmeta-&gt;chunkno = _endian_decode(hbmeta-&gt;chunkno);</span>
+<span class="lineNum">     210 </span>                :<span class="lineCov">   23353649 :     offset += sizeof(hbmeta-&gt;chunkno);</span>
 <span class="lineNum">     211 </span>                :            : 
-<span class="lineNum">     212 </span>                :<span class="lineCov">   24786753 :     memcpy(&amp;valuelen, (uint8_t*)buf+offset, sizeof(trie-&gt;valuelen));</span>
-<span class="lineNum">     213 </span>                :<span class="lineCov">   24786753 :     offset += sizeof(trie-&gt;valuelen);</span>
+<span class="lineNum">     212 </span>                :<span class="lineCov">   23353649 :     memcpy(&amp;valuelen, (uint8_t*)buf+offset, sizeof(trie-&gt;valuelen));</span>
+<span class="lineNum">     213 </span>                :<span class="lineCov">   23353649 :     offset += sizeof(trie-&gt;valuelen);</span>
 <span class="lineNum">     214 </span>                :            : 
-<span class="lineNum">     215 </span>        [<span class="branchCov" title="Branch 0 was taken 4864 times"> + </span><span class="branchCov" title="Branch 1 was taken 24781889 times"> + </span>]:<span class="lineCov">   24786753 :     if (valuelen &gt; 0) {</span>
-<span class="lineNum">     216 </span>                :<span class="lineCov">       4864 :         hbmeta-&gt;value = (uint8_t*)buf + offset;</span>
-<span class="lineNum">     217 </span>                :<span class="lineCov">       4864 :         offset += trie-&gt;valuelen;</span>
+<span class="lineNum">     215 </span>        [<span class="branchCov" title="Branch 0 was taken 1026 times"> + </span><span class="branchCov" title="Branch 1 was taken 23352623 times"> + </span>]:<span class="lineCov">   23353649 :     if (valuelen &gt; 0) {</span>
+<span class="lineNum">     216 </span>                :<span class="lineCov">       1026 :         hbmeta-&gt;value = (uint8_t*)buf + offset;</span>
+<span class="lineNum">     217 </span>                :<span class="lineCov">       1026 :         offset += trie-&gt;valuelen;</span>
 <span class="lineNum">     218 </span>                :            :     } else {
-<span class="lineNum">     219 </span>                :<span class="lineCov">   24781889 :         hbmeta-&gt;value = NULL;</span>
+<span class="lineNum">     219 </span>                :<span class="lineCov">   23352623 :         hbmeta-&gt;value = NULL;</span>
 <span class="lineNum">     220 </span>                :            :     }
 <span class="lineNum">     221 </span>                :            : 
-<span class="lineNum">     222 </span>        [<span class="branchCov" title="Branch 0 was taken 13584 times"> + </span><span class="branchCov" title="Branch 1 was taken 24773169 times"> + </span>]:<span class="lineCov">   24786753 :     if (metasize - offset &gt; 0) {</span>
+<span class="lineNum">     222 </span>        [<span class="branchCov" title="Branch 0 was taken 13584 times"> + </span><span class="branchCov" title="Branch 1 was taken 23340065 times"> + </span>]:<span class="lineCov">   23353649 :     if (metasize - offset &gt; 0) {</span>
 <span class="lineNum">     223 </span>                :            :         //memcpy(hbmeta-&gt;prefix, buf+offset, metasize - offset);
 <span class="lineNum">     224 </span>                :<span class="lineCov">      13584 :         hbmeta-&gt;prefix = (uint8_t*)buf + offset;</span>
 <span class="lineNum">     225 </span>                :<span class="lineCov">      13584 :         hbmeta-&gt;prefix_len = metasize - offset;</span>
 <span class="lineNum">     226 </span>                :            :     } else {
-<span class="lineNum">     227 </span>                :<span class="lineCov">   24773169 :         hbmeta-&gt;prefix = NULL;</span>
-<span class="lineNum">     228 </span>                :<span class="lineCov">   24773169 :         hbmeta-&gt;prefix_len = 0;</span>
+<span class="lineNum">     227 </span>                :<span class="lineCov">   23340065 :         hbmeta-&gt;prefix = NULL;</span>
+<span class="lineNum">     228 </span>                :<span class="lineCov">   23340065 :         hbmeta-&gt;prefix_len = 0;</span>
 <span class="lineNum">     229 </span>                :            :     }
-<span class="lineNum">     230 </span>                :<span class="lineCov">   24786753 : }</span>
+<span class="lineNum">     230 </span>                :<span class="lineCov">   23353649 : }</span>
 <span class="lineNum">     231 </span>                :            : 
 <span class="lineNum">     232 </span>                :            : typedef enum {
 <span class="lineNum">     233 </span>                :            :     HBMETA_NORMAL,
@@ -345,21 +344,21 @@
 <span class="lineNum">     273 </span>                :            :     }
 <a name="274"><span class="lineNum">     274 </span>                :<span class="lineCov">       1949 : }</span></a>
 <span class="lineNum">     275 </span>                :            : 
-<span class="lineNum">     276 </span>                :<span class="lineCov">    1796015 : INLINE int _hbtrie_find_diff_chunk(struct hbtrie *trie,</span>
+<span class="lineNum">     276 </span>                :<span class="lineCov">    1779038 : INLINE int _hbtrie_find_diff_chunk(struct hbtrie *trie,</span>
 <span class="lineNum">     277 </span>                :            :                                    void *key1,
 <span class="lineNum">     278 </span>                :            :                                    void *key2,
 <span class="lineNum">     279 </span>                :            :                                    int start_chunk,
 <span class="lineNum">     280 </span>                :            :                                    int end_chunk)
 <span class="lineNum">     281 </span>                :            : {
 <span class="lineNum">     282 </span>                :            :     int i;
-<span class="lineNum">     283 </span>        [<span class="branchCov" title="Branch 0 was taken 17341387 times"> + </span><span class="branchCov" title="Branch 1 was taken 1807792 times"> + </span>]:<span class="lineCov">   19149179 :     for (i=start_chunk; i &lt; end_chunk; ++i) {</span>
-<span class="lineNum">     284 </span>        [<span class="branchCov" title="Branch 1 was taken 17353164 times"> + </span><span class="branchCov" title="Branch 0 was taken 19 times"> + </span>]:<span class="lineCov">   17341387 :         if (memcmp((uint8_t*)key1 + trie-&gt;chunksize*i,</span>
+<span class="lineNum">     283 </span>        [<span class="branchCov" title="Branch 0 was taken 16822663 times"> + </span><span class="branchCov" title="Branch 1 was taken 1782031 times"> + </span>]:<span class="lineCov">   18604694 :     for (i=start_chunk; i &lt; end_chunk; ++i) {</span>
+<span class="lineNum">     284 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchCov" title="Branch 1 was taken 16825656 times"> + </span>]:<span class="lineCov">   16822663 :         if (memcmp((uint8_t*)key1 + trie-&gt;chunksize*i,</span>
 <span class="lineNum">     285 </span>                :            :                    (uint8_t*)key2 + trie-&gt;chunksize*i,
-<span class="lineNum">     286 </span>                :<span class="lineCov">   17341387 :                    trie-&gt;chunksize)) {</span>
+<span class="lineNum">     286 </span>                :<span class="lineCov">   16822663 :                    trie-&gt;chunksize)) {</span>
 <span class="lineNum">     287 </span>                :<span class="lineCov">         19 :              return i;</span>
 <span class="lineNum">     288 </span>                :            :         }
 <span class="lineNum">     289 </span>                :            :     }
-<span class="lineNum">     290 </span>                :<span class="lineCov">    1796015 :     return i;</span>
+<span class="lineNum">     290 </span>                :<span class="lineCov">    1779038 :     return i;</span>
 <span class="lineNum">     291 </span>                :            : }
 <span class="lineNum">     292 </span>                :            : 
 <span class="lineNum">     293 </span>                :            : //3 ASSUMPTION: 'VALUE' should be based on same endian to hb+trie
@@ -367,17 +366,17 @@
 <span class="lineNum">     295 </span>                :            : #if defined(__ENDIAN_SAFE) || defined(_BIG_ENDIAN)
 <a name="296"><span class="lineNum">     296 </span>                :            : // endian safe option is turned on, OR,</a>
 <span class="lineNum">     297 </span>                :            : // the architecture is based on big endian
-<span class="lineNum">     298 </span>                :<span class="lineCov">       4711 : INLINE void _hbtrie_set_msb(struct hbtrie *trie, void *value)</span>
+<span class="lineNum">     298 </span>                :<span class="lineCov">       4725 : INLINE void _hbtrie_set_msb(struct hbtrie *trie, void *value)</span>
 <span class="lineNum">     299 </span>                :            : {
-<a name="300"><span class="lineNum">     300 </span>                :<span class="lineCov">       4711 :     *((uint8_t*)value) |= (uint8_t)0x80;</span></a>
-<span class="lineNum">     301 </span>                :<span class="lineCov">       4711 : }</span>
-<span class="lineNum">     302 </span>                :<span class="lineCov">   12412354 : INLINE void _hbtrie_clear_msb(struct hbtrie *trie, void *value)</span>
+<a name="300"><span class="lineNum">     300 </span>                :<span class="lineCov">       4725 :     *((uint8_t*)value) |= (uint8_t)0x80;</span></a>
+<span class="lineNum">     301 </span>                :<span class="lineCov">       4725 : }</span>
+<span class="lineNum">     302 </span>                :<span class="lineCov">   11696309 : INLINE void _hbtrie_clear_msb(struct hbtrie *trie, void *value)</span>
 <span class="lineNum">     303 </span>                :            : {
-<a name="304"><span class="lineNum">     304 </span>                :<span class="lineCov">   12412354 :     *((uint8_t*)value) &amp;= ~((uint8_t)0x80);</span></a>
-<span class="lineNum">     305 </span>                :<span class="lineCov">   12412354 : }</span>
-<span class="lineNum">     306 </span>                :<span class="lineCov">   16920421 : INLINE int _hbtrie_is_msb_set(struct hbtrie *trie, void *value)</span>
+<a name="304"><span class="lineNum">     304 </span>                :<span class="lineCov">   11696309 :     *((uint8_t*)value) &amp;= ~((uint8_t)0x80);</span></a>
+<span class="lineNum">     305 </span>                :<span class="lineCov">   11696309 : }</span>
+<span class="lineNum">     306 </span>                :<span class="lineCov">   15824095 : INLINE int _hbtrie_is_msb_set(struct hbtrie *trie, void *value)</span>
 <span class="lineNum">     307 </span>                :            : {
-<span class="lineNum">     308 </span>                :<span class="lineCov">   16920421 :     return *((uint8_t*)value) &amp; ((uint8_t)0x80);</span>
+<span class="lineNum">     308 </span>                :<span class="lineCov">   15824095 :     return *((uint8_t*)value) &amp; ((uint8_t)0x80);</span>
 <span class="lineNum">     309 </span>                :            : }
 <span class="lineNum">     310 </span>                :            : #else
 <span class="lineNum">     311 </span>                :            : // little endian
@@ -427,10 +426,10 @@
 <span class="lineNum">     355 </span>                :<span class="lineCov">       3856 :     it-&gt;curkey = (void *)malloc(HBTRIE_MAX_KEYLEN);</span>
 <span class="lineNum">     356 </span>                :<span class="lineCov">       3856 :     memset(it-&gt;curkey, 0, HBTRIE_MAX_KEYLEN);</span>
 <span class="lineNum">     357 </span>                :            : 
-<span class="lineNum">     358 </span>        [<span class="branchCov" title="Branch 0 was taken 3797 times"> + </span><span class="branchCov" title="Branch 1 was taken 59 times"> + </span>]:<span class="lineCov">       3856 :     if (initial_key) {</span>
-<span class="lineNum">     359 </span>                :<span class="lineCov">       3797 :         it-&gt;keylen = _hbtrie_reform_key(trie, initial_key, keylen, it-&gt;curkey);</span>
+<span class="lineNum">     358 </span>        [<span class="branchCov" title="Branch 0 was taken 3798 times"> + </span><span class="branchCov" title="Branch 1 was taken 58 times"> + </span>]:<span class="lineCov">       3856 :     if (initial_key) {</span>
+<span class="lineNum">     359 </span>                :<span class="lineCov">       3798 :         it-&gt;keylen = _hbtrie_reform_key(trie, initial_key, keylen, it-&gt;curkey);</span>
 <span class="lineNum">     360 </span>                :            :     }else{
-<span class="lineNum">     361 </span>                :<span class="lineCov">         59 :         it-&gt;keylen = 0;</span>
+<span class="lineNum">     361 </span>                :<span class="lineCov">         58 :         it-&gt;keylen = 0;</span>
 <span class="lineNum">     362 </span>                :            :     }
 <span class="lineNum">     363 </span>                :<span class="lineCov">       3856 :     list_init(&amp;it-&gt;btreeit_list);</span>
 <span class="lineNum">     364 </span>                :<span class="lineCov">       3856 :     it-&gt;flags = 0;</span>
@@ -450,7 +449,7 @@
 <span class="lineNum">     378 </span>                :<span class="lineCov">       5918 :         mempool_free(item);</span>
 <span class="lineNum">     379 </span>                :            :     }
 <span class="lineNum">     380 </span>                :<span class="lineCov">       3856 :     free(it-&gt;trie.last_map_chunk);</span>
-<span class="lineNum">     381 </span>        [<span class="branchCov" title="Branch 0 was taken 3803 times"> + </span><span class="branchCov" title="Branch 1 was taken 53 times"> + </span>]:<span class="lineCov">       3856 :     if (it-&gt;curkey) free(it-&gt;curkey);</span>
+<span class="lineNum">     381 </span>        [<span class="branchCov" title="Branch 0 was taken 3804 times"> + </span><span class="branchCov" title="Branch 1 was taken 52 times"> + </span>]:<span class="lineCov">       3856 :     if (it-&gt;curkey) free(it-&gt;curkey);</span>
 <span class="lineNum">     382 </span>                :<span class="lineCov">       3856 :     return HBTRIE_RESULT_SUCCESS;</span>
 <span class="lineNum">     383 </span>                :            : }
 <span class="lineNum">     384 </span>                :            : 
@@ -727,28 +726,28 @@
 <span class="lineNum">     655 </span>                :            : }
 <a name="656"><span class="lineNum">     656 </span>                :            : </a>
 <span class="lineNum">     657 </span>                :            : // recursive function
-<span class="lineNum">     658 </span>                :<span class="lineCov">    4410277 : hbtrie_result _hbtrie_next(struct hbtrie_iterator *it,</span>
+<span class="lineNum">     658 </span>                :<span class="lineCov">    3691723 : hbtrie_result _hbtrie_next(struct hbtrie_iterator *it,</span>
 <span class="lineNum">     659 </span>                :            :                            struct btreeit_item *item,
 <span class="lineNum">     660 </span>                :            :                            void *key_buf,
 <span class="lineNum">     661 </span>                :            :                            size_t *keylen,
 <span class="lineNum">     662 </span>                :            :                            void *value_buf,
 <span class="lineNum">     663 </span>                :            :                            uint8_t flag)
 <span class="lineNum">     664 </span>                :            : {
-<span class="lineNum">     665 </span>                :<span class="lineCov">    4410277 :     struct hbtrie *trie = &amp;it-&gt;trie;</span>
+<span class="lineNum">     665 </span>                :<span class="lineCov">    3691723 :     struct hbtrie *trie = &amp;it-&gt;trie;</span>
 <span class="lineNum">     666 </span>                :            :     struct list_elem *e;
 <span class="lineNum">     667 </span>                :            :     struct btreeit_item *item_new;
 <span class="lineNum">     668 </span>                :            :     struct btree btree;
-<span class="lineNum">     669 </span>                :<span class="lineCov">    4410277 :     hbtrie_result hr = HBTRIE_RESULT_FAIL;</span>
+<span class="lineNum">     669 </span>                :<span class="lineCov">    3691723 :     hbtrie_result hr = HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">     670 </span>                :            :     btree_result br;
 <span class="lineNum">     671 </span>                :            :     struct hbtrie_meta hbmeta;
 <span class="lineNum">     672 </span>                :            :     struct btree_meta bmeta;
 <span class="lineNum">     673 </span>                :            :     void *chunk;
-<span class="lineNum">     674 </span>                :<span class="lineCov">    4410277 :     uint8_t *k = alca(uint8_t, trie-&gt;chunksize);</span>
-<span class="lineNum">     675 </span>                :<span class="lineCov">    4410277 :     uint8_t *v = alca(uint8_t, trie-&gt;valuelen);</span>
+<span class="lineNum">     674 </span>                :<span class="lineCov">    3691723 :     uint8_t *k = alca(uint8_t, trie-&gt;chunksize);</span>
+<span class="lineNum">     675 </span>                :<span class="lineCov">    3691723 :     uint8_t *v = alca(uint8_t, trie-&gt;valuelen);</span>
 <span class="lineNum">     676 </span>                :            :     bid_t bid;
 <span class="lineNum">     677 </span>                :            :     uint64_t offset;
 <span class="lineNum">     678 </span>                :            : 
-<span class="lineNum">     679 </span>        [<span class="branchCov" title="Branch 0 was taken 2020 times"> + </span><span class="branchCov" title="Branch 1 was taken 4408257 times"> + </span>]:<span class="lineCov">    4410277 :     if (item == NULL) {</span>
+<span class="lineNum">     679 </span>        [<span class="branchCov" title="Branch 0 was taken 2020 times"> + </span><span class="branchCov" title="Branch 1 was taken 3689703 times"> + </span>]:<span class="lineCov">    3691723 :     if (item == NULL) {</span>
 <span class="lineNum">     680 </span>                :            :         // this happens only when first call
 <span class="lineNum">     681 </span>                :            :         // create iterator for root b-tree
 <span class="lineNum">     682 </span>        [<span class="branchCov" title="Branch 0 was taken 15 times"> + </span><span class="branchCov" title="Branch 1 was taken 2005 times"> + </span>]:<span class="lineCov">       2020 :         if (it-&gt;trie.root_bid == BLK_NOT_FOUND) return HBTRIE_RESULT_FAIL;</span>
@@ -770,32 +769,32 @@
 <span class="lineNum">     698 </span>                :<span class="lineCov">       2005 :         list_push_back(&amp;it-&gt;btreeit_list, &amp;item-&gt;le);</span>
 <span class="lineNum">     699 </span>                :            :     }
 <span class="lineNum">     700 </span>                :            : 
-<span class="lineNum">     701 </span>                :<span class="lineCov">    4410262 :     e = list_next(&amp;item-&gt;le);</span>
-<span class="lineNum">     702 </span>        [<span class="branchCov" title="Branch 0 was taken 2211757 times"> + </span><span class="branchCov" title="Branch 1 was taken 2198620 times"> + </span>]:<span class="lineCov">    4410377 :     if (e) {</span>
+<span class="lineNum">     701 </span>                :<span class="lineCov">    3691708 :     e = list_next(&amp;item-&gt;le);</span>
+<span class="lineNum">     702 </span>        [<span class="branchCov" title="Branch 0 was taken 1852466 times"> + </span><span class="branchCov" title="Branch 1 was taken 1839316 times"> + </span>]:<span class="lineCov">    3691782 :     if (e) {</span>
 <span class="lineNum">     703 </span>                :            :         // if next sub b-tree exists
-<span class="lineNum">     704 </span>                :<span class="lineCov">    2211757 :         item_new = _get_entry(e, struct btreeit_item, le);</span>
-<span class="lineNum">     705 </span>                :<span class="lineCov">    2211757 :         hr = _hbtrie_next(it, item_new, key_buf, keylen, value_buf, flag);</span>
-<span class="lineNum">     706 </span>        [<span class="branchCov" title="Branch 0 was taken 2206921 times"> + </span><span class="branchCov" title="Branch 1 was taken 4848 times"> + </span>]:<span class="lineCov">    2211769 :         if (hr == HBTRIE_RESULT_SUCCESS) return hr;</span>
+<span class="lineNum">     704 </span>                :<span class="lineCov">    1852466 :         item_new = _get_entry(e, struct btreeit_item, le);</span>
+<span class="lineNum">     705 </span>                :<span class="lineCov">    1852466 :         hr = _hbtrie_next(it, item_new, key_buf, keylen, value_buf, flag);</span>
+<span class="lineNum">     706 </span>        [<span class="branchCov" title="Branch 0 was taken 1847826 times"> + </span><span class="branchCov" title="Branch 1 was taken 4848 times"> + </span>]:<span class="lineCov">    1852674 :         if (hr == HBTRIE_RESULT_SUCCESS) return hr;</span>
 <span class="lineNum">     707 </span>                :<span class="lineCov">       4848 :         it-&gt;keylen = (item-&gt;chunkno+1) * trie-&gt;chunksize;</span>
 <span class="lineNum">     708 </span>                :            :     }
 <span class="lineNum">     709 </span>                :            : 
-<span class="lineNum">     710 </span>        [<span class="branchCov" title="Branch 0 was taken 2203616 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2203616 :     while(hr == HBTRIE_RESULT_FAIL) {</span>
+<span class="lineNum">     710 </span>        [<span class="branchCov" title="Branch 0 was taken 1844312 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    1844312 :     while(hr == HBTRIE_RESULT_FAIL) {</span>
 <span class="lineNum">     711 </span>                :            :         // get key-value from current b-tree iterator
-<span class="lineNum">     712 </span>                :<span class="lineCov">    2203616 :         memset(k, 0, trie-&gt;chunksize);</span>
-<span class="lineNum">     713 </span>                :<span class="lineCov">    2203616 :         br = btree_next(&amp;item-&gt;btree_it, k, v);</span>
-<span class="lineNum">     714 </span>        [<span class="branchCov" title="Branch 0 was taken 4450 times"> + </span><span class="branchCov" title="Branch 1 was taken 2198988 times"> + </span>]:<span class="lineCov">    2203438 :         if (item-&gt;leaf) {</span>
+<span class="lineNum">     712 </span>                :<span class="lineCov">    1844312 :         memset(k, 0, trie-&gt;chunksize);</span>
+<span class="lineNum">     713 </span>                :<span class="lineCov">    1844312 :         br = btree_next(&amp;item-&gt;btree_it, k, v);</span>
+<span class="lineNum">     714 </span>        [<span class="branchCov" title="Branch 0 was taken 4450 times"> + </span><span class="branchCov" title="Branch 1 was taken 1839502 times"> + </span>]:<span class="lineCov">    1843952 :         if (item-&gt;leaf) {</span>
 <span class="lineNum">     715 </span>                :<span class="lineCov">       4450 :             _free_leaf_key(k);</span>
 <span class="lineNum">     716 </span>                :            :         } else {
-<span class="lineNum">     717 </span>                :<span class="lineCov">    2198988 :             chunk = (uint8_t*)it-&gt;curkey + item-&gt;chunkno * trie-&gt;chunksize;</span>
-<span class="lineNum">     718 </span>        [<span class="branchCov" title="Branch 0 was taken 2194529 times"> + </span><span class="branchCov" title="Branch 1 was taken 4470 times"> + </span>]:<span class="lineCov">    2198999 :             if (item-&gt;btree_it.btree.kv_ops-&gt;cmp(k, chunk,</span>
-<span class="lineNum">     719 </span>                :<span class="lineCov">    2198988 :                     item-&gt;btree_it.btree.aux) != 0) {</span>
+<span class="lineNum">     717 </span>                :<span class="lineCov">    1839502 :             chunk = (uint8_t*)it-&gt;curkey + item-&gt;chunkno * trie-&gt;chunksize;</span>
+<span class="lineNum">     718 </span>        [<span class="branchCov" title="Branch 0 was taken 1835100 times"> + </span><span class="branchCov" title="Branch 1 was taken 4461 times"> + </span>]:<span class="lineCov">    1839561 :             if (item-&gt;btree_it.btree.kv_ops-&gt;cmp(k, chunk,</span>
+<span class="lineNum">     719 </span>                :<span class="lineCov">    1839502 :                     item-&gt;btree_it.btree.aux) != 0) {</span>
 <span class="lineNum">     720 </span>                :            :                 // not exact match key .. the rest of string is not necessary anymore
-<span class="lineNum">     721 </span>                :<span class="lineCov">    2194529 :                 it-&gt;keylen = (item-&gt;chunkno+1) * trie-&gt;chunksize;</span>
-<span class="lineNum">     722 </span>                :<span class="lineCov">    2194529 :                 HBTRIE_ITR_SET_MOVED(it);</span>
+<span class="lineNum">     721 </span>                :<span class="lineCov">    1835100 :                 it-&gt;keylen = (item-&gt;chunkno+1) * trie-&gt;chunksize;</span>
+<span class="lineNum">     722 </span>                :<span class="lineCov">    1835100 :                 HBTRIE_ITR_SET_MOVED(it);</span>
 <span class="lineNum">     723 </span>                :            :             }
 <span class="lineNum">     724 </span>                :            :         }
 <span class="lineNum">     725 </span>                :            : 
-<span class="lineNum">     726 </span>        [<span class="branchCov" title="Branch 0 was taken 5102 times"> + </span><span class="branchCov" title="Branch 1 was taken 2198350 times"> + </span>]:<span class="lineCov">    2203452 :         if (br == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">     726 </span>        [<span class="branchCov" title="Branch 0 was taken 5102 times"> + </span><span class="branchCov" title="Branch 1 was taken 1838918 times"> + </span>]:<span class="lineCov">    1844020 :         if (br == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">     727 </span>                :            :             // no more KV pair in the b-tree
 <span class="lineNum">     728 </span>                :<span class="lineCov">       5102 :             btree_iterator_free(&amp;item-&gt;btree_it);</span>
 <span class="lineNum">     729 </span>                :<span class="lineCov">       5102 :             list_remove(&amp;it-&gt;btreeit_list, &amp;item-&gt;le);</span>
@@ -804,7 +803,7 @@
 <span class="lineNum">     732 </span>                :            :         }
 <span class="lineNum">     733 </span>                :            : 
 <span class="lineNum">     734 </span>                :            :         // check whether v points to doc or sub b-tree
-<span class="lineNum">     735 </span>        [<span class="branchCov" title="Branch 1 was taken 7162 times"> + </span><span class="branchCov" title="Branch 2 was taken 2191195 times"> + </span>]:<span class="lineCov">    2198350 :         if (_hbtrie_is_msb_set(trie, v)) {</span>
+<span class="lineNum">     735 </span>        [<span class="branchCov" title="Branch 1 was taken 7162 times"> + </span><span class="branchCov" title="Branch 2 was taken 1831756 times"> + </span>]:<span class="lineCov">    1838918 :         if (_hbtrie_is_msb_set(trie, v)) {</span>
 <span class="lineNum">     736 </span>                :            :             // MSB is set -&gt; sub b-tree
 <span class="lineNum">     737 </span>                :            : 
 <span class="lineNum">     738 </span>                :            :             // load sub b-tree and create new iterator for the b-tree
@@ -852,14 +851,14 @@
 <span class="lineNum">     780 </span>                :            :             //       dummy chunk will be a zero-filled value, and it is used
 <span class="lineNum">     781 </span>                :            :             //       as a key in the next level of B+tree. Hence, there will be
 <span class="lineNum">     782 </span>                :            :             //       no problem to assign the dummy chunk to the 'chunk' variable.
-<span class="lineNum">     783 </span>        [<span class="branchCov" title="Branch 0 was taken 3280 times"> + </span><span class="branchCov" title="Branch 1 was taken 3882 times"> + </span>]:<span class="lineCov">       7162 :             if ( (item_new-&gt;chunkno+1) * trie-&gt;chunksize &lt;= it-&gt;keylen) {</span>
+<span class="lineNum">     783 </span>        [<span class="branchCov" title="Branch 0 was taken 3281 times"> + </span><span class="branchCov" title="Branch 1 was taken 3881 times"> + </span>]:<span class="lineCov">       7162 :             if ( (item_new-&gt;chunkno+1) * trie-&gt;chunksize &lt;= it-&gt;keylen) {</span>
 <span class="lineNum">     784 </span>                :            :                 // happen only once for the first call (for each level of b-trees)
 <span class="lineNum">     785 </span>                :            :                 chunk = (uint8_t*)it-&gt;curkey +
-<span class="lineNum">     786 </span>                :<span class="lineCov">       3280 :                         item_new-&gt;chunkno*trie-&gt;chunksize;</span>
+<span class="lineNum">     786 </span>                :<span class="lineCov">       3281 :                         item_new-&gt;chunkno*trie-&gt;chunksize;</span>
 <span class="lineNum">     787 </span>                :            :             }else{
 <span class="lineNum">     788 </span>                :            :                 // chunk number of the b-tree is longer than current iterator's key
 <span class="lineNum">     789 </span>                :            :                 // set smallest key
-<span class="lineNum">     790 </span>                :<span class="lineCov">       3882 :                 chunk = NULL;</span>
+<span class="lineNum">     790 </span>                :<span class="lineCov">       3881 :                 chunk = NULL;</span>
 <span class="lineNum">     791 </span>                :            :             }
 <span class="lineNum">     792 </span>                :            : 
 <span class="lineNum">     793 </span>[<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchCov" title="Branch 1 was taken 7131 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9 times"> + </span><span class="branchCov" title="Branch 3 was taken 22 times"> + </span>]:<span class="lineCov">       7162 :             if (item_new-&gt;leaf &amp;&amp; chunk) {</span>
@@ -908,80 +907,80 @@
 <span class="lineNum">     836 </span>                :            :         }else{
 <span class="lineNum">     837 </span>                :            :             // MSB is not set -&gt; doc
 <span class="lineNum">     838 </span>                :            :             // read entire key and return the doc offset
-<span class="lineNum">     839 </span>                :<span class="lineCov">    2191195 :             offset = trie-&gt;btree_kv_ops-&gt;value2bid(v);</span>
-<span class="lineNum">     840 </span>        [<span class="branchCov" title="Branch 0 was taken 206969 times"> + </span><span class="branchCov" title="Branch 1 was taken 1984226 times"> + </span>]:<span class="lineCov">    2191195 :             if (!(flag &amp; HBTRIE_PREFIX_MATCH_ONLY)) {</span>
-<span class="lineNum">     841 </span>                :<span class="lineCov">     206969 :                 *keylen = trie-&gt;readkey(trie-&gt;doc_handle, offset, key_buf);</span>
-<span class="lineNum">     842 </span>                :<span class="lineCov">     207225 :                 it-&gt;keylen = _hbtrie_reform_key(trie, key_buf, *keylen, it-&gt;curkey);</span>
+<span class="lineNum">     839 </span>                :<span class="lineCov">    1831756 :             offset = trie-&gt;btree_kv_ops-&gt;value2bid(v);</span>
+<span class="lineNum">     840 </span>        [<span class="branchCov" title="Branch 0 was taken 206414 times"> + </span><span class="branchCov" title="Branch 1 was taken 1625340 times"> + </span>]:<span class="lineCov">    1831754 :             if (!(flag &amp; HBTRIE_PREFIX_MATCH_ONLY)) {</span>
+<span class="lineNum">     841 </span>                :<span class="lineCov">     206414 :                 *keylen = trie-&gt;readkey(trie-&gt;doc_handle, offset, key_buf);</span>
+<span class="lineNum">     842 </span>                :<span class="lineCov">     207101 :                 it-&gt;keylen = _hbtrie_reform_key(trie, key_buf, *keylen, it-&gt;curkey);</span>
 <span class="lineNum">     843 </span>                :            :             }
-<span class="lineNum">     844 </span>                :<span class="lineCov">    2191397 :             memcpy(value_buf, &amp;offset, trie-&gt;valuelen);</span>
+<span class="lineNum">     844 </span>                :<span class="lineCov">    1832311 :             memcpy(value_buf, &amp;offset, trie-&gt;valuelen);</span>
 <span class="lineNum">     845 </span>                :            : 
-<span class="lineNum">     846 </span>                :<span class="lineCov">    2191397 :             return HBTRIE_RESULT_SUCCESS;</span>
+<span class="lineNum">     846 </span>                :<span class="lineCov">    1832311 :             return HBTRIE_RESULT_SUCCESS;</span>
 <span class="lineNum">     847 </span>                :            :         }
 <span class="lineNum">     848 </span>                :            :     }
-<span class="lineNum">     849 </span>                :<span class="lineCov">    4410449 :     return HBTRIE_RESULT_FAIL;</span>
+<span class="lineNum">     849 </span>                :<span class="lineCov">    3692268 :     return HBTRIE_RESULT_FAIL;</span>
 <a name="850"><span class="lineNum">     850 </span>                :            : }</a>
 <span class="lineNum">     851 </span>                :            : 
-<span class="lineNum">     852 </span>                :<span class="lineCov">     208330 : hbtrie_result hbtrie_next(struct hbtrie_iterator *it,</span>
+<span class="lineNum">     852 </span>                :<span class="lineCov">     208041 : hbtrie_result hbtrie_next(struct hbtrie_iterator *it,</span>
 <span class="lineNum">     853 </span>                :            :                           void *key_buf,
 <span class="lineNum">     854 </span>                :            :                           size_t *keylen,
 <span class="lineNum">     855 </span>                :            :                           void *value_buf)
 <span class="lineNum">     856 </span>                :            : {
 <span class="lineNum">     857 </span>                :            :     hbtrie_result hr;
 <span class="lineNum">     858 </span>                :            : 
-<span class="lineNum">     859 </span>[<span class="branchCov" title="Branch 0 was taken 207601 times"> + </span><span class="branchCov" title="Branch 1 was taken 729 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1051 times"> + </span><span class="branchCov" title="Branch 3 was taken 206550 times"> + </span>]:<span class="lineCov">     208330 :     if (HBTRIE_ITR_IS_FWD(it) &amp;&amp; HBTRIE_ITR_IS_FAILED(it)) {</span>
+<span class="lineNum">     859 </span>[<span class="branchCov" title="Branch 0 was taken 207313 times"> + </span><span class="branchCov" title="Branch 1 was taken 728 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1051 times"> + </span><span class="branchCov" title="Branch 3 was taken 206262 times"> + </span>]:<span class="lineCov">     208041 :     if (HBTRIE_ITR_IS_FWD(it) &amp;&amp; HBTRIE_ITR_IS_FAILED(it)) {</span>
 <span class="lineNum">     860 </span>                :<span class="lineCov">       1051 :         return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">     861 </span>                :            :     }
 <span class="lineNum">     862 </span>                :            : 
-<span class="lineNum">     863 </span>                :<span class="lineCov">     207279 :     struct list_elem *e = list_begin(&amp;it-&gt;btreeit_list);</span>
-<span class="lineNum">     864 </span>                :<span class="lineCov">     207249 :     struct btreeit_item *item = NULL;</span>
-<span class="lineNum">     865 </span>        [<span class="branchCov" title="Branch 0 was taken 205287 times"> + </span><span class="branchCov" title="Branch 1 was taken 1962 times"> + </span>]:<span class="lineCov">     207249 :     if (e) item = _get_entry(e, struct btreeit_item, le);</span>
+<span class="lineNum">     863 </span>                :<span class="lineCov">     206990 :     struct list_elem *e = list_begin(&amp;it-&gt;btreeit_list);</span>
+<span class="lineNum">     864 </span>                :<span class="lineCov">     206941 :     struct btreeit_item *item = NULL;</span>
+<span class="lineNum">     865 </span>        [<span class="branchCov" title="Branch 0 was taken 204973 times"> + </span><span class="branchCov" title="Branch 1 was taken 1968 times"> + </span>]:<span class="lineCov">     206941 :     if (e) item = _get_entry(e, struct btreeit_item, le);</span>
 <span class="lineNum">     866 </span>                :            : 
-<span class="lineNum">     867 </span>                :<span class="lineCov">     207249 :     hr = _hbtrie_next(it, item, key_buf, keylen, value_buf, 0x0);</span>
-<span class="lineNum">     868 </span>                :<span class="lineCov">     207240 :     HBTRIE_ITR_SET_FWD(it);</span>
-<span class="lineNum">     869 </span>        [<span class="branchCov" title="Branch 0 was taken 207172 times"> + </span><span class="branchCov" title="Branch 1 was taken 68 times"> + </span>]:<span class="lineCov">     207240 :     if (hr == HBTRIE_RESULT_SUCCESS) {</span>
-<span class="lineNum">     870 </span>                :<span class="lineCov">     207172 :         HBTRIE_ITR_CLR_FAILED(it);</span>
-<span class="lineNum">     871 </span>                :<span class="lineCov">     207172 :         HBTRIE_ITR_SET_MOVED(it);</span>
+<span class="lineNum">     867 </span>                :<span class="lineCov">     206941 :     hr = _hbtrie_next(it, item, key_buf, keylen, value_buf, 0x0);</span>
+<span class="lineNum">     868 </span>                :<span class="lineCov">     207033 :     HBTRIE_ITR_SET_FWD(it);</span>
+<span class="lineNum">     869 </span>        [<span class="branchCov" title="Branch 0 was taken 206964 times"> + </span><span class="branchCov" title="Branch 1 was taken 69 times"> + </span>]:<span class="lineCov">     207033 :     if (hr == HBTRIE_RESULT_SUCCESS) {</span>
+<span class="lineNum">     870 </span>                :<span class="lineCov">     206964 :         HBTRIE_ITR_CLR_FAILED(it);</span>
+<span class="lineNum">     871 </span>                :<span class="lineCov">     206964 :         HBTRIE_ITR_SET_MOVED(it);</span>
 <span class="lineNum">     872 </span>                :            :     } else {
-<span class="lineNum">     873 </span>                :<span class="lineCov">         68 :         HBTRIE_ITR_SET_FAILED(it);</span>
+<span class="lineNum">     873 </span>                :<span class="lineCov">         69 :         HBTRIE_ITR_SET_FAILED(it);</span>
 <span class="lineNum">     874 </span>                :            :     }
-<span class="lineNum">     875 </span>                :<span class="lineCov">     208291 :     return hr;</span>
+<span class="lineNum">     875 </span>                :<span class="lineCov">     208084 :     return hr;</span>
 <a name="876"><span class="lineNum">     876 </span>                :            : }</a>
 <span class="lineNum">     877 </span>                :            : 
-<span class="lineNum">     878 </span>                :<span class="lineCov">    1984279 : hbtrie_result hbtrie_next_value_only(struct hbtrie_iterator *it,</span>
+<span class="lineNum">     878 </span>                :<span class="lineCov">    1625393 : hbtrie_result hbtrie_next_value_only(struct hbtrie_iterator *it,</span>
 <span class="lineNum">     879 </span>                :            :                                      void *value_buf)
 <span class="lineNum">     880 </span>                :            : {
 <span class="lineNum">     881 </span>                :            :     hbtrie_result hr;
 <span class="lineNum">     882 </span>                :            : 
-<span class="lineNum">     883 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1984279 times"> + </span>]:<span class="lineCov">    1984279 :     if (it-&gt;curkey == NULL) return HBTRIE_RESULT_FAIL;</span>
+<span class="lineNum">     883 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1625393 times"> + </span>]:<span class="lineCov">    1625393 :     if (it-&gt;curkey == NULL) return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">     884 </span>                :            : 
-<span class="lineNum">     885 </span>                :<span class="lineCov">    1984279 :     struct list_elem *e = list_begin(&amp;it-&gt;btreeit_list);</span>
-<span class="lineNum">     886 </span>                :<span class="lineCov">    1984279 :     struct btreeit_item *item = NULL;</span>
-<span class="lineNum">     887 </span>        [<span class="branchCov" title="Branch 0 was taken 1984226 times"> + </span><span class="branchCov" title="Branch 1 was taken 53 times"> + </span>]:<span class="lineCov">    1984279 :     if (e) item = _get_entry(e, struct btreeit_item, le);</span>
+<span class="lineNum">     885 </span>                :<span class="lineCov">    1625393 :     struct list_elem *e = list_begin(&amp;it-&gt;btreeit_list);</span>
+<span class="lineNum">     886 </span>                :<span class="lineCov">    1625393 :     struct btreeit_item *item = NULL;</span>
+<span class="lineNum">     887 </span>        [<span class="branchCov" title="Branch 0 was taken 1625341 times"> + </span><span class="branchCov" title="Branch 1 was taken 52 times"> + </span>]:<span class="lineCov">    1625393 :     if (e) item = _get_entry(e, struct btreeit_item, le);</span>
 <span class="lineNum">     888 </span>                :            : 
-<span class="lineNum">     889 </span>                :<span class="lineCov">    1984279 :     hr = _hbtrie_next(it, item, NULL, 0, value_buf, HBTRIE_PREFIX_MATCH_ONLY);</span>
-<span class="lineNum">     890 </span>        [<span class="branchCov" title="Branch 0 was taken 53 times"> + </span><span class="branchCov" title="Branch 1 was taken 1984226 times"> + </span>]:<span class="lineCov">    1984279 :     if (hr == HBTRIE_RESULT_FAIL) {</span>
+<span class="lineNum">     889 </span>                :<span class="lineCov">    1625393 :     hr = _hbtrie_next(it, item, NULL, 0, value_buf, HBTRIE_PREFIX_MATCH_ONLY);</span>
+<span class="lineNum">     890 </span>        [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchCov" title="Branch 1 was taken 1625341 times"> + </span>]:<span class="lineCov">    1625393 :     if (hr == HBTRIE_RESULT_FAIL) {</span>
 <span class="lineNum">     891 </span>                :            :         // this iterator reaches the end of hb-trie
-<span class="lineNum">     892 </span>                :<span class="lineCov">         53 :         free(it-&gt;curkey);</span>
-<span class="lineNum">     893 </span>                :<span class="lineCov">         53 :         it-&gt;curkey = NULL;</span>
+<span class="lineNum">     892 </span>                :<span class="lineCov">         52 :         free(it-&gt;curkey);</span>
+<span class="lineNum">     893 </span>                :<span class="lineCov">         52 :         it-&gt;curkey = NULL;</span>
 <span class="lineNum">     894 </span>                :            :     }
-<span class="lineNum">     895 </span>                :<span class="lineCov">    1984279 :     return hr;</span>
+<span class="lineNum">     895 </span>                :<span class="lineCov">    1625393 :     return hr;</span>
 <a name="896"><span class="lineNum">     896 </span>                :            : }</a>
 <span class="lineNum">     897 </span>                :            : 
-<span class="lineNum">     898 </span>                :<span class="lineCov">    8747180 : void _hbtrie_free_btreelist(struct list *btreelist)</span>
+<span class="lineNum">     898 </span>                :<span class="lineCov">    8064929 : void _hbtrie_free_btreelist(struct list *btreelist)</span>
 <span class="lineNum">     899 </span>                :            : {
 <span class="lineNum">     900 </span>                :            :     struct btreelist_item *btreeitem;
 <span class="lineNum">     901 </span>                :            :     struct list_elem *e;
 <span class="lineNum">     902 </span>                :            : 
 <span class="lineNum">     903 </span>                :            :     // free all items on list
-<span class="lineNum">     904 </span>                :<span class="lineCov">    8747180 :     e = list_begin(btreelist);</span>
-<span class="lineNum">     905 </span>        [<span class="branchCov" title="Branch 0 was taken 17509160 times"> + </span><span class="branchCov" title="Branch 1 was taken 8747176 times"> + </span>]:<span class="lineCov">   26256336 :     while(e) {</span>
-<span class="lineNum">     906 </span>                :<span class="lineCov">   17509160 :         btreeitem = _get_entry(e, struct btreelist_item, e);</span>
-<span class="lineNum">     907 </span>                :<span class="lineCov">   17509160 :         e = list_remove(btreelist, e);</span>
-<span class="lineNum">     908 </span>                :<span class="lineCov">   17509154 :         mempool_free(btreeitem);</span>
+<span class="lineNum">     904 </span>                :<span class="lineCov">    8064929 :     e = list_begin(btreelist);</span>
+<span class="lineNum">     905 </span>        [<span class="branchCov" title="Branch 0 was taken 16144769 times"> + </span><span class="branchCov" title="Branch 1 was taken 8064973 times"> + </span>]:<span class="lineCov">   24209742 :     while(e) {</span>
+<span class="lineNum">     906 </span>                :<span class="lineCov">   16144769 :         btreeitem = _get_entry(e, struct btreelist_item, e);</span>
+<span class="lineNum">     907 </span>                :<span class="lineCov">   16144769 :         e = list_remove(btreelist, e);</span>
+<span class="lineNum">     908 </span>                :<span class="lineCov">   16144818 :         mempool_free(btreeitem);</span>
 <span class="lineNum">     909 </span>                :            :     }
-<a name="910"><span class="lineNum">     910 </span>                :<span class="lineCov">    8747176 : }</span></a>
+<a name="910"><span class="lineNum">     910 </span>                :<span class="lineCov">    8064973 : }</span></a>
 <span class="lineNum">     911 </span>                :            : 
-<span class="lineNum">     912 </span>                :<span class="lineCov">    8747190 : void _hbtrie_btree_cascaded_update(struct hbtrie *trie,</span>
+<span class="lineNum">     912 </span>                :<span class="lineCov">    8064977 : void _hbtrie_btree_cascaded_update(struct hbtrie *trie,</span>
 <span class="lineNum">     913 </span>                :            :                                    struct list *btreelist,
 <span class="lineNum">     914 </span>                :            :                                    void *key,
 <span class="lineNum">     915 </span>                :            :                                    int free_opt)
@@ -990,126 +989,126 @@
 <span class="lineNum">     918 </span>                :            :     struct btreelist_item *btreeitem, *btreeitem_child;
 <span class="lineNum">     919 </span>                :            :     struct list_elem *e, *e_child;
 <span class="lineNum">     920 </span>                :            : 
-<span class="lineNum">     921 </span>                :<span class="lineCov">    8747190 :     e = e_child = NULL;</span>
+<span class="lineNum">     921 </span>                :<span class="lineCov">    8064977 :     e = e_child = NULL;</span>
 <span class="lineNum">     922 </span>                :            : 
 <span class="lineNum">     923 </span>                :            :     //3 cascaded update of each b-tree from leaf to root
-<span class="lineNum">     924 </span>                :<span class="lineCov">    8747190 :     e_child = list_end(btreelist);</span>
-<span class="lineNum">     925 </span>        [<span class="branchCov" title="Branch 0 was taken 8747188 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">    8747189 :     if (e_child) e = list_prev(e_child);</span>
+<span class="lineNum">     924 </span>                :<span class="lineCov">    8064977 :     e_child = list_end(btreelist);</span>
+<span class="lineNum">     925 </span>        [<span class="branchCov" title="Branch 0 was taken 8064963 times"> + </span><span class="branchCov" title="Branch 1 was taken 16 times"> + </span>]:<span class="lineCov">    8064979 :     if (e_child) e = list_prev(e_child);</span>
 <span class="lineNum">     926 </span>                :            : 
-<span class="lineNum">     927 </span>   [<span class="branchCov" title="Branch 0 was taken 8762115 times"> + </span><span class="branchCov" title="Branch 1 was taken 8747175 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 8762116 times"> + </span>]:<span class="lineCov">   17509290 :     while(e &amp;&amp; e_child) {</span>
-<span class="lineNum">         </span>   [<span class="branchCov" title="Branch 4 was taken 8762116 times"> + </span><span class="branchCov" title="Branch 5 was taken 8747174 times"> + </span>][<span class="branchNoCov" title="Branch 3 was not taken"> - </span>]
-<span class="lineNum">     928 </span>                :<span class="lineCov">    8762116 :         btreeitem = _get_entry(e, struct btreelist_item, e);</span>
-<span class="lineNum">     929 </span>                :<span class="lineCov">    8762116 :         btreeitem_child = _get_entry(e_child, struct btreelist_item, e);</span>
+<span class="lineNum">     927 </span>[<span class="branchCov" title="Branch 0 was taken 8079884 times"> + </span><span class="branchCov" title="Branch 1 was taken 8064924 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 8079892 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">   16144808 :     while(e &amp;&amp; e_child) {</span>
+<span class="lineNum">         </span>        [<span class="branchCov" title="Branch 4 was taken 8079884 times"> + </span><span class="branchCov" title="Branch 5 was taken 8064924 times"> + </span>]
+<span class="lineNum">     928 </span>                :<span class="lineCov">    8079884 :         btreeitem = _get_entry(e, struct btreelist_item, e);</span>
+<span class="lineNum">     929 </span>                :<span class="lineCov">    8079884 :         btreeitem_child = _get_entry(e_child, struct btreelist_item, e);</span>
 <span class="lineNum">     930 </span>                :            : 
-<span class="lineNum">     931 </span>        [<span class="branchCov" title="Branch 0 was taken 3084 times"> + </span><span class="branchCov" title="Branch 1 was taken 8759032 times"> + </span>]:<span class="lineCov">    8762116 :         if (btreeitem-&gt;child_rootbid != btreeitem_child-&gt;btree.root_bid) {</span>
+<span class="lineNum">     931 </span>        [<span class="branchCov" title="Branch 0 was taken 3098 times"> + </span><span class="branchCov" title="Branch 1 was taken 8076786 times"> + </span>]:<span class="lineCov">    8079884 :         if (btreeitem-&gt;child_rootbid != btreeitem_child-&gt;btree.root_bid) {</span>
 <span class="lineNum">     932 </span>                :            :             // root node of child sub-tree has been moved to another block
 <span class="lineNum">     933 </span>                :            :             // update parent sub-tree
-<span class="lineNum">     934 </span>                :<span class="lineCov">       3084 :             bid_new = btreeitem_child-&gt;btree.root_bid;</span>
-<span class="lineNum">     935 </span>                :<span class="lineCov">       3084 :             _bid = _endian_encode(bid_new);</span>
-<span class="lineNum">     936 </span>                :<span class="lineCov">       3084 :             _hbtrie_set_msb(trie, (void *)&amp;_bid);</span>
+<span class="lineNum">     934 </span>                :<span class="lineCov">       3098 :             bid_new = btreeitem_child-&gt;btree.root_bid;</span>
+<span class="lineNum">     935 </span>                :<span class="lineCov">       3098 :             _bid = _endian_encode(bid_new);</span>
+<span class="lineNum">     936 </span>                :<span class="lineCov">       3098 :             _hbtrie_set_msb(trie, (void *)&amp;_bid);</span>
 <span class="lineNum">     937 </span>                :            :             btree_insert(&amp;btreeitem-&gt;btree,
-<span class="lineNum">     938 </span>                :<span class="lineCov">       3084 :                     (uint8_t*)key + btreeitem-&gt;chunkno * trie-&gt;chunksize,</span>
-<span class="lineNum">     939 </span>                :<span class="lineCov">       3084 :                     (void *)&amp;_bid);</span>
+<span class="lineNum">     938 </span>                :<span class="lineCov">       3098 :                     (uint8_t*)key + btreeitem-&gt;chunkno * trie-&gt;chunksize,</span>
+<span class="lineNum">     939 </span>                :<span class="lineCov">       3098 :                     (void *)&amp;_bid);</span>
 <span class="lineNum">     940 </span>                :            :         }
-<span class="lineNum">     941 </span>                :<span class="lineCov">    8762116 :         e_child = e;</span>
-<span class="lineNum">     942 </span>                :<span class="lineCov">    8762116 :         e = list_prev(e);</span>
+<span class="lineNum">     941 </span>                :<span class="lineCov">    8079884 :         e_child = e;</span>
+<span class="lineNum">     942 </span>                :<span class="lineCov">    8079884 :         e = list_prev(e);</span>
 <span class="lineNum">     943 </span>                :            :     }
 <span class="lineNum">     944 </span>                :            : 
 <span class="lineNum">     945 </span>                :            :     // update trie root bid
-<span class="lineNum">     946 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8747174 times"> + </span>]:<span class="lineCov">    8747174 :     if (e) {</span>
+<span class="lineNum">     946 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8064924 times"> + </span>]:<span class="lineCov">    8064924 :     if (e) {</span>
 <span class="lineNum">     947 </span>                :<span class="lineNoCov">          0 :         btreeitem = _get_entry(e, struct btreelist_item, e);</span>
 <span class="lineNum">     948 </span>                :<span class="lineNoCov">          0 :         trie-&gt;root_bid = btreeitem-&gt;btree.root_bid;</span>
-<span class="lineNum">     949 </span>        [<span class="branchCov" title="Branch 0 was taken 8747174 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8747174 :     }else if (e_child) {</span>
-<span class="lineNum">     950 </span>                :<span class="lineCov">    8747174 :         btreeitem = _get_entry(e_child, struct btreelist_item, e);</span>
-<span class="lineNum">     951 </span>                :<span class="lineCov">    8747174 :         trie-&gt;root_bid = btreeitem-&gt;btree.root_bid;</span>
+<span class="lineNum">     949 </span>        [<span class="branchCov" title="Branch 0 was taken 8064924 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8064924 :     }else if (e_child) {</span>
+<span class="lineNum">     950 </span>                :<span class="lineCov">    8064924 :         btreeitem = _get_entry(e_child, struct btreelist_item, e);</span>
+<span class="lineNum">     951 </span>                :<span class="lineCov">    8064924 :         trie-&gt;root_bid = btreeitem-&gt;btree.root_bid;</span>
 <span class="lineNum">     952 </span>                :            :     }else {
 <span class="lineNum">     953 </span>                :<span class="lineNoCov">          0 :         assert(0);</span>
 <span class="lineNum">     954 </span>                :            :     }
 <span class="lineNum">     955 </span>                :            : 
-<span class="lineNum">     956 </span>        [<span class="branchCov" title="Branch 0 was taken 8747174 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8747174 :     if (free_opt) {</span>
-<span class="lineNum">     957 </span>                :<span class="lineCov">    8747174 :         _hbtrie_free_btreelist(btreelist);</span>
+<span class="lineNum">     956 </span>        [<span class="branchCov" title="Branch 0 was taken 8064925 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    8064924 :     if (free_opt) {</span>
+<span class="lineNum">     957 </span>                :<span class="lineCov">    8064925 :         _hbtrie_free_btreelist(btreelist);</span>
 <span class="lineNum">     958 </span>                :            :     }
-<a name="959"><span class="lineNum">     959 </span>                :<span class="lineCov">    8747172 : }</span></a>
+<a name="959"><span class="lineNum">     959 </span>                :<span class="lineCov">    8064966 : }</span></a>
 <span class="lineNum">     960 </span>                :            : 
-<span class="lineNum">     961 </span>                :<span class="lineCov">    5663396 : hbtrie_result _hbtrie_find(struct hbtrie *trie, void *key, int keylen,</span>
+<span class="lineNum">     961 </span>                :<span class="lineCov">    5289449 : hbtrie_result _hbtrie_find(struct hbtrie *trie, void *key, int keylen,</span>
 <span class="lineNum">     962 </span>                :            :                            void *valuebuf, struct list *btreelist, uint8_t flag)
 <span class="lineNum">     963 </span>                :            : {
 <span class="lineNum">     964 </span>                :            :     int nchunk;
 <span class="lineNum">     965 </span>                :            :     int rawkeylen;
-<span class="lineNum">     966 </span>                :<span class="lineCov">    5663396 :     int prevchunkno, curchunkno, cpt_node = 0;</span>
-<span class="lineNum">     967 </span>                :<span class="lineCov">    5663396 :     struct btree *btree = NULL;</span>
+<span class="lineNum">     966 </span>                :<span class="lineCov">    5289449 :     int prevchunkno, curchunkno, cpt_node = 0;</span>
+<span class="lineNum">     967 </span>                :<span class="lineCov">    5289449 :     struct btree *btree = NULL;</span>
 <span class="lineNum">     968 </span>                :            :     struct btree btree_static;
 <span class="lineNum">     969 </span>                :            :     btree_result r;
 <span class="lineNum">     970 </span>                :            :     struct hbtrie_meta hbmeta;
 <span class="lineNum">     971 </span>                :            :     struct btree_meta meta;
-<span class="lineNum">     972 </span>                :<span class="lineCov">    5663396 :     struct btreelist_item *btreeitem = NULL;</span>
-<span class="lineNum">     973 </span>                :<span class="lineCov">    5663396 :     uint8_t *k = alca(uint8_t, trie-&gt;chunksize);</span>
-<span class="lineNum">     974 </span>                :<span class="lineCov">    5663396 :     uint8_t *buf = alca(uint8_t, trie-&gt;btree_nodesize);</span>
-<span class="lineNum">     975 </span>                :<span class="lineCov">    5663396 :     uint8_t *btree_value = alca(uint8_t, trie-&gt;valuelen);</span>
-<span class="lineNum">     976 </span>                :<span class="lineCov">    5663396 :     void *chunk = NULL;</span>
+<span class="lineNum">     972 </span>                :<span class="lineCov">    5289449 :     struct btreelist_item *btreeitem = NULL;</span>
+<span class="lineNum">     973 </span>                :<span class="lineCov">    5289449 :     uint8_t *k = alca(uint8_t, trie-&gt;chunksize);</span>
+<span class="lineNum">     974 </span>                :<span class="lineCov">    5289449 :     uint8_t *buf = alca(uint8_t, trie-&gt;btree_nodesize);</span>
+<span class="lineNum">     975 </span>                :<span class="lineCov">    5289449 :     uint8_t *btree_value = alca(uint8_t, trie-&gt;valuelen);</span>
+<span class="lineNum">     976 </span>                :<span class="lineCov">    5289449 :     void *chunk = NULL;</span>
 <span class="lineNum">     977 </span>                :            :     void *void_cmp;
 <span class="lineNum">     978 </span>                :            :     bid_t bid_new;
-<span class="lineNum">     979 </span>                :<span class="lineCov">    5663396 :     nchunk = _get_nchunk(trie, key, keylen);</span>
+<span class="lineNum">     979 </span>                :<span class="lineCov">    5289449 :     nchunk = _get_nchunk(trie, key, keylen);</span>
 <span class="lineNum">     980 </span>                :            : 
-<span class="lineNum">     981 </span>                :<span class="lineCov">    5664101 :     meta.data = buf;</span>
-<span class="lineNum">     982 </span>                :<span class="lineCov">    5664101 :     curchunkno = 0;</span>
+<span class="lineNum">     981 </span>                :<span class="lineCov">    5291068 :     meta.data = buf;</span>
+<span class="lineNum">     982 </span>                :<span class="lineCov">    5291068 :     curchunkno = 0;</span>
 <span class="lineNum">     983 </span>                :            : 
-<span class="lineNum">     984 </span>        [<span class="branchCov" title="Branch 0 was taken 5660571 times"> + </span><span class="branchCov" title="Branch 1 was taken 3530 times"> + </span>]:<span class="lineCov">    5664101 :     if (trie-&gt;map) { // custom cmp functions exist</span>
-<span class="lineNum">     985 </span>        [<span class="branchCov" title="Branch 0 was taken 5640516 times"> + </span><span class="branchCov" title="Branch 1 was taken 20055 times"> + </span>]:<span class="lineCov">    5660571 :         if (!memcmp(trie-&gt;last_map_chunk, key, trie-&gt;chunksize)) {</span>
+<span class="lineNum">     984 </span>        [<span class="branchCov" title="Branch 0 was taken 5287140 times"> + </span><span class="branchCov" title="Branch 1 was taken 3928 times"> + </span>]:<span class="lineCov">    5291068 :     if (trie-&gt;map) { // custom cmp functions exist</span>
+<span class="lineNum">     985 </span>        [<span class="branchCov" title="Branch 0 was taken 5267052 times"> + </span><span class="branchCov" title="Branch 1 was taken 20088 times"> + </span>]:<span class="lineCov">    5287140 :         if (!memcmp(trie-&gt;last_map_chunk, key, trie-&gt;chunksize)) {</span>
 <span class="lineNum">     986 </span>                :            :             // same custom function was used in the last call .. do nothing
 <span class="lineNum">     987 </span>                :            :         } else {
 <span class="lineNum">     988 </span>                :            :             // get cmp function corresponding to the key
-<span class="lineNum">     989 </span>                :<span class="lineCov">    5640516 :             void_cmp = trie-&gt;map(key, (void *)trie);</span>
-<span class="lineNum">     990 </span>        [<span class="branchCov" title="Branch 0 was taken 1987 times"> + </span><span class="branchCov" title="Branch 1 was taken 5638598 times"> + </span>]:<span class="lineCov">    5640585 :             if (void_cmp) { // custom cmp function matches .. turn on leaf b+tree mode</span>
+<span class="lineNum">     989 </span>                :<span class="lineCov">    5267052 :             void_cmp = trie-&gt;map(key, (void *)trie);</span>
+<span class="lineNum">     990 </span>        [<span class="branchCov" title="Branch 0 was taken 1987 times"> + </span><span class="branchCov" title="Branch 1 was taken 5264542 times"> + </span>]:<span class="lineCov">    5266529 :             if (void_cmp) { // custom cmp function matches .. turn on leaf b+tree mode</span>
 <span class="lineNum">     991 </span>                :<span class="lineCov">       1987 :                 memcpy(trie-&gt;last_map_chunk, key, trie-&gt;chunksize);</span>
 <span class="lineNum">     992 </span>                :<span class="lineCov">       1987 :                 trie-&gt;aux = void_cmp; // set aux for _fdb_custom_cmp_wrap()</span>
 <span class="lineNum">     993 </span>                :            :             }
 <span class="lineNum">     994 </span>                :            :         }
 <span class="lineNum">     995 </span>                :            :     }
 <span class="lineNum">     996 </span>                :            : 
-<span class="lineNum">     997 </span>        [<span class="branchCov" title="Branch 0 was taken 22 times"> + </span><span class="branchCov" title="Branch 1 was taken 5664148 times"> + </span>]:<span class="lineCov">    5664170 :     if (btreelist) {</span>
+<span class="lineNum">     997 </span>        [<span class="branchCov" title="Branch 0 was taken 22 times"> + </span><span class="branchCov" title="Branch 1 was taken 5290523 times"> + </span>]:<span class="lineCov">    5290545 :     if (btreelist) {</span>
 <span class="lineNum">     998 </span>                :<span class="lineCov">         22 :         list_init(btreelist);</span>
 <span class="lineNum">     999 </span>                :<span class="lineCov">         22 :         btreeitem = (struct btreelist_item *)mempool_alloc(sizeof(struct btreelist_item));</span>
 <span class="lineNum">    1000 </span>                :<span class="lineCov">         22 :         list_push_back(btreelist, &amp;btreeitem-&gt;e);</span>
-<span class="lineNum">    1001 </span>                :<span class="lineCov">         18 :         btree = &amp;btreeitem-&gt;btree;</span>
+<span class="lineNum">    1001 </span>                :<span class="lineCov">         31 :         btree = &amp;btreeitem-&gt;btree;</span>
 <span class="lineNum">    1002 </span>                :            :     } else {
-<span class="lineNum">    1003 </span>                :<span class="lineCov">    5664148 :         btree = &amp;btree_static;</span>
+<span class="lineNum">    1003 </span>                :<span class="lineCov">    5290523 :         btree = &amp;btree_static;</span>
 <span class="lineNum">    1004 </span>                :            :     }
 <span class="lineNum">    1005 </span>                :            : 
-<span class="lineNum">    1006 </span>        [<span class="branchCov" title="Branch 0 was taken 2039255 times"> + </span><span class="branchCov" title="Branch 1 was taken 3624911 times"> + </span>]:<span class="lineCov">    5664166 :     if (trie-&gt;root_bid == BLK_NOT_FOUND) {</span>
+<span class="lineNum">    1006 </span>        [<span class="branchCov" title="Branch 0 was taken 1699977 times"> + </span><span class="branchCov" title="Branch 1 was taken 3590577 times"> + </span>]:<span class="lineCov">    5290554 :     if (trie-&gt;root_bid == BLK_NOT_FOUND) {</span>
 <span class="lineNum">    1007 </span>                :            :         // retrieval fail
-<span class="lineNum">    1008 </span>                :<span class="lineCov">    2039255 :         return HBTRIE_RESULT_FAIL;</span>
+<span class="lineNum">    1008 </span>                :<span class="lineCov">    1699977 :         return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1009 </span>                :            :     } else {
 <span class="lineNum">    1010 </span>                :            :         // read from root_bid
 <span class="lineNum">    1011 </span>                :            :         r = btree_init_from_bid(btree, trie-&gt;btreeblk_handle, trie-&gt;btree_blk_ops,
 <span class="lineNum">    1012 </span>                :            :                                 trie-&gt;btree_kv_ops, trie-&gt;btree_nodesize,
-<span class="lineNum">    1013 </span>                :<span class="lineCov">    3624911 :                                 trie-&gt;root_bid);</span>
-<span class="lineNum">    1014 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3622646 times"> + </span>]:<span class="lineCov">    3622646 :         if (r != BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1013 </span>                :<span class="lineCov">    3590577 :                                 trie-&gt;root_bid);</span>
+<span class="lineNum">    1014 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3589251 times"> + </span>]:<span class="lineCov">    3589251 :         if (r != BTREE_RESULT_SUCCESS) {</span>
 <span class="lineNum">    1015 </span>                :<span class="lineNoCov">          0 :             return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1016 </span>                :            :         }
-<span class="lineNum">    1017 </span>                :<span class="lineCov">    3622646 :         btree-&gt;aux = trie-&gt;aux;</span>
-<span class="lineNum">    1018 </span>[<span class="branchCov" title="Branch 0 was taken 3621798 times"> + </span><span class="branchCov" title="Branch 1 was taken 848 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 16544 times"> + </span><span class="branchCov" title="Branch 3 was taken 3605254 times"> + </span>]:<span class="lineCov">    3622646 :         assert(btree-&gt;ksize == trie-&gt;chunksize &amp;&amp; btree-&gt;vsize == trie-&gt;valuelen);</span>
+<span class="lineNum">    1017 </span>                :<span class="lineCov">    3589251 :         btree-&gt;aux = trie-&gt;aux;</span>
+<span class="lineNum">    1018 </span>[<span class="branchCov" title="Branch 0 was taken 3589022 times"> + </span><span class="branchCov" title="Branch 1 was taken 229 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 11561 times"> + </span><span class="branchCov" title="Branch 3 was taken 3577461 times"> + </span>]:<span class="lineCov">    3589251 :         assert(btree-&gt;ksize == trie-&gt;chunksize &amp;&amp; btree-&gt;vsize == trie-&gt;valuelen);</span>
 <span class="lineNum">    1019 </span>                :            :     }
 <span class="lineNum">    1020 </span>                :            : 
-<span class="lineNum">    1021 </span>        [<span class="branchCov" title="Branch 0 was taken 7243710 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    7243710 :     while (curchunkno &lt; nchunk) {</span>
+<span class="lineNum">    1021 </span>        [<span class="branchCov" title="Branch 0 was taken 7182672 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    7182672 :     while (curchunkno &lt; nchunk) {</span>
 <span class="lineNum">    1022 </span>                :            :         // get current chunk number
-<span class="lineNum">    1023 </span>                :<span class="lineCov">    7243710 :         meta.size = btree_read_meta(btree, meta.data);</span>
-<span class="lineNum">    1024 </span>                :<span class="lineCov">    7248697 :         _hbtrie_fetch_meta(trie, meta.size, &amp;hbmeta, meta.data);</span>
-<span class="lineNum">    1025 </span>                :<span class="lineCov">    7266409 :         prevchunkno = curchunkno;</span>
-<span class="lineNum">    1026 </span>        [<span class="branchCov" title="Branch 0 was taken 14342 times"> + </span><span class="branchCov" title="Branch 1 was taken 7252067 times"> + </span>]:<span class="lineCov">    7266409 :         if (_is_leaf_btree(hbmeta.chunkno)) {</span>
+<span class="lineNum">    1023 </span>                :<span class="lineCov">    7182672 :         meta.size = btree_read_meta(btree, meta.data);</span>
+<span class="lineNum">    1024 </span>                :<span class="lineCov">    7184437 :         _hbtrie_fetch_meta(trie, meta.size, &amp;hbmeta, meta.data);</span>
+<span class="lineNum">    1025 </span>                :<span class="lineCov">    7198433 :         prevchunkno = curchunkno;</span>
+<span class="lineNum">    1026 </span>        [<span class="branchCov" title="Branch 0 was taken 14342 times"> + </span><span class="branchCov" title="Branch 1 was taken 7184091 times"> + </span>]:<span class="lineCov">    7198433 :         if (_is_leaf_btree(hbmeta.chunkno)) {</span>
 <span class="lineNum">    1027 </span>                :<span class="lineCov">      14342 :             cpt_node = 1;</span>
 <span class="lineNum">    1028 </span>                :<span class="lineCov">      14342 :             hbmeta.chunkno = _get_chunkno(hbmeta.chunkno);</span>
 <span class="lineNum">    1029 </span>                :<span class="lineCov">      14342 :             btree-&gt;kv_ops = trie-&gt;btree_leaf_kv_ops;</span>
 <span class="lineNum">    1030 </span>                :            :         }
-<span class="lineNum">    1031 </span>                :<span class="lineCov">    7266409 :         curchunkno = hbmeta.chunkno;</span>
+<span class="lineNum">    1031 </span>                :<span class="lineCov">    7198433 :         curchunkno = hbmeta.chunkno;</span>
 <span class="lineNum">    1032 </span>                :            : 
-<span class="lineNum">    1033 </span>        [<span class="branchCov" title="Branch 0 was taken 29 times"> + </span><span class="branchCov" title="Branch 1 was taken 7266380 times"> + </span>]:<span class="lineCov">    7266409 :         if (btreelist) {</span>
+<span class="lineNum">    1033 </span>        [<span class="branchCov" title="Branch 0 was taken 29 times"> + </span><span class="branchCov" title="Branch 1 was taken 7198404 times"> + </span>]:<span class="lineCov">    7198433 :         if (btreelist) {</span>
 <span class="lineNum">    1034 </span>                :<span class="lineCov">         29 :             btreeitem-&gt;chunkno = curchunkno;</span>
 <span class="lineNum">    1035 </span>                :<span class="lineCov">         29 :             btreeitem-&gt;leaf = cpt_node;</span>
 <span class="lineNum">    1036 </span>                :            :         }
 <span class="lineNum">    1037 </span>                :            : 
 <span class="lineNum">    1038 </span>                :            :         //3 check whether there are skipped prefixes.
-<span class="lineNum">    1039 </span>        [<span class="branchCov" title="Branch 0 was taken 6003 times"> + </span><span class="branchCov" title="Branch 1 was taken 7260406 times"> + </span>]:<span class="lineCov">    7266409 :         if (curchunkno - prevchunkno &gt; 1) {</span>
+<span class="lineNum">    1039 </span>        [<span class="branchCov" title="Branch 0 was taken 6003 times"> + </span><span class="branchCov" title="Branch 1 was taken 7192430 times"> + </span>]:<span class="lineCov">    7198433 :         if (curchunkno - prevchunkno &gt; 1) {</span>
 <span class="lineNum">    1040 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 6003 times"> + </span>]:<span class="lineCov">       6003 :             assert(hbmeta.prefix != NULL);</span>
 <span class="lineNum">    1041 </span>                :            :             // prefix comparison (find the first different chunk)
 <span class="lineNum">    1042 </span>                :            :             int diffchunkno = _hbtrie_find_diff_chunk(
@@ -1123,16 +1122,16 @@
 <span class="lineNum">    1050 </span>                :            :         }
 <span class="lineNum">    1051 </span>                :            : 
 <span class="lineNum">    1052 </span>                :            :         //3 search b-tree using current chunk (or postfix)
-<span class="lineNum">    1053 </span>                :<span class="lineCov">    7266409 :         rawkeylen = _hbtrie_reform_key_reverse(trie, key, keylen);</span>
-<span class="lineNum">    1054 </span>[<span class="branchCov" title="Branch 0 was taken 14342 times"> + </span><span class="branchCov" title="Branch 1 was taken 7251248 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 13641 times"> + </span><span class="branchCov" title="Branch 3 was taken 701 times"> + </span>]:<span class="lineCov">    7265590 :         if ((cpt_node &amp;&amp; rawkeylen == curchunkno * trie-&gt;chunksize) ||</span>
-<span class="lineNum">         </span>[<span class="branchCov" title="Branch 4 was taken 7250495 times"> + </span><span class="branchCov" title="Branch 5 was taken 14394 times"> + </span>][<span class="branchCov" title="Branch 7 was taken 7251192 times"> + </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span>]
+<span class="lineNum">    1053 </span>                :<span class="lineCov">    7198433 :         rawkeylen = _hbtrie_reform_key_reverse(trie, key, keylen);</span>
+<span class="lineNum">    1054 </span>[<span class="branchCov" title="Branch 0 was taken 14342 times"> + </span><span class="branchCov" title="Branch 1 was taken 7182921 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 14313 times"> + </span><span class="branchCov" title="Branch 3 was taken 29 times"> + </span>]:<span class="lineCov">    7197263 :         if ((cpt_node &amp;&amp; rawkeylen == curchunkno * trie-&gt;chunksize) ||</span>
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 4 was taken 7183668 times"> + </span><span class="branchCov" title="Branch 5 was taken 13566 times"> + </span>][<span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchCov" title="Branch 7 was taken 7183693 times"> + </span>]
 <span class="lineNum">    1055 </span>                :            :             (!cpt_node &amp;&amp; nchunk == curchunkno)) {
 <span class="lineNum">    1056 </span>                :            :             // KEY is exactly same as tree's prefix .. return value in metasection
 <span class="lineNum">    1057 </span>                :<span class="lineCov">          4 :             memcpy(valuebuf, hbmeta.value, trie-&gt;valuelen);</span>
 <span class="lineNum">    1058 </span>                :<span class="lineCov">          4 :             return HBTRIE_RESULT_SUCCESS;</span>
 <span class="lineNum">    1059 </span>                :            :         } else {
-<span class="lineNum">    1060 </span>                :<span class="lineCov">    7265586 :             chunk = (uint8_t*)key + curchunkno*trie-&gt;chunksize;</span>
-<span class="lineNum">    1061 </span>        [<span class="branchCov" title="Branch 0 was taken 14338 times"> + </span><span class="branchCov" title="Branch 1 was taken 7251248 times"> + </span>]:<span class="lineCov">    7265586 :             if (cpt_node) {</span>
+<span class="lineNum">    1060 </span>                :<span class="lineCov">    7197259 :             chunk = (uint8_t*)key + curchunkno*trie-&gt;chunksize;</span>
+<span class="lineNum">    1061 </span>        [<span class="branchCov" title="Branch 0 was taken 14338 times"> + </span><span class="branchCov" title="Branch 1 was taken 7182921 times"> + </span>]:<span class="lineCov">    7197259 :             if (cpt_node) {</span>
 <span class="lineNum">    1062 </span>                :            :                 // leaf b-tree
 <span class="lineNum">    1063 </span>                :            :                 size_t rawchunklen =
 <span class="lineNum">    1064 </span>                :            :                     _hbtrie_reform_key_reverse(trie, chunk,
@@ -1142,16 +1141,16 @@
 <span class="lineNum">    1068 </span>                :<span class="lineCov">      14338 :                 r = btree_find(btree, k, btree_value);</span>
 <span class="lineNum">    1069 </span>                :<span class="lineCov">      14338 :                 _free_leaf_key(k);</span>
 <span class="lineNum">    1070 </span>                :            :             } else {
-<span class="lineNum">    1071 </span>                :<span class="lineCov">    7251248 :                 r = btree_find(btree, chunk, btree_value);</span>
+<span class="lineNum">    1071 </span>                :<span class="lineCov">    7182921 :                 r = btree_find(btree, chunk, btree_value);</span>
 <span class="lineNum">    1072 </span>                :            :             }
 <span class="lineNum">    1073 </span>                :            :         }
 <span class="lineNum">    1074 </span>                :            : 
-<span class="lineNum">    1075 </span>        [<span class="branchCov" title="Branch 0 was taken 1828998 times"> + </span><span class="branchCov" title="Branch 1 was taken 5434410 times"> + </span>]:<span class="lineCov">    7263408 :         if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1075 </span>        [<span class="branchCov" title="Branch 0 was taken 1820898 times"> + </span><span class="branchCov" title="Branch 1 was taken 5373670 times"> + </span>]:<span class="lineCov">    7194568 :         if (r == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1076 </span>                :            :             // retrieval fail
-<span class="lineNum">    1077 </span>                :<span class="lineCov">    1828998 :             return HBTRIE_RESULT_FAIL;</span>
+<span class="lineNum">    1077 </span>                :<span class="lineCov">    1820898 :             return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1078 </span>                :            :         } else {
 <span class="lineNum">    1079 </span>                :            :             // same chunk exists
-<span class="lineNum">    1080 </span>[<span class="branchCov" title="Branch 0 was taken 56 times"> + </span><span class="branchCov" title="Branch 1 was taken 5434354 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 46 times"> + </span><span class="branchCov" title="Branch 3 was taken 10 times"> + </span>]:<span class="lineCov">    5434410 :             if (flag &amp; HBTRIE_PARTIAL_MATCH &amp;&amp;</span>
+<span class="lineNum">    1080 </span>[<span class="branchCov" title="Branch 0 was taken 56 times"> + </span><span class="branchCov" title="Branch 1 was taken 5373614 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 46 times"> + </span><span class="branchCov" title="Branch 3 was taken 10 times"> + </span>]:<span class="lineCov">    5373670 :             if (flag &amp; HBTRIE_PARTIAL_MATCH &amp;&amp;</span>
 <span class="lineNum">    1081 </span>                :            :                 curchunkno + 1 == nchunk - 1) {
 <span class="lineNum">    1082 </span>                :            :                 // partial match mode &amp; the last meaningful chunk
 <span class="lineNum">    1083 </span>                :            :                 // return btree value
@@ -1161,13 +1160,13 @@
 <span class="lineNum">    1087 </span>                :            : 
 <span class="lineNum">    1088 </span>                :            :             // check whether the value points to sub-tree or document
 <span class="lineNum">    1089 </span>                :            :             // check MSB
-<span class="lineNum">    1090 </span>        [<span class="branchCov" title="Branch 1 was taken 3640470 times"> + </span><span class="branchCov" title="Branch 2 was taken 1795700 times"> + </span>]:<span class="lineCov">    5434364 :             if (_hbtrie_is_msb_set(trie, btree_value)) {</span>
+<span class="lineNum">    1090 </span>        [<span class="branchCov" title="Branch 1 was taken 3606511 times"> + </span><span class="branchCov" title="Branch 2 was taken 1769022 times"> + </span>]:<span class="lineCov">    5373624 :             if (_hbtrie_is_msb_set(trie, btree_value)) {</span>
 <span class="lineNum">    1091 </span>                :            :                 // this is BID of b-tree node (by clearing MSB)
-<span class="lineNum">    1092 </span>                :<span class="lineCov">    3640470 :                 _hbtrie_clear_msb(trie, btree_value);</span>
-<span class="lineNum">    1093 </span>                :<span class="lineCov">    3641030 :                 bid_new = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
-<span class="lineNum">    1094 </span>                :<span class="lineCov">    3642506 :                 bid_new = _endian_decode(bid_new);</span>
+<span class="lineNum">    1092 </span>                :<span class="lineCov">    3606511 :                 _hbtrie_clear_msb(trie, btree_value);</span>
+<span class="lineNum">    1093 </span>                :<span class="lineCov">    3606831 :                 bid_new = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
+<span class="lineNum">    1094 </span>                :<span class="lineCov">    3608116 :                 bid_new = _endian_decode(bid_new);</span>
 <span class="lineNum">    1095 </span>                :            : 
-<span class="lineNum">    1096 </span>        [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchCov" title="Branch 1 was taken 3642499 times"> + </span>]:<span class="lineCov">    3642506 :                 if (btreelist) {</span>
+<span class="lineNum">    1096 </span>        [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchCov" title="Branch 1 was taken 3608109 times"> + </span>]:<span class="lineCov">    3608116 :                 if (btreelist) {</span>
 <span class="lineNum">    1097 </span>                :<span class="lineCov">          7 :                     btreeitem-&gt;child_rootbid = bid_new;</span>
 <span class="lineNum">    1098 </span>                :            :                     btreeitem = (struct btreelist_item *)
 <span class="lineNum">    1099 </span>                :<span class="lineCov">          7 :                                 mempool_alloc(sizeof(struct btreelist_item));</span>
@@ -1177,73 +1176,73 @@
 <span class="lineNum">    1103 </span>                :            : 
 <span class="lineNum">    1104 </span>                :            :                 // fetch sub-tree
 <span class="lineNum">    1105 </span>                :            :                 r = btree_init_from_bid(btree, trie-&gt;btreeblk_handle, trie-&gt;btree_blk_ops,
-<span class="lineNum">    1106 </span>                :<span class="lineCov">    3642506 :                                         trie-&gt;btree_kv_ops, trie-&gt;btree_nodesize, bid_new);</span>
-<span class="lineNum">    1107 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3638456 times"> + </span>]:<span class="lineCov">    3638456 :                 if (r != BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1106 </span>                :<span class="lineCov">    3608116 :                                         trie-&gt;btree_kv_ops, trie-&gt;btree_nodesize, bid_new);</span>
+<span class="lineNum">    1107 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3605211 times"> + </span>]:<span class="lineCov">    3605211 :                 if (r != BTREE_RESULT_SUCCESS) {</span>
 <span class="lineNum">    1108 </span>                :<span class="lineNoCov">          0 :                     return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1109 </span>                :            :                 }
-<span class="lineNum">    1110 </span>                :<span class="lineCov">    3638456 :                 btree-&gt;aux = trie-&gt;aux;</span>
+<span class="lineNum">    1110 </span>                :<span class="lineCov">    3605211 :                 btree-&gt;aux = trie-&gt;aux;</span>
 <span class="lineNum">    1111 </span>                :            :             } else {
 <span class="lineNum">    1112 </span>                :            :                 // this is offset of document (as it is)
 <span class="lineNum">    1113 </span>                :            :                 // read entire key
-<span class="lineNum">    1114 </span>                :<span class="lineCov">    1795700 :                 uint8_t *docrawkey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
-<span class="lineNum">    1115 </span>                :<span class="lineCov">    1795700 :                 uint8_t *dockey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
+<span class="lineNum">    1114 </span>                :<span class="lineCov">    1769022 :                 uint8_t *docrawkey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
+<span class="lineNum">    1115 </span>                :<span class="lineCov">    1769022 :                 uint8_t *dockey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
 <span class="lineNum">    1116 </span>                :            :                 uint32_t docrawkeylen, dockeylen;
 <span class="lineNum">    1117 </span>                :            :                 uint64_t offset;
 <span class="lineNum">    1118 </span>                :            :                 int docnchunk, diffchunkno;
 <span class="lineNum">    1119 </span>                :            : 
 <span class="lineNum">    1120 </span>                :            :                 // get offset value from btree_value
-<span class="lineNum">    1121 </span>                :<span class="lineCov">    1795700 :                 offset = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
-<span class="lineNum">    1122 </span>        [<span class="branchCov" title="Branch 0 was taken 1287555 times"> + </span><span class="branchCov" title="Branch 1 was taken 508279 times"> + </span>]:<span class="lineCov">    1795834 :                 if (!(flag &amp; HBTRIE_PREFIX_MATCH_ONLY)) {</span>
+<span class="lineNum">    1121 </span>                :<span class="lineCov">    1769022 :                 offset = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
+<span class="lineNum">    1122 </span>        [<span class="branchCov" title="Branch 0 was taken 1255050 times"> + </span><span class="branchCov" title="Branch 1 was taken 514556 times"> + </span>]:<span class="lineCov">    1769606 :                 if (!(flag &amp; HBTRIE_PREFIX_MATCH_ONLY)) {</span>
 <span class="lineNum">    1123 </span>                :            :                     // read entire key
-<span class="lineNum">    1124 </span>                :<span class="lineCov">    1287555 :                     docrawkeylen = trie-&gt;readkey(trie-&gt;doc_handle, offset, docrawkey);</span>
-<span class="lineNum">    1125 </span>                :<span class="lineCov">    1288407 :                     dockeylen = _hbtrie_reform_key(trie, docrawkey, docrawkeylen, dockey);</span>
+<span class="lineNum">    1124 </span>                :<span class="lineCov">    1255050 :                     docrawkeylen = trie-&gt;readkey(trie-&gt;doc_handle, offset, docrawkey);</span>
+<span class="lineNum">    1125 </span>                :<span class="lineCov">    1256133 :                     dockeylen = _hbtrie_reform_key(trie, docrawkey, docrawkeylen, dockey);</span>
 <span class="lineNum">    1126 </span>                :            : 
 <span class="lineNum">    1127 </span>                :            :                     // find first different chunk
-<span class="lineNum">    1128 </span>                :<span class="lineCov">    1287947 :                     docnchunk = _get_nchunk(trie, dockey, dockeylen);</span>
+<span class="lineNum">    1128 </span>                :<span class="lineCov">    1255492 :                     docnchunk = _get_nchunk(trie, dockey, dockeylen);</span>
 <span class="lineNum">    1129 </span>                :            : 
-<span class="lineNum">    1130 </span>        [<span class="branchCov" title="Branch 0 was taken 1287540 times"> + </span><span class="branchCov" title="Branch 1 was taken 5 times"> + </span>]:<span class="lineCov">    1287545 :                     if (docnchunk == nchunk) {</span>
+<span class="lineNum">    1130 </span>        [<span class="branchCov" title="Branch 0 was taken 1255239 times"> + </span><span class="branchCov" title="Branch 1 was taken 82 times"> + </span>]:<span class="lineCov">    1255321 :                     if (docnchunk == nchunk) {</span>
 <span class="lineNum">    1131 </span>                :            :                         diffchunkno = _hbtrie_find_diff_chunk(trie, key,
-<span class="lineNum">    1132 </span>                :<span class="lineCov">    1287540 :                                             dockey, curchunkno, nchunk);</span>
-<span class="lineNum">    1133 </span>        [<span class="branchCov" title="Branch 0 was taken 1287970 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">    1287966 :                         if (diffchunkno == nchunk) {</span>
+<span class="lineNum">    1132 </span>                :<span class="lineCov">    1255239 :                                             dockey, curchunkno, nchunk);</span>
+<span class="lineNum">    1133 </span>        [<span class="branchCov" title="Branch 0 was taken 1255483 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">    1255402 :                         if (diffchunkno == nchunk) {</span>
 <span class="lineNum">    1134 </span>                :            :                             // success
-<span class="lineNum">    1135 </span>                :<span class="lineCov">    1287970 :                             memcpy(valuebuf, btree_value, trie-&gt;valuelen);</span>
-<span class="lineNum">    1136 </span>                :<span class="lineCov">    1287970 :                             return HBTRIE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1135 </span>                :<span class="lineCov">    1255483 :                             memcpy(valuebuf, btree_value, trie-&gt;valuelen);</span>
+<span class="lineNum">    1136 </span>                :<span class="lineCov">    1255483 :                             return HBTRIE_RESULT_SUCCESS;</span>
 <span class="lineNum">    1137 </span>                :            :                         }
 <span class="lineNum">    1138 </span>                :            :                     }
 <span class="lineNum">    1139 </span>                :<span class="lineCov">          1 :                     return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1140 </span>                :            :                 } else {
 <span class="lineNum">    1141 </span>                :            :                     // just return value
-<span class="lineNum">    1142 </span>                :<span class="lineCov">     508279 :                     memcpy(valuebuf, btree_value, trie-&gt;valuelen);</span>
-<span class="lineNum">    1143 </span>                :<span class="lineCov">     508279 :                     return HBTRIE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1142 </span>                :<span class="lineCov">     514556 :                     memcpy(valuebuf, btree_value, trie-&gt;valuelen);</span>
+<span class="lineNum">    1143 </span>                :<span class="lineCov">     514556 :                     return HBTRIE_RESULT_SUCCESS;</span>
 <span class="lineNum">    1144 </span>                :            :                 }
 <span class="lineNum">    1145 </span>                :            :             }
 <span class="lineNum">    1146 </span>                :            :         }
 <span class="lineNum">    1147 </span>                :            :     }
 <span class="lineNum">    1148 </span>                :            : 
-<span class="lineNum">    1149 </span>                :<span class="lineCov">    5664553 :     return HBTRIE_RESULT_FAIL;</span>
+<span class="lineNum">    1149 </span>                :<span class="lineCov">    5290965 :     return HBTRIE_RESULT_FAIL;</span>
 <a name="1150"><span class="lineNum">    1150 </span>                :            : }</a>
 <span class="lineNum">    1151 </span>                :            : 
-<span class="lineNum">    1152 </span>                :<span class="lineCov">    1288188 : hbtrie_result hbtrie_find(struct hbtrie *trie, void *rawkey,</span>
+<span class="lineNum">    1152 </span>                :<span class="lineCov">    1255987 : hbtrie_result hbtrie_find(struct hbtrie *trie, void *rawkey,</span>
 <span class="lineNum">    1153 </span>                :            :                           int rawkeylen, void *valuebuf)
 <span class="lineNum">    1154 </span>                :            : {
-<span class="lineNum">    1155 </span>                :<span class="lineCov">    1288188 :     int nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
-<span class="lineNum">    1156 </span>                :<span class="lineCov">    1287942 :     uint8_t *key = alca(uint8_t, nchunk * trie-&gt;chunksize);</span>
+<span class="lineNum">    1155 </span>                :<span class="lineCov">    1255987 :     int nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
+<span class="lineNum">    1156 </span>                :<span class="lineCov">    1255626 :     uint8_t *key = alca(uint8_t, nchunk * trie-&gt;chunksize);</span>
 <span class="lineNum">    1157 </span>                :            :     int keylen;
 <span class="lineNum">    1158 </span>                :            : 
-<span class="lineNum">    1159 </span>                :<span class="lineCov">    1287942 :     keylen = _hbtrie_reform_key(trie, rawkey, rawkeylen, key);</span>
-<span class="lineNum">    1160 </span>                :<span class="lineCov">    1287449 :     return _hbtrie_find(trie, key, keylen, valuebuf, NULL, 0x0);</span>
+<span class="lineNum">    1159 </span>                :<span class="lineCov">    1255626 :     keylen = _hbtrie_reform_key(trie, rawkey, rawkeylen, key);</span>
+<span class="lineNum">    1160 </span>                :<span class="lineCov">    1254790 :     return _hbtrie_find(trie, key, keylen, valuebuf, NULL, 0x0);</span>
 <a name="1161"><span class="lineNum">    1161 </span>                :            : }</a>
 <span class="lineNum">    1162 </span>                :            : 
-<span class="lineNum">    1163 </span>                :<span class="lineCov">    4376074 : hbtrie_result hbtrie_find_offset(struct hbtrie *trie, void *rawkey,</span>
+<span class="lineNum">    1163 </span>                :<span class="lineCov">    4034973 : hbtrie_result hbtrie_find_offset(struct hbtrie *trie, void *rawkey,</span>
 <span class="lineNum">    1164 </span>                :            :                                  int rawkeylen, void *valuebuf)
 <span class="lineNum">    1165 </span>                :            : {
-<span class="lineNum">    1166 </span>                :<span class="lineCov">    4376074 :     int nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
-<span class="lineNum">    1167 </span>                :<span class="lineCov">    4376074 :     uint8_t *key = alca(uint8_t, nchunk * trie-&gt;chunksize);</span>
+<span class="lineNum">    1166 </span>                :<span class="lineCov">    4034973 :     int nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
+<span class="lineNum">    1167 </span>                :<span class="lineCov">    4034973 :     uint8_t *key = alca(uint8_t, nchunk * trie-&gt;chunksize);</span>
 <span class="lineNum">    1168 </span>                :            :     int keylen;
 <span class="lineNum">    1169 </span>                :            : 
-<span class="lineNum">    1170 </span>                :<span class="lineCov">    4376074 :     keylen = _hbtrie_reform_key(trie, rawkey, rawkeylen, key);</span>
+<span class="lineNum">    1170 </span>                :<span class="lineCov">    4034973 :     keylen = _hbtrie_reform_key(trie, rawkey, rawkeylen, key);</span>
 <span class="lineNum">    1171 </span>                :            :     return _hbtrie_find(trie, key, keylen, valuebuf, NULL,
-<span class="lineNum">    1172 </span>                :<span class="lineCov">    4376074 :                         HBTRIE_PREFIX_MATCH_ONLY);</span>
+<span class="lineNum">    1172 </span>                :<span class="lineCov">    4034973 :                         HBTRIE_PREFIX_MATCH_ONLY);</span>
 <a name="1173"><span class="lineNum">    1173 </span>                :            : }</a>
 <span class="lineNum">    1174 </span>                :            : 
 <span class="lineNum">    1175 </span>                :<span class="lineCov">         34 : hbtrie_result hbtrie_find_partial(struct hbtrie *trie, void *rawkey,</span>
@@ -1497,7 +1496,7 @@
 <span class="lineNum">    1421 </span>                :            : 
 <a name="1422"><span class="lineNum">    1422 </span>                :            : // suppose that VALUE and OLDVALUE_OUT are based on the same endian in hb+trie</a>
 <span class="lineNum">    1423 </span>                :            : #define HBTRIE_PARTIAL_UPDATE (0x1)
-<span class="lineNum">    1424 </span>                :<span class="lineCov">    8747139 : INLINE hbtrie_result _hbtrie_insert(struct hbtrie *trie,</span>
+<span class="lineNum">    1424 </span>                :<span class="lineCov">    8064947 : INLINE hbtrie_result _hbtrie_insert(struct hbtrie *trie,</span>
 <span class="lineNum">    1425 </span>                :            :                                     void *rawkey, int rawkeylen,
 <span class="lineNum">    1426 </span>                :            :                                     void *value, void *oldvalue_out,
 <span class="lineNum">    1427 </span>                :            :                                     uint8_t flag)
@@ -1515,14 +1514,14 @@
 <span class="lineNum">    1439 </span>                :            :     int nchunk;
 <span class="lineNum">    1440 </span>                :            :     int keylen;
 <span class="lineNum">    1441 </span>                :            :     int prevchunkno, curchunkno;
-<span class="lineNum">    1442 </span>                :<span class="lineCov">    8747139 :     int cpt_node = 0;</span>
-<span class="lineNum">    1443 </span>                :<span class="lineCov">    8747139 :     int leaf_cond = 0;</span>
-<span class="lineNum">    1444 </span>                :<span class="lineCov">    8747139 :     uint8_t *k = alca(uint8_t, trie-&gt;chunksize);</span>
+<span class="lineNum">    1442 </span>                :<span class="lineCov">    8064947 :     int cpt_node = 0;</span>
+<span class="lineNum">    1443 </span>                :<span class="lineCov">    8064947 :     int leaf_cond = 0;</span>
+<span class="lineNum">    1444 </span>                :<span class="lineCov">    8064947 :     uint8_t *k = alca(uint8_t, trie-&gt;chunksize);</span>
 <span class="lineNum">    1445 </span>                :            : 
 <span class="lineNum">    1446 </span>                :            :     struct list btreelist;
 <span class="lineNum">    1447 </span>                :            :     //struct btree btree, btree_new;
 <span class="lineNum">    1448 </span>                :            :     struct btreelist_item *btreeitem, *btreeitem_new;
-<span class="lineNum">    1449 </span>                :<span class="lineCov">    8747139 :     hbtrie_result ret_result = HBTRIE_RESULT_SUCCESS;</span>
+<span class="lineNum">    1449 </span>                :<span class="lineCov">    8064947 :     hbtrie_result ret_result = HBTRIE_RESULT_SUCCESS;</span>
 <span class="lineNum">    1450 </span>                :            :     btree_result r;
 <span class="lineNum">    1451 </span>                :            :     struct btree_kv_ops *kv_ops;
 <span class="lineNum">    1452 </span>                :            : 
@@ -1531,27 +1530,27 @@
 <span class="lineNum">    1455 </span>                :            :     hbmeta_opt opt;
 <span class="lineNum">    1456 </span>                :            :     void *void_cmp;
 <span class="lineNum">    1457 </span>                :            : 
-<span class="lineNum">    1458 </span>                :<span class="lineCov">    8747139 :     nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
+<span class="lineNum">    1458 </span>                :<span class="lineCov">    8064947 :     nchunk = _get_nchunk_raw(trie, rawkey, rawkeylen);</span>
 <span class="lineNum">    1459 </span>                :            : 
-<span class="lineNum">    1460 </span>                :<span class="lineCov">    8747155 :     uint8_t *key = alca(uint8_t, nchunk * trie-&gt;chunksize);</span>
-<span class="lineNum">    1461 </span>                :<span class="lineCov">    8747155 :     uint8_t *buf = alca(uint8_t, trie-&gt;btree_nodesize);</span>
-<span class="lineNum">    1462 </span>                :<span class="lineCov">    8747155 :     uint8_t *btree_value = alca(uint8_t, trie-&gt;valuelen);</span>
+<span class="lineNum">    1460 </span>                :<span class="lineCov">    8064950 :     uint8_t *key = alca(uint8_t, nchunk * trie-&gt;chunksize);</span>
+<span class="lineNum">    1461 </span>                :<span class="lineCov">    8064950 :     uint8_t *buf = alca(uint8_t, trie-&gt;btree_nodesize);</span>
+<span class="lineNum">    1462 </span>                :<span class="lineCov">    8064950 :     uint8_t *btree_value = alca(uint8_t, trie-&gt;valuelen);</span>
 <span class="lineNum">    1463 </span>                :            :     void *chunk, *chunk_new;
 <span class="lineNum">    1464 </span>                :            :     bid_t bid_new, _bid;
 <span class="lineNum">    1465 </span>                :            : 
-<span class="lineNum">    1466 </span>                :<span class="lineCov">    8747155 :     meta.data = buf;</span>
-<span class="lineNum">    1467 </span>                :<span class="lineCov">    8747155 :     curchunkno = 0;</span>
-<span class="lineNum">    1468 </span>                :<span class="lineCov">    8747155 :     keylen = _hbtrie_reform_key(trie, rawkey, rawkeylen, key);</span>
+<span class="lineNum">    1466 </span>                :<span class="lineCov">    8064950 :     meta.data = buf;</span>
+<span class="lineNum">    1467 </span>                :<span class="lineCov">    8064950 :     curchunkno = 0;</span>
+<span class="lineNum">    1468 </span>                :<span class="lineCov">    8064950 :     keylen = _hbtrie_reform_key(trie, rawkey, rawkeylen, key);</span>
 <span class="lineNum">    1469 </span>                :            :     (void)keylen;
 <span class="lineNum">    1470 </span>                :            : 
-<span class="lineNum">    1471 </span>        [<span class="branchCov" title="Branch 0 was taken 4372999 times"> + </span><span class="branchCov" title="Branch 1 was taken 4374157 times"> + </span>]:<span class="lineCov">    8747156 :     if (trie-&gt;map) { // custom cmp functions exist</span>
-<span class="lineNum">    1472 </span>        [<span class="branchCov" title="Branch 0 was taken 9223 times"> + </span><span class="branchCov" title="Branch 1 was taken 4363776 times"> + </span>]:<span class="lineCov">    4372999 :         if (!memcmp(trie-&gt;last_map_chunk, key, trie-&gt;chunksize)) {</span>
+<span class="lineNum">    1471 </span>        [<span class="branchCov" title="Branch 0 was taken 4031900 times"> + </span><span class="branchCov" title="Branch 1 was taken 4033051 times"> + </span>]:<span class="lineCov">    8064951 :     if (trie-&gt;map) { // custom cmp functions exist</span>
+<span class="lineNum">    1472 </span>        [<span class="branchCov" title="Branch 0 was taken 9223 times"> + </span><span class="branchCov" title="Branch 1 was taken 4022677 times"> + </span>]:<span class="lineCov">    4031900 :         if (!memcmp(trie-&gt;last_map_chunk, key, trie-&gt;chunksize)) {</span>
 <span class="lineNum">    1473 </span>                :            :             // same custom function was used in the last call .. leaf b+tree
 <span class="lineNum">    1474 </span>                :<span class="lineCov">       9223 :             leaf_cond = 1;</span>
 <span class="lineNum">    1475 </span>                :            :         } else {
 <span class="lineNum">    1476 </span>                :            :             // get cmp function corresponding to the key
-<span class="lineNum">    1477 </span>                :<span class="lineCov">    4363776 :             void_cmp = trie-&gt;map(key, (void *)trie);</span>
-<span class="lineNum">    1478 </span>        [<span class="branchCov" title="Branch 0 was taken 50 times"> + </span><span class="branchCov" title="Branch 1 was taken 4363727 times"> + </span>]:<span class="lineCov">    4363777 :             if (void_cmp) { // custom cmp function matches .. turn on leaf b+tree mode</span>
+<span class="lineNum">    1477 </span>                :<span class="lineCov">    4022677 :             void_cmp = trie-&gt;map(key, (void *)trie);</span>
+<span class="lineNum">    1478 </span>        [<span class="branchCov" title="Branch 0 was taken 50 times"> + </span><span class="branchCov" title="Branch 1 was taken 4022626 times"> + </span>]:<span class="lineCov">    4022676 :             if (void_cmp) { // custom cmp function matches .. turn on leaf b+tree mode</span>
 <span class="lineNum">    1479 </span>                :<span class="lineCov">         50 :                 leaf_cond = 1;</span>
 <span class="lineNum">    1480 </span>                :<span class="lineCov">         50 :                 memcpy(trie-&gt;last_map_chunk, key, trie-&gt;chunksize);</span>
 <span class="lineNum">    1481 </span>                :<span class="lineCov">         50 :                 trie-&gt;aux = void_cmp; // set aux for _fdb_custom_cmp_wrap()</span>
@@ -1559,12 +1558,12 @@
 <span class="lineNum">    1483 </span>                :            :         }
 <span class="lineNum">    1484 </span>                :            :     }
 <span class="lineNum">    1485 </span>                :            : 
-<span class="lineNum">    1486 </span>                :<span class="lineCov">    8747157 :     list_init(&amp;btreelist);</span>
+<span class="lineNum">    1486 </span>                :<span class="lineCov">    8064950 :     list_init(&amp;btreelist);</span>
 <span class="lineNum">    1487 </span>                :            :     // btreeitem for root btree
-<span class="lineNum">    1488 </span>                :<span class="lineCov">    8747158 :     btreeitem = (struct btreelist_item*)mempool_alloc(sizeof(struct btreelist_item));</span>
-<span class="lineNum">    1489 </span>                :<span class="lineCov">    8747158 :     list_push_back(&amp;btreelist, &amp;btreeitem-&gt;e);</span>
+<span class="lineNum">    1488 </span>                :<span class="lineCov">    8064928 :     btreeitem = (struct btreelist_item*)mempool_alloc(sizeof(struct btreelist_item));</span>
+<span class="lineNum">    1489 </span>                :<span class="lineCov">    8064928 :     list_push_back(&amp;btreelist, &amp;btreeitem-&gt;e);</span>
 <span class="lineNum">    1490 </span>                :            : 
-<span class="lineNum">    1491 </span>        [<span class="branchCov" title="Branch 0 was taken 274 times"> + </span><span class="branchCov" title="Branch 1 was taken 8746891 times"> + </span>]:<span class="lineCov">    8747165 :     if (trie-&gt;root_bid == BLK_NOT_FOUND) {</span>
+<span class="lineNum">    1491 </span>        [<span class="branchCov" title="Branch 0 was taken 274 times"> + </span><span class="branchCov" title="Branch 1 was taken 8064671 times"> + </span>]:<span class="lineCov">    8064945 :     if (trie-&gt;root_bid == BLK_NOT_FOUND) {</span>
 <span class="lineNum">    1492 </span>                :            :         // create root b-tree
 <span class="lineNum">    1493 </span>                :<span class="lineCov">        274 :         _hbtrie_store_meta(trie, &amp;meta.size, 0, HBMETA_NORMAL, NULL, 0, NULL, buf);</span>
 <span class="lineNum">    1494 </span>                :            :         r = btree_init(
@@ -1577,27 +1576,27 @@
 <span class="lineNum">    1501 </span>                :            :         // read from root_bid
 <span class="lineNum">    1502 </span>                :            :         r = btree_init_from_bid(
 <span class="lineNum">    1503 </span>                :            :             &amp;btreeitem-&gt;btree, trie-&gt;btreeblk_handle, trie-&gt;btree_blk_ops, trie-&gt;btree_kv_ops,
-<span class="lineNum">    1504 </span>                :<span class="lineCov">    8746891 :             trie-&gt;btree_nodesize, trie-&gt;root_bid);</span>
-<span class="lineNum">    1505 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8746852 times"> + </span>]:<span class="lineCov">    8746852 :         if (r != BTREE_RESULT_SUCCESS) {</span>
+<span class="lineNum">    1504 </span>                :<span class="lineCov">    8064671 :             trie-&gt;btree_nodesize, trie-&gt;root_bid);</span>
+<span class="lineNum">    1505 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8064642 times"> + </span>]:<span class="lineCov">    8064642 :         if (r != BTREE_RESULT_SUCCESS) {</span>
 <span class="lineNum">    1506 </span>                :<span class="lineNoCov">          0 :             return HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1507 </span>                :            :         }
 <span class="lineNum">    1508 </span>                :            :     }
-<span class="lineNum">    1509 </span>                :<span class="lineCov">    8747126 :     btreeitem-&gt;btree.aux = trie-&gt;aux;</span>
+<span class="lineNum">    1509 </span>                :<span class="lineCov">    8064916 :     btreeitem-&gt;btree.aux = trie-&gt;aux;</span>
 <span class="lineNum">    1510 </span>                :            : 
-<span class="lineNum">    1511 </span>        [<span class="branchCov" title="Branch 0 was taken 17507258 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   17507258 :     while(curchunkno &lt; nchunk){</span>
+<span class="lineNum">    1511 </span>        [<span class="branchCov" title="Branch 0 was taken 16142778 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   16142778 :     while(curchunkno &lt; nchunk){</span>
 <span class="lineNum">    1512 </span>                :            :         // get current chunk number
-<span class="lineNum">    1513 </span>                :<span class="lineCov">   17507258 :         meta.size = btree_read_meta(&amp;btreeitem-&gt;btree, meta.data);</span>
-<span class="lineNum">    1514 </span>                :<span class="lineCov">   17507358 :         _hbtrie_fetch_meta(trie, meta.size, &amp;hbmeta, meta.data);</span>
-<span class="lineNum">    1515 </span>                :<span class="lineCov">   17507666 :         prevchunkno = curchunkno;</span>
-<span class="lineNum">    1516 </span>        [<span class="branchCov" title="Branch 0 was taken 9240 times"> + </span><span class="branchCov" title="Branch 1 was taken 17498426 times"> + </span>]:<span class="lineCov">   17507666 :         if (_is_leaf_btree(hbmeta.chunkno)) {</span>
+<span class="lineNum">    1513 </span>                :<span class="lineCov">   16142778 :         meta.size = btree_read_meta(&amp;btreeitem-&gt;btree, meta.data);</span>
+<span class="lineNum">    1514 </span>                :<span class="lineCov">   16142885 :         _hbtrie_fetch_meta(trie, meta.size, &amp;hbmeta, meta.data);</span>
+<span class="lineNum">    1515 </span>                :<span class="lineCov">   16143230 :         prevchunkno = curchunkno;</span>
+<span class="lineNum">    1516 </span>        [<span class="branchCov" title="Branch 0 was taken 9240 times"> + </span><span class="branchCov" title="Branch 1 was taken 16133990 times"> + </span>]:<span class="lineCov">   16143230 :         if (_is_leaf_btree(hbmeta.chunkno)) {</span>
 <span class="lineNum">    1517 </span>                :<span class="lineCov">       9240 :             cpt_node = 1;</span>
 <span class="lineNum">    1518 </span>                :<span class="lineCov">       9240 :             hbmeta.chunkno = _get_chunkno(hbmeta.chunkno);</span>
 <span class="lineNum">    1519 </span>                :<span class="lineCov">       9240 :             btreeitem-&gt;btree.kv_ops = trie-&gt;btree_leaf_kv_ops;</span>
 <span class="lineNum">    1520 </span>                :            :         }
-<span class="lineNum">    1521 </span>                :<span class="lineCov">   17507666 :         btreeitem-&gt;chunkno = curchunkno = hbmeta.chunkno;</span>
+<span class="lineNum">    1521 </span>                :<span class="lineCov">   16143230 :         btreeitem-&gt;chunkno = curchunkno = hbmeta.chunkno;</span>
 <span class="lineNum">    1522 </span>                :            : 
 <span class="lineNum">    1523 </span>                :            :         //3 check whether there is skipped prefix
-<span class="lineNum">    1524 </span>        [<span class="branchCov" title="Branch 0 was taken 5717 times"> + </span><span class="branchCov" title="Branch 1 was taken 17501949 times"> + </span>]:<span class="lineCov">   17507666 :         if (curchunkno - prevchunkno &gt; 1) {</span>
+<span class="lineNum">    1524 </span>        [<span class="branchCov" title="Branch 0 was taken 5717 times"> + </span><span class="branchCov" title="Branch 1 was taken 16137513 times"> + </span>]:<span class="lineCov">   16143230 :         if (curchunkno - prevchunkno &gt; 1) {</span>
 <span class="lineNum">    1525 </span>                :            :             // prefix comparison (find the first different chunk)
 <span class="lineNum">    1526 </span>                :            :             int diffchunkno = _hbtrie_find_diff_chunk(trie, hbmeta.prefix,
 <span class="lineNum">    1527 </span>                :<span class="lineCov">       5717 :                                   key + trie-&gt;chunksize * (prevchunkno+1),</span>
@@ -1670,8 +1669,8 @@
 <span class="lineNum">    1594 </span>                :            :         }
 <span class="lineNum">    1595 </span>                :            : 
 <span class="lineNum">    1596 </span>                :            :         //3 search b-tree using current chunk
-<span class="lineNum">    1597 </span>[<span class="branchCov" title="Branch 0 was taken 9240 times"> + </span><span class="branchCov" title="Branch 1 was taken 17498382 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9239 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">   17507622 :         if ((cpt_node &amp;&amp; rawkeylen == curchunkno * trie-&gt;chunksize) ||</span>
-<span class="lineNum">         </span>[<span class="branchCov" title="Branch 4 was taken 17498384 times"> + </span><span class="branchCov" title="Branch 5 was taken 9237 times"> + </span>][<span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchCov" title="Branch 7 was taken 17498384 times"> + </span>]
+<span class="lineNum">    1597 </span>[<span class="branchCov" title="Branch 0 was taken 9240 times"> + </span><span class="branchCov" title="Branch 1 was taken 16133946 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9239 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">   16143186 :         if ((cpt_node &amp;&amp; rawkeylen == curchunkno * trie-&gt;chunksize) ||</span>
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 4 was taken 16133946 times"> + </span><span class="branchCov" title="Branch 5 was taken 9239 times"> + </span>][<span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchCov" title="Branch 7 was taken 16133946 times"> + </span>]
 <span class="lineNum">    1598 </span>                :            :             (!cpt_node &amp;&amp; nchunk == curchunkno)) {
 <span class="lineNum">    1599 </span>                :            :             // KEY is exactly same as tree's prefix .. insert into metasection
 <span class="lineNum">    1600 </span>                :            :             _hbtrie_store_meta(
@@ -1681,26 +1680,26 @@
 <span class="lineNum">    1604 </span>                :<span class="lineCov">          1 :             btree_update_meta(&amp;btreeitem-&gt;btree, &amp;meta);</span>
 <span class="lineNum">    1605 </span>                :<span class="lineCov">          1 :             break;</span>
 <span class="lineNum">    1606 </span>                :            :         } else {
-<span class="lineNum">    1607 </span>                :<span class="lineCov">   17507621 :             chunk = key + curchunkno*trie-&gt;chunksize;</span>
-<span class="lineNum">    1608 </span>        [<span class="branchCov" title="Branch 0 was taken 9239 times"> + </span><span class="branchCov" title="Branch 1 was taken 17498382 times"> + </span>]:<span class="lineCov">   17507621 :             if (cpt_node) {</span>
+<span class="lineNum">    1607 </span>                :<span class="lineCov">   16143185 :             chunk = key + curchunkno*trie-&gt;chunksize;</span>
+<span class="lineNum">    1608 </span>        [<span class="branchCov" title="Branch 0 was taken 9239 times"> + </span><span class="branchCov" title="Branch 1 was taken 16133946 times"> + </span>]:<span class="lineCov">   16143185 :             if (cpt_node) {</span>
 <span class="lineNum">    1609 </span>                :            :                 // leaf b-tree
 <span class="lineNum">    1610 </span>                :<span class="lineCov">       9239 :                 _set_leaf_key(k, chunk, rawkeylen - curchunkno*trie-&gt;chunksize);</span>
 <span class="lineNum">    1611 </span>                :<span class="lineCov">       9239 :                 r = btree_find(&amp;btreeitem-&gt;btree, k, btree_value);</span>
 <span class="lineNum">    1612 </span>                :<span class="lineCov">       9239 :                 _free_leaf_key(k);</span>
 <span class="lineNum">    1613 </span>                :            :             } else {
-<span class="lineNum">    1614 </span>                :<span class="lineCov">   17498382 :                 r = btree_find(&amp;btreeitem-&gt;btree, chunk, btree_value);</span>
+<span class="lineNum">    1614 </span>                :<span class="lineCov">   16133946 :                 r = btree_find(&amp;btreeitem-&gt;btree, chunk, btree_value);</span>
 <span class="lineNum">    1615 </span>                :            :             }
 <span class="lineNum">    1616 </span>                :            :         }
 <span class="lineNum">    1617 </span>                :            : 
-<span class="lineNum">    1618 </span>        [<span class="branchCov" title="Branch 0 was taken 8237161 times"> + </span><span class="branchCov" title="Branch 1 was taken 9270401 times"> + </span>]:<span class="lineCov">   17507562 :         if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1618 </span>        [<span class="branchCov" title="Branch 0 was taken 7548680 times"> + </span><span class="branchCov" title="Branch 1 was taken 8594461 times"> + </span>]:<span class="lineCov">   16143141 :         if (r == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1619 </span>                :            :             //3 1. normal insert: same chunk does not exist -&gt; just insert
-<span class="lineNum">    1620 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 8237159 times"> + </span>]:<span class="lineCov">    8237161 :             if (flag &amp; HBTRIE_PARTIAL_UPDATE) {</span>
+<span class="lineNum">    1620 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 7548678 times"> + </span>]:<span class="lineCov">    7548680 :             if (flag &amp; HBTRIE_PARTIAL_UPDATE) {</span>
 <span class="lineNum">    1621 </span>                :            :                 // partial update doesn't allow inserting a new key
 <span class="lineNum">    1622 </span>                :<span class="lineCov">          2 :                 ret_result = HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1623 </span>                :<span class="lineCov">          2 :                 break; // while loop</span>
 <span class="lineNum">    1624 </span>                :            :             }
 <span class="lineNum">    1625 </span>                :            : 
-<span class="lineNum">    1626 </span>        [<span class="branchCov" title="Branch 0 was taken 7638 times"> + </span><span class="branchCov" title="Branch 1 was taken 8229521 times"> + </span>]:<span class="lineCov">    8237159 :             if (cpt_node) {</span>
+<span class="lineNum">    1626 </span>        [<span class="branchCov" title="Branch 0 was taken 7638 times"> + </span><span class="branchCov" title="Branch 1 was taken 7541040 times"> + </span>]:<span class="lineCov">    7548678 :             if (cpt_node) {</span>
 <span class="lineNum">    1627 </span>                :            :                 // leaf b-tree
 <span class="lineNum">    1628 </span>                :<span class="lineCov">       7638 :                 _set_leaf_key(k, chunk, rawkeylen - curchunkno*trie-&gt;chunksize);</span>
 <span class="lineNum">    1629 </span>                :<span class="lineCov">       7638 :                 r = btree_insert(&amp;btreeitem-&gt;btree, k, value);</span>
@@ -1711,23 +1710,23 @@
 <span class="lineNum">    1634 </span>                :            :                 }
 <span class="lineNum">    1635 </span>                :<span class="lineCov">       7638 :                 _free_leaf_key(k);</span>
 <span class="lineNum">    1636 </span>                :            : 
-<span class="lineNum">    1637 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 7635 times"> + </span>]:<span class="lineCov">       7637 :                 if (btreeitem-&gt;btree.height &gt; trie-&gt;leaf_height_limit) {</span>
+<span class="lineNum">    1637 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 7636 times"> + </span>]:<span class="lineCov">       7638 :                 if (btreeitem-&gt;btree.height &gt; trie-&gt;leaf_height_limit) {</span>
 <span class="lineNum">    1638 </span>                :            :                     // height growth .. extend!
 <span class="lineNum">    1639 </span>                :            :                     _hbtrie_extend_leaf_tree(trie, &amp;btreelist, btreeitem,
 <span class="lineNum">    1640 </span>                :<span class="lineCov">          2 :                         key, curchunkno * trie-&gt;chunksize);</span>
 <span class="lineNum">    1641 </span>                :<span class="lineCov">          2 :                     return ret_result;</span>
 <span class="lineNum">    1642 </span>                :            :                 }
 <span class="lineNum">    1643 </span>                :            :             } else {
-<span class="lineNum">    1644 </span>                :<span class="lineCov">    8229521 :                 r = btree_insert(&amp;btreeitem-&gt;btree, chunk, value);</span>
-<span class="lineNum">    1645 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8229558 times"> + </span>]:<span class="lineCov">    8229558 :                 if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1644 </span>                :<span class="lineCov">    7541040 :                 r = btree_insert(&amp;btreeitem-&gt;btree, chunk, value);</span>
+<span class="lineNum">    1645 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 7541074 times"> + </span>]:<span class="lineCov">    7541074 :                 if (r == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1646 </span>                :<span class="lineNoCov">          0 :                     ret_result = HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1647 </span>                :            :                 }
 <span class="lineNum">    1648 </span>                :            :             }
-<span class="lineNum">    1649 </span>                :<span class="lineCov">    8237193 :             break; // while loop</span>
+<span class="lineNum">    1649 </span>                :<span class="lineCov">    7548710 :             break; // while loop</span>
 <span class="lineNum">    1650 </span>                :            : 
 <span class="lineNum">    1651 </span>                :            :         } else {
 <span class="lineNum">    1652 </span>                :            :             // same chunk already exists
-<span class="lineNum">    1653 </span>[<span class="branchCov" title="Branch 0 was taken 41 times"> + </span><span class="branchCov" title="Branch 1 was taken 9270360 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 32 times"> + </span><span class="branchCov" title="Branch 3 was taken 9 times"> + </span>]:<span class="lineCov">    9270401 :             if (flag &amp; HBTRIE_PARTIAL_UPDATE &amp;&amp;</span>
+<span class="lineNum">    1653 </span>[<span class="branchCov" title="Branch 0 was taken 41 times"> + </span><span class="branchCov" title="Branch 1 was taken 8594420 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 32 times"> + </span><span class="branchCov" title="Branch 3 was taken 9 times"> + </span>]:<span class="lineCov">    8594461 :             if (flag &amp; HBTRIE_PARTIAL_UPDATE &amp;&amp;</span>
 <span class="lineNum">    1654 </span>                :            :                 curchunkno + 1 == nchunk - 1) {
 <span class="lineNum">    1655 </span>                :            :                 // partial update mode &amp; the last meaningful chunk
 <span class="lineNum">    1656 </span>                :            :                 // update the local btree value
@@ -1746,50 +1745,50 @@
 <span class="lineNum">    1669 </span>                :            : 
 <span class="lineNum">    1670 </span>                :            :             // check whether the value points to sub-tree or document
 <span class="lineNum">    1671 </span>                :            :             // check MSB
-<span class="lineNum">    1672 </span>        [<span class="branchCov" title="Branch 1 was taken 8760470 times"> + </span><span class="branchCov" title="Branch 2 was taken 509898 times"> + </span>]:<span class="lineCov">    9270369 :             if (_hbtrie_is_msb_set(trie, btree_value)) {</span>
+<span class="lineNum">    1672 </span>        [<span class="branchCov" title="Branch 1 was taken 8078257 times"> + </span><span class="branchCov" title="Branch 2 was taken 516175 times"> + </span>]:<span class="lineCov">    8594429 :             if (_hbtrie_is_msb_set(trie, btree_value)) {</span>
 <span class="lineNum">    1673 </span>                :            :                 // this is BID of b-tree node (by clearing MSB)
-<span class="lineNum">    1674 </span>                :<span class="lineCov">    8760470 :                 _hbtrie_clear_msb(trie, btree_value);</span>
-<span class="lineNum">    1675 </span>                :<span class="lineCov">    8760471 :                 bid_new = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
-<span class="lineNum">    1676 </span>                :<span class="lineCov">    8760490 :                 bid_new = _endian_decode(bid_new);</span>
-<span class="lineNum">    1677 </span>                :<span class="lineCov">    8760490 :                 btreeitem-&gt;child_rootbid = bid_new;</span>
+<span class="lineNum">    1674 </span>                :<span class="lineCov">    8078257 :                 _hbtrie_clear_msb(trie, btree_value);</span>
+<span class="lineNum">    1675 </span>                :<span class="lineCov">    8078255 :                 bid_new = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
+<span class="lineNum">    1676 </span>                :<span class="lineCov">    8078287 :                 bid_new = _endian_decode(bid_new);</span>
+<span class="lineNum">    1677 </span>                :<span class="lineCov">    8078287 :                 btreeitem-&gt;child_rootbid = bid_new;</span>
 <span class="lineNum">    1678 </span>                :            :                 //3 traverse to the sub-tree
 <span class="lineNum">    1679 </span>                :            :                 // fetch sub-tree
 <span class="lineNum">    1680 </span>                :            :                 btreeitem = (struct btreelist_item*)
-<span class="lineNum">    1681 </span>                :<span class="lineCov">    8760490 :                             mempool_alloc(sizeof(struct btreelist_item));</span>
+<span class="lineNum">    1681 </span>                :<span class="lineCov">    8078287 :                             mempool_alloc(sizeof(struct btreelist_item));</span>
 <span class="lineNum">    1682 </span>                :            : 
 <span class="lineNum">    1683 </span>                :            :                 r = btree_init_from_bid(&amp;btreeitem-&gt;btree,
 <span class="lineNum">    1684 </span>                :            :                                         trie-&gt;btreeblk_handle,
 <span class="lineNum">    1685 </span>                :            :                                         trie-&gt;btree_blk_ops,
 <span class="lineNum">    1686 </span>                :            :                                         trie-&gt;btree_kv_ops,
-<span class="lineNum">    1687 </span>                :<span class="lineCov">    8760490 :                                         trie-&gt;btree_nodesize, bid_new);</span>
-<span class="lineNum">    1688 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8760462 times"> + </span>]:<span class="lineCov">    8760462 :                 if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1687 </span>                :<span class="lineCov">    8078287 :                                         trie-&gt;btree_nodesize, bid_new);</span>
+<span class="lineNum">    1688 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8078256 times"> + </span>]:<span class="lineCov">    8078256 :                 if (r == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1689 </span>                :<span class="lineNoCov">          0 :                     ret_result = HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1690 </span>                :            :                 }
-<span class="lineNum">    1691 </span>                :<span class="lineCov">    8760462 :                 btreeitem-&gt;btree.aux = trie-&gt;aux;</span>
-<span class="lineNum">    1692 </span>                :<span class="lineCov">    8760462 :                 list_push_back(&amp;btreelist, &amp;btreeitem-&gt;e);</span>
+<span class="lineNum">    1691 </span>                :<span class="lineCov">    8078256 :                 btreeitem-&gt;btree.aux = trie-&gt;aux;</span>
+<span class="lineNum">    1692 </span>                :<span class="lineCov">    8078256 :                 list_push_back(&amp;btreelist, &amp;btreeitem-&gt;e);</span>
 <span class="lineNum">    1693 </span>                :            : 
 <span class="lineNum">    1694 </span>                :            :             } else {
 <span class="lineNum">    1695 </span>                :            :                 // this is offset of document (as it is)
 <span class="lineNum">    1696 </span>                :            :                 // create new sub-tree
 <span class="lineNum">    1697 </span>                :            : 
 <span class="lineNum">    1698 </span>                :            :                 // read entire key
-<span class="lineNum">    1699 </span>                :<span class="lineCov">     509898 :                 uint8_t *docrawkey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
-<span class="lineNum">    1700 </span>                :<span class="lineCov">     509898 :                 uint8_t *dockey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
+<span class="lineNum">    1699 </span>                :<span class="lineCov">     516175 :                 uint8_t *docrawkey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
+<span class="lineNum">    1700 </span>                :<span class="lineCov">     516175 :                 uint8_t *dockey = alca(uint8_t, HBTRIE_MAX_KEYLEN);</span>
 <span class="lineNum">    1701 </span>                :            :                 uint32_t docrawkeylen, dockeylen, minrawkeylen;
 <span class="lineNum">    1702 </span>                :            :                 uint64_t offset;
 <span class="lineNum">    1703 </span>                :            :                 int docnchunk, minchunkno, newchunkno, diffchunkno;
 <span class="lineNum">    1704 </span>                :            : 
 <span class="lineNum">    1705 </span>                :            :                 // get offset value from btree_value
-<span class="lineNum">    1706 </span>                :<span class="lineCov">     509898 :                 offset = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
+<span class="lineNum">    1706 </span>                :<span class="lineCov">     516175 :                 offset = trie-&gt;btree_kv_ops-&gt;value2bid(btree_value);</span>
 <span class="lineNum">    1707 </span>                :            : 
 <span class="lineNum">    1708 </span>                :            :                 // read entire key
-<span class="lineNum">    1709 </span>                :<span class="lineCov">     509898 :                 docrawkeylen = trie-&gt;readkey(trie-&gt;doc_handle, offset, docrawkey);</span>
-<span class="lineNum">    1710 </span>                :<span class="lineCov">     509898 :                 dockeylen = _hbtrie_reform_key(trie, docrawkey, docrawkeylen, dockey);</span>
+<span class="lineNum">    1709 </span>                :<span class="lineCov">     516175 :                 docrawkeylen = trie-&gt;readkey(trie-&gt;doc_handle, offset, docrawkey);</span>
+<span class="lineNum">    1710 </span>                :<span class="lineCov">     516175 :                 dockeylen = _hbtrie_reform_key(trie, docrawkey, docrawkeylen, dockey);</span>
 <span class="lineNum">    1711 </span>                :            : 
 <span class="lineNum">    1712 </span>                :            :                 // find first different chunk
-<span class="lineNum">    1713 </span>                :<span class="lineCov">     509898 :                 docnchunk = _get_nchunk(trie, dockey, dockeylen);</span>
+<span class="lineNum">    1713 </span>                :<span class="lineCov">     516175 :                 docnchunk = _get_nchunk(trie, dockey, dockeylen);</span>
 <span class="lineNum">    1714 </span>                :            : 
-<span class="lineNum">    1715 </span>[<span class="branchCov" title="Branch 0 was taken 509890 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1626 times"> + </span><span class="branchCov" title="Branch 3 was taken 508264 times"> + </span>]:<span class="lineCov">     509898 :                 if (trie-&gt;flag &amp; HBTRIE_FLAG_COMPACT || leaf_cond) {</span>
+<span class="lineNum">    1715 </span>[<span class="branchCov" title="Branch 0 was taken 516167 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 1626 times"> + </span><span class="branchCov" title="Branch 3 was taken 514541 times"> + </span>]:<span class="lineCov">     516175 :                 if (trie-&gt;flag &amp; HBTRIE_FLAG_COMPACT || leaf_cond) {</span>
 <span class="lineNum">    1716 </span>                :            :                     // optimization mode
 <span class="lineNum">    1717 </span>                :<span class="lineCov">       1634 :                     newchunkno = curchunkno+1;</span>
 <span class="lineNum">    1718 </span>                :<span class="lineCov">       1634 :                     minchunkno = MIN(_l2c(trie, rawkeylen) , _l2c(trie, docrawkeylen));</span>
@@ -1807,33 +1806,33 @@
 <span class="lineNum">    1730 </span>                :<span class="lineCov">       1634 :                     kv_ops = trie-&gt;btree_leaf_kv_ops;</span>
 <span class="lineNum">    1731 </span>                :            :                 } else {
 <span class="lineNum">    1732 </span>                :            :                     // original mode
-<span class="lineNum">    1733 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 508264 times"> + </span>]:<span class="lineCov">     508264 :                     minchunkno = MIN(nchunk, docnchunk);</span>
+<span class="lineNum">    1733 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 514541 times"> + </span>]:<span class="lineCov">     514541 :                     minchunkno = MIN(nchunk, docnchunk);</span>
 <span class="lineNum">    1734 </span>                :            :                     newchunkno = diffchunkno =
-<span class="lineNum">    1735 </span>                :<span class="lineCov">     508264 :                         _hbtrie_find_diff_chunk(trie, key, dockey, curchunkno, minchunkno);</span>
-<span class="lineNum">    1736 </span>                :<span class="lineCov">     508264 :                     opt = HBMETA_NORMAL;</span>
-<span class="lineNum">    1737 </span>                :<span class="lineCov">     508264 :                     kv_ops = trie-&gt;btree_kv_ops;</span>
+<span class="lineNum">    1735 </span>                :<span class="lineCov">     514541 :                         _hbtrie_find_diff_chunk(trie, key, dockey, curchunkno, minchunkno);</span>
+<span class="lineNum">    1736 </span>                :<span class="lineCov">     514541 :                     opt = HBMETA_NORMAL;</span>
+<span class="lineNum">    1737 </span>                :<span class="lineCov">     514541 :                     kv_ops = trie-&gt;btree_kv_ops;</span>
 <span class="lineNum">    1738 </span>                :            :                 }
 <span class="lineNum">    1739 </span>                :            : 
 <span class="lineNum">    1740 </span>                :            :                 // one key is substring of the other key
-<span class="lineNum">    1741 </span>[<span class="branchCov" title="Branch 0 was taken 508320 times"> + </span><span class="branchCov" title="Branch 1 was taken 1578 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 508315 times"> + </span><span class="branchCov" title="Branch 3 was taken 5 times"> + </span>]:<span class="lineCov">     509898 :                 if (minchunkno == diffchunkno &amp;&amp; docnchunk == nchunk) {</span>
+<span class="lineNum">    1741 </span>[<span class="branchCov" title="Branch 0 was taken 514597 times"> + </span><span class="branchCov" title="Branch 1 was taken 1578 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 514592 times"> + </span><span class="branchCov" title="Branch 3 was taken 5 times"> + </span>]:<span class="lineCov">     516175 :                 if (minchunkno == diffchunkno &amp;&amp; docnchunk == nchunk) {</span>
 <span class="lineNum">    1742 </span>                :            :                     //3 same key!! .. update the value
 <span class="lineNum">    1743 </span>                :            : 
-<span class="lineNum">    1744 </span>        [<span class="branchCov" title="Branch 0 was taken 508315 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     508315 :                     if (oldvalue_out) memcpy(oldvalue_out, btree_value, trie-&gt;valuelen);</span>
-<span class="lineNum">    1745 </span>        [<span class="branchCov" title="Branch 0 was taken 1601 times"> + </span><span class="branchCov" title="Branch 1 was taken 506714 times"> + </span>]:<span class="lineCov">     508315 :                     if (cpt_node) {</span>
+<span class="lineNum">    1744 </span>        [<span class="branchCov" title="Branch 0 was taken 514592 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     514592 :                     if (oldvalue_out) memcpy(oldvalue_out, btree_value, trie-&gt;valuelen);</span>
+<span class="lineNum">    1745 </span>        [<span class="branchCov" title="Branch 0 was taken 1601 times"> + </span><span class="branchCov" title="Branch 1 was taken 512991 times"> + </span>]:<span class="lineCov">     514592 :                     if (cpt_node) {</span>
 <span class="lineNum">    1746 </span>                :            :                         // leaf b-tree
 <span class="lineNum">    1747 </span>                :<span class="lineCov">       1601 :                         _set_leaf_key(k, chunk, rawkeylen - curchunkno*trie-&gt;chunksize);</span>
 <span class="lineNum">    1748 </span>                :<span class="lineCov">       1601 :                         r = btree_insert(&amp;btreeitem-&gt;btree, k, value);</span>
 <span class="lineNum">    1749 </span>                :<span class="lineCov">       1601 :                         _free_leaf_key(k);</span>
 <span class="lineNum">    1750 </span>                :            :                     } else {
 <span class="lineNum">    1751 </span>                :            :                         // normal b-tree
-<span class="lineNum">    1752 </span>                :<span class="lineCov">     506714 :                         r = btree_insert(&amp;btreeitem-&gt;btree, chunk, value);</span>
+<span class="lineNum">    1752 </span>                :<span class="lineCov">     512991 :                         r = btree_insert(&amp;btreeitem-&gt;btree, chunk, value);</span>
 <span class="lineNum">    1753 </span>                :            :                     }
-<span class="lineNum">    1754 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 508315 times"> + </span>]:<span class="lineCov">     508315 :                     if (r == BTREE_RESULT_FAIL) {</span>
+<span class="lineNum">    1754 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 514592 times"> + </span>]:<span class="lineCov">     514592 :                     if (r == BTREE_RESULT_FAIL) {</span>
 <span class="lineNum">    1755 </span>                :<span class="lineNoCov">          0 :                         ret_result = HBTRIE_RESULT_FAIL;</span>
 <span class="lineNum">    1756 </span>                :            :                     } else {
-<span class="lineNum">    1757 </span>                :<span class="lineCov">     508315 :                         ret_result = HBTRIE_RESULT_UPDATE;</span>
+<span class="lineNum">    1757 </span>                :<span class="lineCov">     514592 :                         ret_result = HBTRIE_RESULT_UPDATE;</span>
 <span class="lineNum">    1758 </span>                :            :                     }
-<span class="lineNum">    1759 </span>                :<span class="lineCov">     508315 :                     break;</span>
+<span class="lineNum">    1759 </span>                :<span class="lineCov">     514592 :                     break;</span>
 <span class="lineNum">    1760 </span>                :            : 
 <span class="lineNum">    1761 </span>[<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 1578 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">       1583 :                 }else if (minchunkno == diffchunkno &amp;&amp; minchunkno == newchunkno) {</span>
 <span class="lineNum">    1762 </span>                :            :                     //3 2-1. create sub-tree
@@ -1973,15 +1972,15 @@
 <span class="lineNum">    1896 </span>                :            :         } // b-tree result success or fail
 <span class="lineNum">    1897 </span>                :            :     } // while
 <span class="lineNum">    1898 </span>                :            : 
-<span class="lineNum">    1899 </span>                :<span class="lineCov">    8747170 :     _hbtrie_btree_cascaded_update(trie, &amp;btreelist, key, 1);</span>
+<span class="lineNum">    1899 </span>                :<span class="lineCov">    8064964 :     _hbtrie_btree_cascaded_update(trie, &amp;btreelist, key, 1);</span>
 <span class="lineNum">    1900 </span>                :            : 
-<span class="lineNum">    1901 </span>                :<span class="lineCov">    8747167 :     return ret_result;</span>
+<span class="lineNum">    1901 </span>                :<span class="lineCov">    8064953 :     return ret_result;</span>
 <a name="1902"><span class="lineNum">    1902 </span>                :            : }</a>
 <span class="lineNum">    1903 </span>                :            : 
-<span class="lineNum">    1904 </span>                :<span class="lineCov">    8747103 : hbtrie_result hbtrie_insert(struct hbtrie *trie,</span>
+<span class="lineNum">    1904 </span>                :<span class="lineCov">    8064913 : hbtrie_result hbtrie_insert(struct hbtrie *trie,</span>
 <span class="lineNum">    1905 </span>                :            :                             void *rawkey, int rawkeylen,
 <span class="lineNum">    1906 </span>                :            :                             void *value, void *oldvalue_out) {
-<span class="lineNum">    1907 </span>                :<span class="lineCov">    8747103 :     return _hbtrie_insert(trie, rawkey, rawkeylen, value, oldvalue_out, 0x0);</span>
+<span class="lineNum">    1907 </span>                :<span class="lineCov">    8064913 :     return _hbtrie_insert(trie, rawkey, rawkeylen, value, oldvalue_out, 0x0);</span>
 <a name="1908"><span class="lineNum">    1908 </span>                :            : }</a>
 <span class="lineNum">    1909 </span>                :            : 
 <span class="lineNum">    1910 </span>                :<span class="lineCov">         34 : hbtrie_result hbtrie_insert_partial(struct hbtrie *trie,</span>
