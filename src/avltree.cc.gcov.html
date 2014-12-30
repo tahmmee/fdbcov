@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2014-12-30 15:06:17</td>
+            <td class="headerValue">2014-12-30 15:11:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">18</td>
@@ -90,16 +90,16 @@
 <span class="lineNum">      19 </span>                :            : 
 <a name="20"><span class="lineNum">      20 </span>                :            : #define max(a,b)    (((a) &gt; (b)) ? (a) : (b))</a>
 <span class="lineNum">      21 </span>                :            : 
-<span class="lineNum">      22 </span>                :<span class="lineCov">   64313424 : INLINE int _abs(int n) {</span>
-<span class="lineNum">      23 </span>                :<span class="lineCov">   64313424 :     int mask = n &gt;&gt; ((sizeof(int)*8) -1);</span>
-<span class="lineNum">      24 </span>                :<span class="lineCov">   64313424 :     return (mask + n)^mask;</span>
+<span class="lineNum">      22 </span>                :<span class="lineCov">   61993938 : INLINE int _abs(int n) {</span>
+<span class="lineNum">      23 </span>                :<span class="lineCov">   61993938 :     int mask = n &gt;&gt; ((sizeof(int)*8) -1);</span>
+<span class="lineNum">      24 </span>                :<span class="lineCov">   61993938 :     return (mask + n)^mask;</span>
 <a name="25"><span class="lineNum">      25 </span>                :            : }</a>
 <span class="lineNum">      26 </span>                :            : 
-<span class="lineNum">      27 </span>                :<span class="lineCov">   51299889 : INLINE void avl_set_parent(struct avl_node *node, struct avl_node *parent)</span>
+<span class="lineNum">      27 </span>                :<span class="lineCov">   49025293 : INLINE void avl_set_parent(struct avl_node *node, struct avl_node *parent)</span>
 <span class="lineNum">      28 </span>                :            : {
 <span class="lineNum">      29 </span>                :            :     node-&gt;parent = (struct avl_node *)(
-<span class="lineNum">      30 </span>                :<span class="lineCov">   51299889 :         (uint64_t)parent | ((uint64_t)node-&gt;parent &amp; 0x3));</span>
-<span class="lineNum">      31 </span>                :<span class="lineCov">   51299889 : }</span>
+<span class="lineNum">      30 </span>                :<span class="lineCov">   49025293 :         (uint64_t)parent | ((uint64_t)node-&gt;parent &amp; 0x3));</span>
+<span class="lineNum">      31 </span>                :<span class="lineCov">   49025293 : }</span>
 <span class="lineNum">      32 </span>                :            : 
 <span class="lineNum">      33 </span>                :            : #ifdef __AVL_DEBUG
 <span class="lineNum">      34 </span>                :            : #include &lt;stdio.h&gt;
@@ -116,7 +116,7 @@
 <span class="lineNum">      45 </span>                :            : #define __AVL_DEBUG_DISPLAY(tree)
 <a name="46"><span class="lineNum">      46 </span>                :            : #endif</a>
 <span class="lineNum">      47 </span>                :            : 
-<span class="lineNum">      48 </span>                :<span class="lineCov">   87989255 : INLINE void avl_set_bf(struct avl_node *node, int bf)</span>
+<span class="lineNum">      48 </span>                :<span class="lineCov">   83850015 : INLINE void avl_set_bf(struct avl_node *node, int bf)</span>
 <span class="lineNum">      49 </span>                :            : {
 <span class="lineNum">      50 </span>                :            :     __AVL_DEBUG_BF_CHECK(bf);
 <span class="lineNum">      51 </span>                :            : 
@@ -124,179 +124,179 @@
 <span class="lineNum">      53 </span>                :            :     node-&gt;bf = bf;
 <span class="lineNum">      54 </span>                :            : #else
 <span class="lineNum">      55 </span>                :            :     node-&gt;parent = (struct avl_node *)(
-<span class="lineNum">      56 </span>                :<span class="lineCov">   87989255 :         (uint64_t)avl_parent(node) | (uint64_t)(bf+1));</span>
+<span class="lineNum">      56 </span>                :<span class="lineCov">   83850015 :         (uint64_t)avl_parent(node) | (uint64_t)(bf+1));</span>
 <span class="lineNum">      57 </span>                :            : #endif
-<a name="58"><span class="lineNum">      58 </span>                :<span class="lineCov">   87989255 : }</span></a>
+<a name="58"><span class="lineNum">      58 </span>                :<span class="lineCov">   83850015 : }</span></a>
 <span class="lineNum">      59 </span>                :            : 
-<span class="lineNum">      60 </span>                :<span class="lineCov">    1290408 : INLINE struct avl_node* _rotate_LL(struct avl_node *parent,</span>
+<span class="lineNum">      60 </span>                :<span class="lineCov">    1266704 : INLINE struct avl_node* _rotate_LL(struct avl_node *parent,</span>
 <span class="lineNum">      61 </span>                :            :                                    int parent_bf,
 <span class="lineNum">      62 </span>                :            :                                    int *child_bf,
 <span class="lineNum">      63 </span>                :            :                                    int *height_delta)
 <span class="lineNum">      64 </span>                :            : // MUST ensure that parent_bf &lt;= 0
 <span class="lineNum">      65 </span>                :            : {
 <span class="lineNum">      66 </span>                :            :     int p_right, c_left, c_right;
-<span class="lineNum">      67 </span>                :<span class="lineCov">    1290408 :     struct avl_node *child = parent-&gt;left;</span>
+<span class="lineNum">      67 </span>                :<span class="lineCov">    1266704 :     struct avl_node *child = parent-&gt;left;</span>
 <span class="lineNum">      68 </span>                :            : 
 <span class="lineNum">      69 </span>                :            :     __AVL_DEBUG_LL(parent, child, parent_bf, *child_bf);
 <span class="lineNum">      70 </span>                :            : 
-<span class="lineNum">      71 </span>        [<span class="branchCov" title="Branch 0 was taken 961614 times"> + </span><span class="branchCov" title="Branch 1 was taken 328794 times"> + </span>]:<span class="lineCov">    1290408 :     c_left = (child-&gt;left)?(1):(0);</span>
-<span class="lineNum">      72 </span>        [<span class="branchCov" title="Branch 0 was taken 433968 times"> + </span><span class="branchCov" title="Branch 1 was taken 856440 times"> + </span>]:<span class="lineCov">    1290408 :     c_right = (child-&gt;right)?(1):(0);</span>
-<span class="lineNum">      73 </span>        [<span class="branchCov" title="Branch 0 was taken 842953 times"> + </span><span class="branchCov" title="Branch 1 was taken 447455 times"> + </span>]:<span class="lineCov">    1290408 :     if (*child_bf &lt; 0) {</span>
+<span class="lineNum">      71 </span>        [<span class="branchCov" title="Branch 0 was taken 933597 times"> + </span><span class="branchCov" title="Branch 1 was taken 333107 times"> + </span>]:<span class="lineCov">    1266704 :     c_left = (child-&gt;left)?(1):(0);</span>
+<span class="lineNum">      72 </span>        [<span class="branchCov" title="Branch 0 was taken 399759 times"> + </span><span class="branchCov" title="Branch 1 was taken 866945 times"> + </span>]:<span class="lineCov">    1266704 :     c_right = (child-&gt;right)?(1):(0);</span>
+<span class="lineNum">      73 </span>        [<span class="branchCov" title="Branch 0 was taken 830875 times"> + </span><span class="branchCov" title="Branch 1 was taken 435829 times"> + </span>]:<span class="lineCov">    1266704 :     if (*child_bf &lt; 0) {</span>
 <span class="lineNum">      74 </span>                :            :         // child-&gt;left &gt; child-&gt;right
-<span class="lineNum">      75 </span>                :<span class="lineCov">     842953 :         c_left = c_right - (*child_bf);</span>
-<span class="lineNum">      76 </span>                :<span class="lineCov">     842953 :         p_right = c_left + 1 + parent_bf;</span>
-<span class="lineNum">      77 </span>        [<span class="branchCov" title="Branch 0 was taken 45663 times"> + </span><span class="branchCov" title="Branch 1 was taken 797290 times"> + </span>]:<span class="lineCov">     842953 :         if (height_delta)</span>
-<span class="lineNum">      78 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 45663 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 45663 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      45663 :             *height_delta = max(c_left, max(c_right, p_right)+1) - (c_left + 1);</span>
-<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 45663 times"> + </span>]
+<span class="lineNum">      75 </span>                :<span class="lineCov">     830875 :         c_left = c_right - (*child_bf);</span>
+<span class="lineNum">      76 </span>                :<span class="lineCov">     830875 :         p_right = c_left + 1 + parent_bf;</span>
+<span class="lineNum">      77 </span>        [<span class="branchCov" title="Branch 0 was taken 44257 times"> + </span><span class="branchCov" title="Branch 1 was taken 786618 times"> + </span>]:<span class="lineCov">     830875 :         if (height_delta)</span>
+<span class="lineNum">      78 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 44257 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 44257 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      44257 :             *height_delta = max(c_left, max(c_right, p_right)+1) - (c_left + 1);</span>
+<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 44257 times"> + </span>]
 <span class="lineNum">      79 </span>                :            : 
 <span class="lineNum">      80 </span>                :            :     } else {
 <span class="lineNum">      81 </span>                :            :         // child-&gt;left &lt;= child-&gt;right
-<span class="lineNum">      82 </span>                :<span class="lineCov">     447455 :         c_right = c_left + (*child_bf);</span>
-<span class="lineNum">      83 </span>                :<span class="lineCov">     447455 :         p_right = c_right + 1 + parent_bf;</span>
-<span class="lineNum">      84 </span>        [<span class="branchCov" title="Branch 0 was taken 383514 times"> + </span><span class="branchCov" title="Branch 1 was taken 63941 times"> + </span>]:<span class="lineCov">     447455 :         if (height_delta)</span>
-<span class="lineNum">      85 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 383514 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 383514 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     383514 :             *height_delta = max(c_left, max(c_right, p_right)+1) - (c_right + 1);</span>
-<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 383514 times"> + </span>]
+<span class="lineNum">      82 </span>                :<span class="lineCov">     435829 :         c_right = c_left + (*child_bf);</span>
+<span class="lineNum">      83 </span>                :<span class="lineCov">     435829 :         p_right = c_right + 1 + parent_bf;</span>
+<span class="lineNum">      84 </span>        [<span class="branchCov" title="Branch 0 was taken 375639 times"> + </span><span class="branchCov" title="Branch 1 was taken 60190 times"> + </span>]:<span class="lineCov">     435829 :         if (height_delta)</span>
+<span class="lineNum">      85 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 375639 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 375639 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     375639 :             *height_delta = max(c_left, max(c_right, p_right)+1) - (c_right + 1);</span>
+<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 375639 times"> + </span>]
 <span class="lineNum">      86 </span>                :            :     }
-<span class="lineNum">      87 </span>        [<span class="branchCov" title="Branch 0 was taken 63941 times"> + </span><span class="branchCov" title="Branch 1 was taken 1226467 times"> + </span>]:<span class="lineCov">    1290408 :     *child_bf = (max(c_right, p_right) + 1) - c_left;</span>
-<span class="lineNum">      88 </span>                :<span class="lineCov">    1290408 :     avl_set_bf(parent, p_right - c_right);</span>
+<span class="lineNum">      87 </span>        [<span class="branchCov" title="Branch 0 was taken 60190 times"> + </span><span class="branchCov" title="Branch 1 was taken 1206514 times"> + </span>]:<span class="lineCov">    1266704 :     *child_bf = (max(c_right, p_right) + 1) - c_left;</span>
+<span class="lineNum">      88 </span>                :<span class="lineCov">    1266704 :     avl_set_bf(parent, p_right - c_right);</span>
 <span class="lineNum">      89 </span>                :            : 
-<span class="lineNum">      90 </span>                :<span class="lineCov">    1290408 :     parent-&gt;left = child-&gt;right;</span>
-<span class="lineNum">      91 </span>        [<span class="branchCov" title="Branch 0 was taken 433968 times"> + </span><span class="branchCov" title="Branch 1 was taken 856440 times"> + </span>]:<span class="lineCov">    1290408 :     if (child-&gt;right)</span>
-<span class="lineNum">      92 </span>                :<span class="lineCov">     433968 :         avl_set_parent(child-&gt;right, parent);</span>
-<span class="lineNum">      93 </span>                :<span class="lineCov">    1290408 :     child-&gt;right = parent;</span>
-<span class="lineNum">      94 </span>                :<span class="lineCov">    1290408 :     avl_set_parent(child, avl_parent(parent));</span>
-<span class="lineNum">      95 </span>                :<span class="lineCov">    1290408 :     avl_set_parent(parent, child);</span>
+<span class="lineNum">      90 </span>                :<span class="lineCov">    1266704 :     parent-&gt;left = child-&gt;right;</span>
+<span class="lineNum">      91 </span>        [<span class="branchCov" title="Branch 0 was taken 399759 times"> + </span><span class="branchCov" title="Branch 1 was taken 866945 times"> + </span>]:<span class="lineCov">    1266704 :     if (child-&gt;right)</span>
+<span class="lineNum">      92 </span>                :<span class="lineCov">     399759 :         avl_set_parent(child-&gt;right, parent);</span>
+<span class="lineNum">      93 </span>                :<span class="lineCov">    1266704 :     child-&gt;right = parent;</span>
+<span class="lineNum">      94 </span>                :<span class="lineCov">    1266704 :     avl_set_parent(child, avl_parent(parent));</span>
+<span class="lineNum">      95 </span>                :<span class="lineCov">    1266704 :     avl_set_parent(parent, child);</span>
 <span class="lineNum">      96 </span>                :            : 
-<span class="lineNum">      97 </span>                :<span class="lineCov">    1290408 :     return child;</span>
+<span class="lineNum">      97 </span>                :<span class="lineCov">    1266704 :     return child;</span>
 <a name="98"><span class="lineNum">      98 </span>                :            : }</a>
 <span class="lineNum">      99 </span>                :            : 
-<span class="lineNum">     100 </span>                :<span class="lineCov">   10101978 : INLINE struct avl_node* _rotate_RR(struct avl_node *parent,</span>
+<span class="lineNum">     100 </span>                :<span class="lineCov">    9752582 : INLINE struct avl_node* _rotate_RR(struct avl_node *parent,</span>
 <span class="lineNum">     101 </span>                :            :                                    int parent_bf,
 <span class="lineNum">     102 </span>                :            :                                    int *child_bf,
 <span class="lineNum">     103 </span>                :            :                                    int *height_delta)
 <span class="lineNum">     104 </span>                :            : // MUST ensure that parent_bf &gt;= 0
 <span class="lineNum">     105 </span>                :            : {
 <span class="lineNum">     106 </span>                :            :     int p_left, c_left, c_right;
-<span class="lineNum">     107 </span>                :<span class="lineCov">   10101978 :     struct avl_node *child = parent-&gt;right;</span>
+<span class="lineNum">     107 </span>                :<span class="lineCov">    9752582 :     struct avl_node *child = parent-&gt;right;</span>
 <span class="lineNum">     108 </span>                :            : 
 <span class="lineNum">     109 </span>                :            :     __AVL_DEBUG_RR(parent, child, parent_bf, *child_bf);
 <span class="lineNum">     110 </span>                :            : 
-<span class="lineNum">     111 </span>        [<span class="branchCov" title="Branch 0 was taken 5981008 times"> + </span><span class="branchCov" title="Branch 1 was taken 4120970 times"> + </span>]:<span class="lineCov">   10101978 :     c_left = (child-&gt;left)?(1):(0);</span>
-<span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 9791023 times"> + </span><span class="branchCov" title="Branch 1 was taken 310955 times"> + </span>]:<span class="lineCov">   10101978 :     c_right = (child-&gt;right)?(1):(0);</span>
-<span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 47540 times"> + </span><span class="branchCov" title="Branch 1 was taken 10054438 times"> + </span>]:<span class="lineCov">   10101978 :     if (*child_bf &lt; 0) {</span>
+<span class="lineNum">     111 </span>        [<span class="branchCov" title="Branch 0 was taken 5774336 times"> + </span><span class="branchCov" title="Branch 1 was taken 3978246 times"> + </span>]:<span class="lineCov">    9752582 :     c_left = (child-&gt;left)?(1):(0);</span>
+<span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 9420804 times"> + </span><span class="branchCov" title="Branch 1 was taken 331778 times"> + </span>]:<span class="lineCov">    9752582 :     c_right = (child-&gt;right)?(1):(0);</span>
+<span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 44572 times"> + </span><span class="branchCov" title="Branch 1 was taken 9708010 times"> + </span>]:<span class="lineCov">    9752582 :     if (*child_bf &lt; 0) {</span>
 <span class="lineNum">     114 </span>                :            :         // child-&gt;left &gt; child-&gt;right
-<span class="lineNum">     115 </span>                :<span class="lineCov">      47540 :         c_left = c_right - (*child_bf);</span>
-<span class="lineNum">     116 </span>                :<span class="lineCov">      47540 :         p_left = c_left + 1 - parent_bf;</span>
-<span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 47537 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">      47540 :         if (height_delta)</span>
-<span class="lineNum">     118 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 47537 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 47537 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      47537 :             *height_delta = max(c_right, max(c_left, p_left)+1) - (c_left + 1);</span>
-<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 47537 times"> + </span>]
+<span class="lineNum">     115 </span>                :<span class="lineCov">      44572 :         c_left = c_right - (*child_bf);</span>
+<span class="lineNum">     116 </span>                :<span class="lineCov">      44572 :         p_left = c_left + 1 - parent_bf;</span>
+<span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 44570 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      44572 :         if (height_delta)</span>
+<span class="lineNum">     118 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 44570 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 44570 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      44570 :             *height_delta = max(c_right, max(c_left, p_left)+1) - (c_left + 1);</span>
+<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 44570 times"> + </span>]
 <span class="lineNum">     119 </span>                :            : 
 <span class="lineNum">     120 </span>                :            :     } else {
 <span class="lineNum">     121 </span>                :            :         // child-&gt;left &lt;= child-&gt;right
-<span class="lineNum">     122 </span>                :<span class="lineCov">   10054438 :         c_right = c_left + (*child_bf);</span>
-<span class="lineNum">     123 </span>                :<span class="lineCov">   10054438 :         p_left = c_right + 1 - parent_bf;</span>
-<span class="lineNum">     124 </span>        [<span class="branchCov" title="Branch 0 was taken 428293 times"> + </span><span class="branchCov" title="Branch 1 was taken 9626145 times"> + </span>]:<span class="lineCov">   10054438 :         if (height_delta)</span>
-<span class="lineNum">     125 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 428293 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 428293 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     428293 :             *height_delta = max(c_right, max(c_left, p_left)+1) - (c_right + 1);</span>
-<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 428293 times"> + </span>]
+<span class="lineNum">     122 </span>                :<span class="lineCov">    9708010 :         c_right = c_left + (*child_bf);</span>
+<span class="lineNum">     123 </span>                :<span class="lineCov">    9708010 :         p_left = c_right + 1 - parent_bf;</span>
+<span class="lineNum">     124 </span>        [<span class="branchCov" title="Branch 0 was taken 433681 times"> + </span><span class="branchCov" title="Branch 1 was taken 9274329 times"> + </span>]:<span class="lineCov">    9708010 :         if (height_delta)</span>
+<span class="lineNum">     125 </span>[<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 433681 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 433681 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     433681 :             *height_delta = max(c_right, max(c_left, p_left)+1) - (c_right + 1);</span>
+<span class="lineNum">         </span>        [<span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 433681 times"> + </span>]
 <span class="lineNum">     126 </span>                :            : 
 <span class="lineNum">     127 </span>                :            :     }
-<span class="lineNum">     128 </span>        [<span class="branchCov" title="Branch 0 was taken 2797675 times"> + </span><span class="branchCov" title="Branch 1 was taken 7304303 times"> + </span>]:<span class="lineCov">   10101978 :     *child_bf = c_right - (max(c_left, p_left) + 1);</span>
-<span class="lineNum">     129 </span>                :<span class="lineCov">   10101978 :     avl_set_bf(parent, c_left - p_left);</span>
+<span class="lineNum">     128 </span>        [<span class="branchCov" title="Branch 0 was taken 2713556 times"> + </span><span class="branchCov" title="Branch 1 was taken 7039026 times"> + </span>]:<span class="lineCov">    9752582 :     *child_bf = c_right - (max(c_left, p_left) + 1);</span>
+<span class="lineNum">     129 </span>                :<span class="lineCov">    9752582 :     avl_set_bf(parent, c_left - p_left);</span>
 <span class="lineNum">     130 </span>                :            : 
-<span class="lineNum">     131 </span>                :<span class="lineCov">   10101974 :     parent-&gt;right = child-&gt;left;</span>
-<span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 5981006 times"> + </span><span class="branchCov" title="Branch 1 was taken 4120968 times"> + </span>]:<span class="lineCov">   10101974 :     if (child-&gt;left)</span>
-<span class="lineNum">     133 </span>                :<span class="lineCov">    5981006 :         avl_set_parent(child-&gt;left, parent);</span>
-<span class="lineNum">     134 </span>                :<span class="lineCov">   10101973 :     child-&gt;left = parent;</span>
-<span class="lineNum">     135 </span>                :<span class="lineCov">   10101973 :     avl_set_parent(child, avl_parent(parent));</span>
-<span class="lineNum">     136 </span>                :<span class="lineCov">   10101972 :     avl_set_parent(parent, child);</span>
+<span class="lineNum">     131 </span>                :<span class="lineCov">    9752580 :     parent-&gt;right = child-&gt;left;</span>
+<span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 5774336 times"> + </span><span class="branchCov" title="Branch 1 was taken 3978244 times"> + </span>]:<span class="lineCov">    9752580 :     if (child-&gt;left)</span>
+<span class="lineNum">     133 </span>                :<span class="lineCov">    5774336 :         avl_set_parent(child-&gt;left, parent);</span>
+<span class="lineNum">     134 </span>                :<span class="lineCov">    9752580 :     child-&gt;left = parent;</span>
+<span class="lineNum">     135 </span>                :<span class="lineCov">    9752580 :     avl_set_parent(child, avl_parent(parent));</span>
+<span class="lineNum">     136 </span>                :<span class="lineCov">    9752579 :     avl_set_parent(parent, child);</span>
 <span class="lineNum">     137 </span>                :            : 
-<span class="lineNum">     138 </span>                :<span class="lineCov">   10101972 :     return child;</span>
+<span class="lineNum">     138 </span>                :<span class="lineCov">    9752578 :     return child;</span>
 <a name="139"><span class="lineNum">     139 </span>                :            : }</a>
 <span class="lineNum">     140 </span>                :            : 
-<span class="lineNum">     141 </span>                :<span class="lineCov">     475830 : INLINE struct avl_node* _rotate_LR(struct avl_node *parent, int parent_bf)</span>
+<span class="lineNum">     141 </span>                :<span class="lineCov">     478251 : INLINE struct avl_node* _rotate_LR(struct avl_node *parent, int parent_bf)</span>
 <span class="lineNum">     142 </span>                :            : {
-<span class="lineNum">     143 </span>                :<span class="lineCov">     475830 :     int child_bf, height_delta = 0;</span>
-<span class="lineNum">     144 </span>                :<span class="lineCov">     475830 :     struct avl_node *child = parent-&gt;left;</span>
+<span class="lineNum">     143 </span>                :<span class="lineCov">     478251 :     int child_bf, height_delta = 0;</span>
+<span class="lineNum">     144 </span>                :<span class="lineCov">     478251 :     struct avl_node *child = parent-&gt;left;</span>
 <span class="lineNum">     145 </span>                :            :     struct avl_node *ret;
 <span class="lineNum">     146 </span>                :            : 
-<span class="lineNum">     147 </span>        [<span class="branchCov" title="Branch 0 was taken 475830 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     475830 :     if (child-&gt;right) {</span>
-<span class="lineNum">     148 </span>                :<span class="lineCov">     475830 :         child_bf = avl_bf(child-&gt;right);</span>
-<span class="lineNum">     149 </span>                :<span class="lineCov">     475830 :         parent-&gt;left = _rotate_RR(child, avl_bf(child), &amp;child_bf, &amp;height_delta);</span>
+<span class="lineNum">     147 </span>        [<span class="branchCov" title="Branch 0 was taken 478251 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     478251 :     if (child-&gt;right) {</span>
+<span class="lineNum">     148 </span>                :<span class="lineCov">     478251 :         child_bf = avl_bf(child-&gt;right);</span>
+<span class="lineNum">     149 </span>                :<span class="lineCov">     478251 :         parent-&gt;left = _rotate_RR(child, avl_bf(child), &amp;child_bf, &amp;height_delta);</span>
 <span class="lineNum">     150 </span>                :            :     } else {
 <span class="lineNum">     151 </span>                :<span class="lineNoCov">          0 :         child_bf = avl_bf(child);</span>
 <span class="lineNum">     152 </span>                :            :     }
 <span class="lineNum">     153 </span>                :            : 
-<span class="lineNum">     154 </span>                :<span class="lineCov">     475830 :     ret = _rotate_LL(parent, parent_bf-height_delta, &amp;child_bf, NULL);</span>
-<span class="lineNum">     155 </span>                :<span class="lineCov">     475830 :     avl_set_bf(ret, child_bf);</span>
-<span class="lineNum">     156 </span>                :<span class="lineCov">     475830 :     return ret;</span>
+<span class="lineNum">     154 </span>                :<span class="lineCov">     478251 :     ret = _rotate_LL(parent, parent_bf-height_delta, &amp;child_bf, NULL);</span>
+<span class="lineNum">     155 </span>                :<span class="lineCov">     478251 :     avl_set_bf(ret, child_bf);</span>
+<span class="lineNum">     156 </span>                :<span class="lineCov">     478251 :     return ret;</span>
 <a name="157"><span class="lineNum">     157 </span>                :            : }</a>
 <span class="lineNum">     158 </span>                :            : 
-<span class="lineNum">     159 </span>                :<span class="lineCov">     429177 : INLINE struct avl_node* _rotate_RL(struct avl_node *parent, int parent_bf)</span>
+<span class="lineNum">     159 </span>                :<span class="lineCov">     419896 : INLINE struct avl_node* _rotate_RL(struct avl_node *parent, int parent_bf)</span>
 <span class="lineNum">     160 </span>                :            : {
-<span class="lineNum">     161 </span>                :<span class="lineCov">     429177 :     int child_bf, height_delta = 0;</span>
-<span class="lineNum">     162 </span>                :<span class="lineCov">     429177 :     struct avl_node *child = parent-&gt;right;</span>
+<span class="lineNum">     161 </span>                :<span class="lineCov">     419896 :     int child_bf, height_delta = 0;</span>
+<span class="lineNum">     162 </span>                :<span class="lineCov">     419896 :     struct avl_node *child = parent-&gt;right;</span>
 <span class="lineNum">     163 </span>                :            :     struct avl_node *ret;
 <span class="lineNum">     164 </span>                :            : 
-<span class="lineNum">     165 </span>        [<span class="branchCov" title="Branch 0 was taken 429177 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     429177 :     if (child-&gt;left) {</span>
-<span class="lineNum">     166 </span>                :<span class="lineCov">     429177 :         child_bf = avl_bf(child-&gt;left);</span>
-<span class="lineNum">     167 </span>                :<span class="lineCov">     429177 :         parent-&gt;right = _rotate_LL(child, avl_bf(child), &amp;child_bf, &amp;height_delta);</span>
+<span class="lineNum">     165 </span>        [<span class="branchCov" title="Branch 0 was taken 419896 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     419896 :     if (child-&gt;left) {</span>
+<span class="lineNum">     166 </span>                :<span class="lineCov">     419896 :         child_bf = avl_bf(child-&gt;left);</span>
+<span class="lineNum">     167 </span>                :<span class="lineCov">     419896 :         parent-&gt;right = _rotate_LL(child, avl_bf(child), &amp;child_bf, &amp;height_delta);</span>
 <span class="lineNum">     168 </span>                :            :     } else {
 <span class="lineNum">     169 </span>                :<span class="lineNoCov">          0 :         child_bf = avl_bf(child);</span>
 <span class="lineNum">     170 </span>                :            :     }
 <span class="lineNum">     171 </span>                :            : 
-<span class="lineNum">     172 </span>                :<span class="lineCov">     429177 :     ret = _rotate_RR(parent, parent_bf+height_delta, &amp;child_bf, NULL);</span>
-<span class="lineNum">     173 </span>                :<span class="lineCov">     429177 :     avl_set_bf(ret, child_bf);</span>
-<span class="lineNum">     174 </span>                :<span class="lineCov">     429177 :     return ret;</span>
+<span class="lineNum">     172 </span>                :<span class="lineCov">     419896 :     ret = _rotate_RR(parent, parent_bf+height_delta, &amp;child_bf, NULL);</span>
+<span class="lineNum">     173 </span>                :<span class="lineCov">     419896 :     avl_set_bf(ret, child_bf);</span>
+<span class="lineNum">     174 </span>                :<span class="lineCov">     419896 :     return ret;</span>
 <span class="lineNum">     175 </span>                :            : }
 <span class="lineNum">     176 </span>                :            : 
 <a name="177"><span class="lineNum">     177 </span>                :            : #define _get_balance(node) ((node)?(avl_bf(node)):(0))</a>
 <span class="lineNum">     178 </span>                :            : 
-<span class="lineNum">     179 </span>                :<span class="lineCov">   56326095 : struct avl_node* _balance_tree(struct avl_node *node, int bf)</span>
+<span class="lineNum">     179 </span>                :<span class="lineCov">   53782328 : struct avl_node* _balance_tree(struct avl_node *node, int bf)</span>
 <span class="lineNum">     180 </span>                :            : {
 <span class="lineNum">     181 </span>                :            :     int child_bf;
-<span class="lineNum">     182 </span>        [<span class="branchCov" title="Branch 0 was taken 56326095 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   56326095 :     int height_diff= _get_balance(node) + bf;</span>
+<span class="lineNum">     182 </span>        [<span class="branchCov" title="Branch 0 was taken 53782328 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   53782328 :     int height_diff= _get_balance(node) + bf;</span>
 <span class="lineNum">     183 </span>                :            : 
-<span class="lineNum">     184 </span>        [<span class="branchCov" title="Branch 0 was taken 56326095 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   56326095 :     if (node) {</span>
+<span class="lineNum">     184 </span>        [<span class="branchCov" title="Branch 0 was taken 53782333 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   53782328 :     if (node) {</span>
 <span class="lineNum">     185 </span>                :            :         __AVL_DEBUG_BAL_BEGIN(node, bf, height_diff);
 <span class="lineNum">     186 </span>                :            : 
-<span class="lineNum">     187 </span>[<span class="branchCov" title="Branch 0 was taken 861231 times"> + </span><span class="branchCov" title="Branch 1 was taken 55464864 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 861231 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">   56326095 :         if(height_diff &lt; -1 &amp;&amp; node-&gt;left) {</span>
+<span class="lineNum">     187 </span>[<span class="branchCov" title="Branch 0 was taken 846808 times"> + </span><span class="branchCov" title="Branch 1 was taken 52935525 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 846808 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">   53782333 :         if(height_diff &lt; -1 &amp;&amp; node-&gt;left) {</span>
 <span class="lineNum">     188 </span>                :            :             // balance left sub tree
-<span class="lineNum">     189 </span>[<span class="branchCov" title="Branch 0 was taken 861231 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 385401 times"> + </span><span class="branchCov" title="Branch 3 was taken 475830 times"> + </span>]:<span class="lineCov">    1722462 :             if(_get_balance(node-&gt;left) &lt;= 0) {</span>
-<span class="lineNum">     190 </span>                :<span class="lineCov">     385401 :                 child_bf = avl_bf(node-&gt;left);</span>
-<span class="lineNum">     191 </span>                :<span class="lineCov">     385401 :                 node = _rotate_LL(node, height_diff, &amp;child_bf, NULL);</span>
-<span class="lineNum">     192 </span>                :<span class="lineCov">     385401 :                 avl_set_bf(node, child_bf);</span>
+<span class="lineNum">     189 </span>[<span class="branchCov" title="Branch 0 was taken 846808 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 368557 times"> + </span><span class="branchCov" title="Branch 3 was taken 478251 times"> + </span>]:<span class="lineCov">    1693616 :             if(_get_balance(node-&gt;left) &lt;= 0) {</span>
+<span class="lineNum">     190 </span>                :<span class="lineCov">     368557 :                 child_bf = avl_bf(node-&gt;left);</span>
+<span class="lineNum">     191 </span>                :<span class="lineCov">     368557 :                 node = _rotate_LL(node, height_diff, &amp;child_bf, NULL);</span>
+<span class="lineNum">     192 </span>                :<span class="lineCov">     368557 :                 avl_set_bf(node, child_bf);</span>
 <span class="lineNum">     193 </span>                :            :             } else {
-<span class="lineNum">     194 </span>                :<span class="lineCov">     475830 :                 node = _rotate_LR(node, height_diff);</span>
+<span class="lineNum">     194 </span>                :<span class="lineCov">     478251 :                 node = _rotate_LR(node, height_diff);</span>
 <span class="lineNum">     195 </span>                :            :             }
-<span class="lineNum">     196 </span>[<span class="branchCov" title="Branch 0 was taken 9626144 times"> + </span><span class="branchCov" title="Branch 1 was taken 45838720 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9626144 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">   55464864 :         } else if(height_diff &gt; 1 &amp;&amp; node-&gt;right) {</span>
+<span class="lineNum">     196 </span>[<span class="branchCov" title="Branch 0 was taken 9274327 times"> + </span><span class="branchCov" title="Branch 1 was taken 43661198 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9274327 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">   52935525 :         } else if(height_diff &gt; 1 &amp;&amp; node-&gt;right) {</span>
 <span class="lineNum">     197 </span>                :            :             // balance right sub tree
-<span class="lineNum">     198 </span>[<span class="branchCov" title="Branch 0 was taken 9626144 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 9196967 times"> + </span><span class="branchCov" title="Branch 3 was taken 429177 times"> + </span>]:<span class="lineCov">   19252287 :             if(_get_balance(node-&gt;right) &gt;= 0) {</span>
-<span class="lineNum">     199 </span>                :<span class="lineCov">    9196967 :                 child_bf = avl_bf(node-&gt;right);</span>
-<span class="lineNum">     200 </span>                :<span class="lineCov">    9196967 :                 node = _rotate_RR(node, height_diff, &amp;child_bf, NULL);</span>
-<span class="lineNum">     201 </span>                :<span class="lineCov">    9196966 :                 avl_set_bf(node, child_bf);</span>
+<span class="lineNum">     198 </span>[<span class="branchCov" title="Branch 0 was taken 9274327 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>][<span class="branchCov" title="Branch 2 was taken 8854431 times"> + </span><span class="branchCov" title="Branch 3 was taken 419896 times"> + </span>]:<span class="lineCov">   18548653 :             if(_get_balance(node-&gt;right) &gt;= 0) {</span>
+<span class="lineNum">     199 </span>                :<span class="lineCov">    8854431 :                 child_bf = avl_bf(node-&gt;right);</span>
+<span class="lineNum">     200 </span>                :<span class="lineCov">    8854431 :                 node = _rotate_RR(node, height_diff, &amp;child_bf, NULL);</span>
+<span class="lineNum">     201 </span>                :<span class="lineCov">    8854431 :                 avl_set_bf(node, child_bf);</span>
 <span class="lineNum">     202 </span>                :            :             } else {
-<span class="lineNum">     203 </span>                :<span class="lineCov">     429177 :                 node = _rotate_RL(node, height_diff);</span>
+<span class="lineNum">     203 </span>                :<span class="lineCov">     419896 :                 node = _rotate_RL(node, height_diff);</span>
 <span class="lineNum">     204 </span>                :            :             }
 <span class="lineNum">     205 </span>                :            :         } else {
-<span class="lineNum">     206 </span>                :<span class="lineCov">   56326094 :             avl_set_bf(node, avl_bf(node) + bf);</span>
+<span class="lineNum">     206 </span>                :<span class="lineCov">   53782332 :             avl_set_bf(node, avl_bf(node) + bf);</span>
 <span class="lineNum">     207 </span>                :            :         }
 <span class="lineNum">     208 </span>                :            : 
 <span class="lineNum">     209 </span>                :            :         __AVL_DEBUG_BAL_END(node);
 <span class="lineNum">     210 </span>                :            :     }
 <span class="lineNum">     211 </span>                :            : 
-<span class="lineNum">     212 </span>                :<span class="lineCov">   56325997 :     return node;</span>
+<span class="lineNum">     212 </span>                :<span class="lineCov">   53782151 :     return node;</span>
 <a name="213"><span class="lineNum">     213 </span>                :            : }</a>
 <span class="lineNum">     214 </span>                :            : 
-<span class="lineNum">     215 </span>                :<span class="lineCov">   20639571 : struct avl_node* avl_first(struct avl_tree *tree)</span>
+<span class="lineNum">     215 </span>                :<span class="lineCov">   19396154 : struct avl_node* avl_first(struct avl_tree *tree)</span>
 <span class="lineNum">     216 </span>                :            : {
-<span class="lineNum">     217 </span>                :<span class="lineCov">   20639571 :     struct avl_node *p = NULL;</span>
-<span class="lineNum">     218 </span>                :<span class="lineCov">   20639571 :     struct avl_node *node = tree-&gt;root;</span>
+<span class="lineNum">     217 </span>                :<span class="lineCov">   19396154 :     struct avl_node *p = NULL;</span>
+<span class="lineNum">     218 </span>                :<span class="lineCov">   19396154 :     struct avl_node *node = tree-&gt;root;</span>
 <span class="lineNum">     219 </span>                :            : 
-<span class="lineNum">     220 </span>        [<span class="branchCov" title="Branch 0 was taken 49152341 times"> + </span><span class="branchCov" title="Branch 1 was taken 20639571 times"> + </span>]:<span class="lineCov">   69791912 :     while(node) {</span>
-<span class="lineNum">     221 </span>                :<span class="lineCov">   49152341 :         p = node;</span>
-<span class="lineNum">     222 </span>                :<span class="lineCov">   49152341 :         node = node-&gt;left;</span>
+<span class="lineNum">     220 </span>        [<span class="branchCov" title="Branch 0 was taken 47554053 times"> + </span><span class="branchCov" title="Branch 1 was taken 19396154 times"> + </span>]:<span class="lineCov">   66950207 :     while(node) {</span>
+<span class="lineNum">     221 </span>                :<span class="lineCov">   47554053 :         p = node;</span>
+<span class="lineNum">     222 </span>                :<span class="lineCov">   47554053 :         node = node-&gt;left;</span>
 <span class="lineNum">     223 </span>                :            :     }
-<span class="lineNum">     224 </span>                :<span class="lineCov">   20639571 :     return p;</span>
+<span class="lineNum">     224 </span>                :<span class="lineCov">   19396154 :     return p;</span>
 <a name="225"><span class="lineNum">     225 </span>                :            : }</a>
 <span class="lineNum">     226 </span>                :            : 
 <span class="lineNum">     227 </span>                :<span class="lineCov">         17 : struct avl_node* avl_last(struct avl_tree *tree)</span>
@@ -311,9 +311,9 @@
 <span class="lineNum">     236 </span>                :<span class="lineCov">         17 :     return p;</span>
 <a name="237"><span class="lineNum">     237 </span>                :            : }</a>
 <span class="lineNum">     238 </span>                :            : 
-<span class="lineNum">     239 </span>                :<span class="lineCov">    4970386 : struct avl_node* avl_next(struct avl_node *node)</span>
+<span class="lineNum">     239 </span>                :<span class="lineCov">    4793200 : struct avl_node* avl_next(struct avl_node *node)</span>
 <span class="lineNum">     240 </span>                :            : {
-<span class="lineNum">     241 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4970386 times"> + </span>]:<span class="lineCov">    4970386 :     if (node == NULL) return NULL;</span>
+<span class="lineNum">     241 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4793200 times"> + </span>]:<span class="lineCov">    4793200 :     if (node == NULL) return NULL;</span>
 <span class="lineNum">     242 </span>                :            : 
 <span class="lineNum">     243 </span>                :            : #ifdef _AVL_NEXT_POINTER
 <span class="lineNum">     244 </span>                :            :     return node-&gt;next;
@@ -322,31 +322,31 @@
 <span class="lineNum">     247 </span>                :            :     struct avl_node *p;
 <span class="lineNum">     248 </span>                :            : 
 <span class="lineNum">     249 </span>                :            :     // smallest value of right subtree
-<span class="lineNum">     250 </span>        [<span class="branchCov" title="Branch 0 was taken 2405484 times"> + </span><span class="branchCov" title="Branch 1 was taken 2564902 times"> + </span>]:<span class="lineCov">    4970386 :     if (node-&gt;right) {</span>
-<span class="lineNum">     251 </span>                :<span class="lineCov">    2405484 :         p = node;</span>
-<span class="lineNum">     252 </span>                :<span class="lineCov">    2405484 :         node = node-&gt;right;</span>
-<span class="lineNum">     253 </span>        [<span class="branchCov" title="Branch 0 was taken 4640966 times"> + </span><span class="branchCov" title="Branch 1 was taken 2405484 times"> + </span>]:<span class="lineCov">    7046450 :         while (node) {</span>
-<span class="lineNum">     254 </span>                :<span class="lineCov">    4640966 :             p = node;</span>
-<span class="lineNum">     255 </span>                :<span class="lineCov">    4640966 :             node = node-&gt;left;</span>
+<span class="lineNum">     250 </span>        [<span class="branchCov" title="Branch 0 was taken 2342162 times"> + </span><span class="branchCov" title="Branch 1 was taken 2451038 times"> + </span>]:<span class="lineCov">    4793200 :     if (node-&gt;right) {</span>
+<span class="lineNum">     251 </span>                :<span class="lineCov">    2342162 :         p = node;</span>
+<span class="lineNum">     252 </span>                :<span class="lineCov">    2342162 :         node = node-&gt;right;</span>
+<span class="lineNum">     253 </span>        [<span class="branchCov" title="Branch 0 was taken 4516456 times"> + </span><span class="branchCov" title="Branch 1 was taken 2342162 times"> + </span>]:<span class="lineCov">    6858618 :         while (node) {</span>
+<span class="lineNum">     254 </span>                :<span class="lineCov">    4516456 :             p = node;</span>
+<span class="lineNum">     255 </span>                :<span class="lineCov">    4516456 :             node = node-&gt;left;</span>
 <span class="lineNum">     256 </span>                :            :         }
-<span class="lineNum">     257 </span>                :<span class="lineCov">    2405484 :         return p;</span>
+<span class="lineNum">     257 </span>                :<span class="lineCov">    2342162 :         return p;</span>
 <span class="lineNum">     258 </span>                :            :     }
 <span class="lineNum">     259 </span>                :            : 
 <span class="lineNum">     260 </span>                :            :     // node does not have right child
-<span class="lineNum">     261 </span>        [<span class="branchCov" title="Branch 0 was taken 2411075 times"> + </span><span class="branchCov" title="Branch 1 was taken 153827 times"> + </span>]:<span class="lineCov">    2564902 :     if (avl_parent(node)) {</span>
+<span class="lineNum">     261 </span>        [<span class="branchCov" title="Branch 0 was taken 2346851 times"> + </span><span class="branchCov" title="Branch 1 was taken 104187 times"> + </span>]:<span class="lineCov">    2451038 :     if (avl_parent(node)) {</span>
 <span class="lineNum">     262 </span>                :            :         // find first parent that has right child
-<span class="lineNum">     263 </span>                :<span class="lineCov">    2411075 :         p = node;</span>
-<span class="lineNum">     264 </span>                :<span class="lineCov">    2411075 :         node = avl_parent(node);</span>
-<span class="lineNum">     265 </span>        [<span class="branchCov" title="Branch 0 was taken 4662400 times"> + </span><span class="branchCov" title="Branch 1 was taken 3865 times"> + </span>]:<span class="lineCov">    4666265 :         while(node) {</span>
-<span class="lineNum">     266 </span>        [<span class="branchCov" title="Branch 0 was taken 2407210 times"> + </span><span class="branchCov" title="Branch 1 was taken 2255190 times"> + </span>]:<span class="lineCov">    4662400 :             if (node-&gt;left == p) {</span>
-<span class="lineNum">     267 </span>                :<span class="lineCov">    2407210 :                 return node;</span>
+<span class="lineNum">     263 </span>                :<span class="lineCov">    2346851 :         p = node;</span>
+<span class="lineNum">     264 </span>                :<span class="lineCov">    2346851 :         node = avl_parent(node);</span>
+<span class="lineNum">     265 </span>        [<span class="branchCov" title="Branch 0 was taken 4537743 times"> + </span><span class="branchCov" title="Branch 1 was taken 3853 times"> + </span>]:<span class="lineCov">    4541596 :         while(node) {</span>
+<span class="lineNum">     266 </span>        [<span class="branchCov" title="Branch 0 was taken 2342998 times"> + </span><span class="branchCov" title="Branch 1 was taken 2194745 times"> + </span>]:<span class="lineCov">    4537743 :             if (node-&gt;left == p) {</span>
+<span class="lineNum">     267 </span>                :<span class="lineCov">    2342998 :                 return node;</span>
 <span class="lineNum">     268 </span>                :            :             }
-<span class="lineNum">     269 </span>                :<span class="lineCov">    2255190 :             p = node;</span>
-<span class="lineNum">     270 </span>                :<span class="lineCov">    2255190 :             node = avl_parent(node);</span>
+<span class="lineNum">     269 </span>                :<span class="lineCov">    2194745 :             p = node;</span>
+<span class="lineNum">     270 </span>                :<span class="lineCov">    2194745 :             node = avl_parent(node);</span>
 <span class="lineNum">     271 </span>                :            :         }
 <span class="lineNum">     272 </span>                :            :     }
 <span class="lineNum">     273 </span>                :            : #endif
-<span class="lineNum">     274 </span>                :<span class="lineCov">    4970386 :     return NULL;</span>
+<span class="lineNum">     274 </span>                :<span class="lineCov">    4793200 :     return NULL;</span>
 <a name="275"><span class="lineNum">     275 </span>                :            : }</a>
 <span class="lineNum">     276 </span>                :            : 
 <span class="lineNum">     277 </span>                :<span class="lineCov">      16517 : struct avl_node* avl_prev(struct avl_node *node)</span>
@@ -387,28 +387,28 @@
 <span class="lineNum">     312 </span>                :<span class="lineCov">      16517 :     return NULL;</span>
 <a name="313"><span class="lineNum">     313 </span>                :            : }</a>
 <span class="lineNum">     314 </span>                :            : 
-<span class="lineNum">     315 </span>                :<span class="lineCov">   51812575 : struct avl_node* avl_search(struct avl_tree *tree,</span>
+<span class="lineNum">     315 </span>                :<span class="lineCov">   47399916 : struct avl_node* avl_search(struct avl_tree *tree,</span>
 <span class="lineNum">     316 </span>                :            :                             struct avl_node *node,
 <span class="lineNum">     317 </span>                :            :                             avl_cmp_func *func)
 <span class="lineNum">     318 </span>                :            : // exact match
 <span class="lineNum">     319 </span>                :            : {
-<span class="lineNum">     320 </span>                :<span class="lineCov">   51812575 :     struct avl_node *p = tree-&gt;root;</span>
+<span class="lineNum">     320 </span>                :<span class="lineCov">   47399916 :     struct avl_node *p = tree-&gt;root;</span>
 <span class="lineNum">     321 </span>                :            :     int cmp;
 <span class="lineNum">     322 </span>                :            : 
-<span class="lineNum">     323 </span>        [<span class="branchCov" title="Branch 0 was taken 69757239 times"> + </span><span class="branchCov" title="Branch 1 was taken 11324881 times"> + </span>]:<span class="lineCov">   81082120 :     while(p)</span>
+<span class="lineNum">     323 </span>        [<span class="branchCov" title="Branch 0 was taken 66147644 times"> + </span><span class="branchCov" title="Branch 1 was taken 9236628 times"> + </span>]:<span class="lineCov">   75384272 :     while(p)</span>
 <span class="lineNum">     324 </span>                :            :     {
-<span class="lineNum">     325 </span>                :<span class="lineCov">   69757239 :         cmp = func(p, node, tree-&gt;aux);</span>
-<span class="lineNum">     326 </span>        [<span class="branchCov" title="Branch 0 was taken 10205933 times"> + </span><span class="branchCov" title="Branch 1 was taken 59577168 times"> + </span>]:<span class="lineCov">   69783101 :         if (cmp &gt; 0) {</span>
-<span class="lineNum">     327 </span>                :<span class="lineCov">   10205933 :             p = p-&gt;left;</span>
-<span class="lineNum">     328 </span>        [<span class="branchCov" title="Branch 0 was taken 19063612 times"> + </span><span class="branchCov" title="Branch 1 was taken 40513556 times"> + </span>]:<span class="lineCov">   59577168 :         }else if (cmp &lt; 0){</span>
-<span class="lineNum">     329 </span>                :<span class="lineCov">   19063612 :             p = p-&gt;right;</span>
+<span class="lineNum">     325 </span>                :<span class="lineCov">   66147644 :         cmp = func(p, node, tree-&gt;aux);</span>
+<span class="lineNum">     326 </span>        [<span class="branchCov" title="Branch 0 was taken 9661172 times"> + </span><span class="branchCov" title="Branch 1 was taken 56500903 times"> + </span>]:<span class="lineCov">   66162075 :         if (cmp &gt; 0) {</span>
+<span class="lineNum">     327 </span>                :<span class="lineCov">    9661172 :             p = p-&gt;left;</span>
+<span class="lineNum">     328 </span>        [<span class="branchCov" title="Branch 0 was taken 18323184 times"> + </span><span class="branchCov" title="Branch 1 was taken 38177719 times"> + </span>]:<span class="lineCov">   56500903 :         }else if (cmp &lt; 0){</span>
+<span class="lineNum">     329 </span>                :<span class="lineCov">   18323184 :             p = p-&gt;right;</span>
 <span class="lineNum">     330 </span>                :            :         }else {
 <span class="lineNum">     331 </span>                :            :             // search success
-<span class="lineNum">     332 </span>                :<span class="lineCov">   40513556 :             return p;</span>
+<span class="lineNum">     332 </span>                :<span class="lineCov">   38177719 :             return p;</span>
 <span class="lineNum">     333 </span>                :            :         }
 <span class="lineNum">     334 </span>                :            :     }
 <span class="lineNum">     335 </span>                :            :     // search fail
-<span class="lineNum">     336 </span>                :<span class="lineCov">   51838437 :     return NULL;</span>
+<span class="lineNum">     336 </span>                :<span class="lineCov">   47414347 :     return NULL;</span>
 <a name="337"><span class="lineNum">     337 </span>                :            : }</a>
 <span class="lineNum">     338 </span>                :            : 
 <span class="lineNum">     339 </span>                :<span class="lineCov">       2053 : struct avl_node* avl_search_greater(struct avl_tree *tree,</span>
@@ -485,48 +485,48 @@
 <span class="lineNum">     410 </span>                :            :     }
 <a name="411"><span class="lineNum">     411 </span>                :            : }</a>
 <span class="lineNum">     412 </span>                :            : 
-<span class="lineNum">     413 </span>                :<span class="lineCov">    2794539 : void avl_init(struct avl_tree *tree, void *aux)</span>
+<span class="lineNum">     413 </span>                :<span class="lineCov">    2794519 : void avl_init(struct avl_tree *tree, void *aux)</span>
 <span class="lineNum">     414 </span>                :            : {
-<span class="lineNum">     415 </span>                :<span class="lineCov">    2794539 :     tree-&gt;root = NULL;</span>
-<span class="lineNum">     416 </span>                :<span class="lineCov">    2794539 :     tree-&gt;aux = aux;</span>
-<a name="417"><span class="lineNum">     417 </span>                :<span class="lineCov">    2794539 : }</span></a>
+<span class="lineNum">     415 </span>                :<span class="lineCov">    2794519 :     tree-&gt;root = NULL;</span>
+<span class="lineNum">     416 </span>                :<span class="lineCov">    2794519 :     tree-&gt;aux = aux;</span>
+<a name="417"><span class="lineNum">     417 </span>                :<span class="lineCov">    2794519 : }</span></a>
 <span class="lineNum">     418 </span>                :            : 
-<span class="lineNum">     419 </span>                :<span class="lineCov">   15675117 : struct avl_node* avl_insert(struct avl_tree *tree,</span>
+<span class="lineNum">     419 </span>                :<span class="lineCov">   14626110 : struct avl_node* avl_insert(struct avl_tree *tree,</span>
 <span class="lineNum">     420 </span>                :            :                             struct avl_node *node,
 <span class="lineNum">     421 </span>                :            :                             avl_cmp_func *func)
 <span class="lineNum">     422 </span>                :            : {
 <span class="lineNum">     423 </span>                :            :     __AVL_DEBUG_INSERT(node);
 <span class="lineNum">     424 </span>                :            : 
-<span class="lineNum">     425 </span>                :<span class="lineCov">   15675117 :     struct avl_node *p=NULL,*cur;</span>
+<span class="lineNum">     425 </span>                :<span class="lineCov">   14626110 :     struct avl_node *p=NULL,*cur;</span>
 <span class="lineNum">     426 </span>                :            :     int cmp, bf, bf_old;
 <span class="lineNum">     427 </span>                :            : 
-<span class="lineNum">     428 </span>                :<span class="lineCov">   15675117 :     cur = tree-&gt;root;</span>
-<span class="lineNum">     429 </span>        [<span class="branchCov" title="Branch 0 was taken 74871155 times"> + </span><span class="branchCov" title="Branch 1 was taken 15675122 times"> + </span>]:<span class="lineCov">   90546277 :     while(cur)</span>
+<span class="lineNum">     428 </span>                :<span class="lineCov">   14626110 :     cur = tree-&gt;root;</span>
+<span class="lineNum">     429 </span>        [<span class="branchCov" title="Branch 0 was taken 72250329 times"> + </span><span class="branchCov" title="Branch 1 was taken 14626098 times"> + </span>]:<span class="lineCov">   86876427 :     while(cur)</span>
 <span class="lineNum">     430 </span>                :            :     {
-<span class="lineNum">     431 </span>                :<span class="lineCov">   74871155 :         cmp = func(cur, node, tree-&gt;aux);</span>
-<span class="lineNum">     432 </span>                :<span class="lineCov">   74871178 :         p = cur;</span>
+<span class="lineNum">     431 </span>                :<span class="lineCov">   72250329 :         cmp = func(cur, node, tree-&gt;aux);</span>
+<span class="lineNum">     432 </span>                :<span class="lineCov">   72250335 :         p = cur;</span>
 <span class="lineNum">     433 </span>                :            : 
-<span class="lineNum">     434 </span>        [<span class="branchCov" title="Branch 0 was taken 5287814 times"> + </span><span class="branchCov" title="Branch 1 was taken 69583364 times"> + </span>]:<span class="lineCov">   74871178 :         if(cmp &gt; 0) {</span>
-<span class="lineNum">     435 </span>                :<span class="lineCov">    5287814 :             cur = cur-&gt;left;</span>
-<span class="lineNum">     436 </span>        [<span class="branchCov" title="Branch 0 was taken 69583346 times"> + </span><span class="branchCov" title="Branch 1 was taken 18 times"> + </span>]:<span class="lineCov">   69583364 :         }else if (cmp &lt; 0){</span>
-<span class="lineNum">     437 </span>                :<span class="lineCov">   69583346 :             cur = cur-&gt;right;</span>
+<span class="lineNum">     434 </span>        [<span class="branchCov" title="Branch 0 was taken 5103963 times"> + </span><span class="branchCov" title="Branch 1 was taken 67146372 times"> + </span>]:<span class="lineCov">   72250335 :         if(cmp &gt; 0) {</span>
+<span class="lineNum">     435 </span>                :<span class="lineCov">    5103963 :             cur = cur-&gt;left;</span>
+<span class="lineNum">     436 </span>        [<span class="branchCov" title="Branch 0 was taken 67146354 times"> + </span><span class="branchCov" title="Branch 1 was taken 18 times"> + </span>]:<span class="lineCov">   67146372 :         }else if (cmp &lt; 0){</span>
+<span class="lineNum">     437 </span>                :<span class="lineCov">   67146354 :             cur = cur-&gt;right;</span>
 <span class="lineNum">     438 </span>                :            :         }else {
 <span class="lineNum">     439 </span>                :            :             // duplicated key -&gt; return
 <span class="lineNum">     440 </span>                :<span class="lineCov">         18 :             return cur;</span>
 <span class="lineNum">     441 </span>                :            :         }
 <span class="lineNum">     442 </span>                :            :     }
 <span class="lineNum">     443 </span>                :            : 
-<span class="lineNum">     444 </span>                :<span class="lineCov">   15675122 :     avl_set_parent(node, p);</span>
-<span class="lineNum">     445 </span>                :<span class="lineCov">   15675064 :     avl_set_bf(node, 0);</span>
-<span class="lineNum">     446 </span>                :<span class="lineCov">   15675316 :     node-&gt;left = node-&gt;right = NULL;</span>
+<span class="lineNum">     444 </span>                :<span class="lineCov">   14626098 :     avl_set_parent(node, p);</span>
+<span class="lineNum">     445 </span>                :<span class="lineCov">   14626082 :     avl_set_bf(node, 0);</span>
+<span class="lineNum">     446 </span>                :<span class="lineCov">   14626169 :     node-&gt;left = node-&gt;right = NULL;</span>
 <span class="lineNum">     447 </span>                :            : #ifdef _AVL_NEXT_POINTER
 <span class="lineNum">     448 </span>                :            :     node-&gt;prev = node-&gt;next = NULL;
 <span class="lineNum">     449 </span>                :            : #endif
 <span class="lineNum">     450 </span>                :            : 
 <span class="lineNum">     451 </span>                :            :     // P is parent node of CUR
-<span class="lineNum">     452 </span>        [<span class="branchCov" title="Branch 0 was taken 9537391 times"> + </span><span class="branchCov" title="Branch 1 was taken 6137925 times"> + </span>]:<span class="lineCov">   15675316 :     if(p) {</span>
-<span class="lineNum">     453 </span>        [<span class="branchCov" title="Branch 1 was taken 1499616 times"> + </span><span class="branchCov" title="Branch 2 was taken 8036864 times"> + </span>]:<span class="lineCov">    9537391 :         if(func(p, node, tree-&gt;aux) &gt; 0) {</span>
-<span class="lineNum">     454 </span>                :<span class="lineCov">    1499616 :             p-&gt;left = node;</span>
+<span class="lineNum">     452 </span>        [<span class="branchCov" title="Branch 0 was taken 9190274 times"> + </span><span class="branchCov" title="Branch 1 was taken 5435895 times"> + </span>]:<span class="lineCov">   14626169 :     if(p) {</span>
+<span class="lineNum">     453 </span>        [<span class="branchCov" title="Branch 1 was taken 1486356 times"> + </span><span class="branchCov" title="Branch 2 was taken 7703690 times"> + </span>]:<span class="lineCov">    9190274 :         if(func(p, node, tree-&gt;aux) &gt; 0) {</span>
+<span class="lineNum">     454 </span>                :<span class="lineCov">    1486356 :             p-&gt;left = node;</span>
 <span class="lineNum">     455 </span>                :            : #ifdef _AVL_NEXT_POINTER
 <span class="lineNum">     456 </span>                :            :             node-&gt;next = p;
 <span class="lineNum">     457 </span>                :            :             node-&gt;prev = p-&gt;prev;
@@ -535,7 +535,7 @@
 <span class="lineNum">     460 </span>                :            : #endif
 <span class="lineNum">     461 </span>                :            : 
 <span class="lineNum">     462 </span>                :            :         }else {
-<span class="lineNum">     463 </span>                :<span class="lineCov">    8036864 :             p-&gt;right = node;</span>
+<span class="lineNum">     463 </span>                :<span class="lineCov">    7703690 :             p-&gt;right = node;</span>
 <span class="lineNum">     464 </span>                :            : #ifdef _AVL_NEXT_POINTER
 <span class="lineNum">     465 </span>                :            :             node-&gt;prev = p;
 <span class="lineNum">     466 </span>                :            :             node-&gt;next = p-&gt;next;
@@ -546,67 +546,67 @@
 <span class="lineNum">     471 </span>                :            : 
 <span class="lineNum">     472 </span>                :            :     } else {
 <span class="lineNum">     473 </span>                :            :         // no parent .. make NODE as root
-<span class="lineNum">     474 </span>                :<span class="lineCov">    6137925 :         tree-&gt;root = node;</span>
+<span class="lineNum">     474 </span>                :<span class="lineCov">    5435895 :         tree-&gt;root = node;</span>
 <span class="lineNum">     475 </span>                :            :     }
 <span class="lineNum">     476 </span>                :            : 
 <span class="lineNum">     477 </span>                :            :     // recursive balancing process .. scan from leaf to root
-<span class="lineNum">     478 </span>                :<span class="lineCov">   15674405 :     bf = 0;</span>
-<span class="lineNum">     479 </span>        [<span class="branchCov" title="Branch 0 was taken 40126682 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   40126549 :     while(node) {</span>
-<span class="lineNum">     480 </span>                :<span class="lineCov">   40126682 :         p = avl_parent(node);</span>
+<span class="lineNum">     478 </span>                :<span class="lineCov">   14625941 :     bf = 0;</span>
+<span class="lineNum">     479 </span>        [<span class="branchCov" title="Branch 0 was taken 38184131 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">   38184118 :     while(node) {</span>
+<span class="lineNum">     480 </span>                :<span class="lineCov">   38184131 :         p = avl_parent(node);</span>
 <span class="lineNum">     481 </span>                :            : 
-<span class="lineNum">     482 </span>        [<span class="branchCov" title="Branch 0 was taken 31456355 times"> + </span><span class="branchCov" title="Branch 1 was taken 8670327 times"> + </span>]:<span class="lineCov">   40126682 :         if (p) {</span>
+<span class="lineNum">     482 </span>        [<span class="branchCov" title="Branch 0 was taken 30313754 times"> + </span><span class="branchCov" title="Branch 1 was taken 7870377 times"> + </span>]:<span class="lineCov">   38184131 :         if (p) {</span>
 <span class="lineNum">     483 </span>                :            :             // if parent exists
-<span class="lineNum">     484 </span>                :<span class="lineCov">   31456355 :             bf_old = avl_bf(node);</span>
+<span class="lineNum">     484 </span>                :<span class="lineCov">   30313754 :             bf_old = avl_bf(node);</span>
 <span class="lineNum">     485 </span>                :            : 
-<span class="lineNum">     486 </span>        [<span class="branchCov" title="Branch 0 was taken 27468310 times"> + </span><span class="branchCov" title="Branch 1 was taken 3988045 times"> + </span>]:<span class="lineCov">   31456355 :             if (p-&gt;right == node) {</span>
-<span class="lineNum">     487 </span>                :<span class="lineCov">   27468310 :                 node = _balance_tree(node, bf);</span>
-<span class="lineNum">     488 </span>                :<span class="lineCov">   27468980 :                 p-&gt;right = node;</span>
+<span class="lineNum">     486 </span>        [<span class="branchCov" title="Branch 0 was taken 26458287 times"> + </span><span class="branchCov" title="Branch 1 was taken 3855467 times"> + </span>]:<span class="lineCov">   30313754 :             if (p-&gt;right == node) {</span>
+<span class="lineNum">     487 </span>                :<span class="lineCov">   26458287 :                 node = _balance_tree(node, bf);</span>
+<span class="lineNum">     488 </span>                :<span class="lineCov">   26458410 :                 p-&gt;right = node;</span>
 <span class="lineNum">     489 </span>                :            :             }else {
-<span class="lineNum">     490 </span>                :<span class="lineCov">    3988045 :                 node = _balance_tree(node, bf);</span>
-<span class="lineNum">     491 </span>                :<span class="lineCov">    3988045 :                 p-&gt;left = node;</span>
+<span class="lineNum">     490 </span>                :<span class="lineCov">    3855467 :                 node = _balance_tree(node, bf);</span>
+<span class="lineNum">     491 </span>                :<span class="lineCov">    3855468 :                 p-&gt;left = node;</span>
 <span class="lineNum">     492 </span>                :            :             }
 <span class="lineNum">     493 </span>                :            : 
 <span class="lineNum">     494 </span>                :            :             // calculate balance facter BF for parent
-<span class="lineNum">     495 </span>[<span class="branchCov" title="Branch 0 was taken 16732054 times"> + </span><span class="branchCov" title="Branch 1 was taken 14724971 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9537303 times"> + </span><span class="branchCov" title="Branch 3 was taken 7194751 times"> + </span>]:<span class="lineCov">   31457025 :             if (node-&gt;left == NULL &amp;&amp; node-&gt;right == NULL) {</span>
+<span class="lineNum">     495 </span>[<span class="branchCov" title="Branch 0 was taken 16088148 times"> + </span><span class="branchCov" title="Branch 1 was taken 14225730 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 9190245 times"> + </span><span class="branchCov" title="Branch 3 was taken 6897903 times"> + </span>]:<span class="lineCov">   30313878 :             if (node-&gt;left == NULL &amp;&amp; node-&gt;right == NULL) {</span>
 <span class="lineNum">     496 </span>                :            :                 // leaf node
-<span class="lineNum">     497 </span>        [<span class="branchCov" title="Branch 0 was taken 1500445 times"> + </span><span class="branchCov" title="Branch 1 was taken 8036858 times"> + </span>]:<span class="lineCov">   17574161 :                 if (p-&gt;left == node) bf = -1;</span>
-<span class="lineNum">     498 </span>                :<span class="lineCov">    8036858 :                 else bf = 1;</span>
+<span class="lineNum">     497 </span>        [<span class="branchCov" title="Branch 0 was taken 1486557 times"> + </span><span class="branchCov" title="Branch 1 was taken 7703688 times"> + </span>]:<span class="lineCov">   16893933 :                 if (p-&gt;left == node) bf = -1;</span>
+<span class="lineNum">     498 </span>                :<span class="lineCov">    7703688 :                 else bf = 1;</span>
 <span class="lineNum">     499 </span>                :            :             } else {
 <span class="lineNum">     500 </span>                :            :                 // index ndoe
-<span class="lineNum">     501 </span>                :<span class="lineCov">   21919722 :                 bf = 0;</span>
-<span class="lineNum">     502 </span>        [<span class="branchCov" title="Branch 2 was taken 14914818 times"> + </span><span class="branchCov" title="Branch 3 was taken 7004863 times"> + </span>]:<span class="lineCov">   21919722 :                 if (_abs(bf_old) &lt; _abs(avl_bf(node))) {</span>
+<span class="lineNum">     501 </span>                :<span class="lineCov">   21123633 :                 bf = 0;</span>
+<span class="lineNum">     502 </span>        [<span class="branchCov" title="Branch 2 was taken 14367921 times"> + </span><span class="branchCov" title="Branch 3 was taken 6755696 times"> + </span>]:<span class="lineCov">   21123633 :                 if (_abs(bf_old) &lt; _abs(avl_bf(node))) {</span>
 <span class="lineNum">     503 </span>                :            :                     // if ABS of balance factor increases
 <span class="lineNum">     504 </span>                :            :                     // cascade to parent
-<span class="lineNum">     505 </span>        [<span class="branchCov" title="Branch 0 was taken 1701405 times"> + </span><span class="branchCov" title="Branch 1 was taken 13213413 times"> + </span>]:<span class="lineCov">   14914818 :                     if (p-&gt;left == node) bf = -1;</span>
-<span class="lineNum">     506 </span>                :<span class="lineCov">   31456984 :                     else bf = 1;</span>
+<span class="lineNum">     505 </span>        [<span class="branchCov" title="Branch 0 was taken 1644293 times"> + </span><span class="branchCov" title="Branch 1 was taken 12723628 times"> + </span>]:<span class="lineCov">   14367921 :                     if (p-&gt;left == node) bf = -1;</span>
+<span class="lineNum">     506 </span>                :<span class="lineCov">   30313862 :                     else bf = 1;</span>
 <span class="lineNum">     507 </span>                :            :                 }
 <span class="lineNum">     508 </span>                :            :             }
 <span class="lineNum">     509 </span>                :            : 
-<span class="lineNum">     510 </span>        [<span class="branchCov" title="Branch 0 was taken 8670297 times"> + </span><span class="branchCov" title="Branch 1 was taken 30 times"> + </span>]:<span class="lineCov">    8670327 :         } else if(node == tree-&gt;root){</span>
-<span class="lineNum">     511 </span>                :<span class="lineCov">    8670297 :             tree-&gt;root = _balance_tree(tree-&gt;root, bf);</span>
-<span class="lineNum">     512 </span>                :<span class="lineCov">    8670234 :             break;</span>
+<span class="lineNum">     510 </span>        [<span class="branchCov" title="Branch 0 was taken 7870365 times"> + </span><span class="branchCov" title="Branch 1 was taken 12 times"> + </span>]:<span class="lineCov">    7870377 :         } else if(node == tree-&gt;root){</span>
+<span class="lineNum">     511 </span>                :<span class="lineCov">    7870365 :             tree-&gt;root = _balance_tree(tree-&gt;root, bf);</span>
+<span class="lineNum">     512 </span>                :<span class="lineCov">    7870257 :             break;</span>
 <span class="lineNum">     513 </span>                :            :         }
-<span class="lineNum">     514 </span>        [<span class="branchCov" title="Branch 0 was taken 7004870 times"> + </span><span class="branchCov" title="Branch 1 was taken 24452144 times"> + </span>]:<span class="lineCov">   31457014 :         if (bf == 0) break;</span>
+<span class="lineNum">     514 </span>        [<span class="branchCov" title="Branch 0 was taken 6755697 times"> + </span><span class="branchCov" title="Branch 1 was taken 23558177 times"> + </span>]:<span class="lineCov">   30313874 :         if (bf == 0) break;</span>
 <span class="lineNum">     515 </span>                :            : 
-<span class="lineNum">     516 </span>                :<span class="lineCov">   24452144 :         node = p;</span>
+<span class="lineNum">     516 </span>                :<span class="lineCov">   23558177 :         node = p;</span>
 <span class="lineNum">     517 </span>                :            :     }
 <span class="lineNum">     518 </span>                :            : 
 <span class="lineNum">     519 </span>                :            :     __AVL_DEBUG_DISPLAY(tree);
 <span class="lineNum">     520 </span>                :            : 
-<span class="lineNum">     521 </span>                :<span class="lineCov">   15674989 :     return node;</span>
+<span class="lineNum">     521 </span>                :<span class="lineCov">   14625959 :     return node;</span>
 <a name="522"><span class="lineNum">     522 </span>                :            : }</a>
 <span class="lineNum">     523 </span>                :            : 
-<span class="lineNum">     524 </span>                :<span class="lineCov">   15673051 : void avl_remove(struct avl_tree *tree,</span>
+<span class="lineNum">     524 </span>                :<span class="lineCov">   14623842 : void avl_remove(struct avl_tree *tree,</span>
 <span class="lineNum">     525 </span>                :            :                 struct avl_node *node)
 <span class="lineNum">     526 </span>                :            : {
 <span class="lineNum">     527 </span>                :            :     __AVL_DEBUG_REMOVE(node);
 <span class="lineNum">     528 </span>                :            : 
 <span class="lineNum">     529 </span>                :            :     // not found
-<span class="lineNum">     530 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 15673051 times"> + </span>]:<span class="lineCov">   31346102 :     if (node == NULL) return;</span>
+<span class="lineNum">     530 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14623842 times"> + </span>]:<span class="lineCov">   29247684 :     if (node == NULL) return;</span>
 <span class="lineNum">     531 </span>                :            : 
 <span class="lineNum">     532 </span>                :            :     struct avl_tree right_subtree;
-<span class="lineNum">     533 </span>                :<span class="lineCov">   15673051 :     struct avl_node *p=NULL,*cur, *next=NULL;</span>
-<span class="lineNum">     534 </span>                :<span class="lineCov">   15673051 :     int bf = 0, bf_old;</span>
+<span class="lineNum">     533 </span>                :<span class="lineCov">   14623842 :     struct avl_node *p=NULL,*cur, *next=NULL;</span>
+<span class="lineNum">     534 </span>                :<span class="lineCov">   14623842 :     int bf = 0, bf_old;</span>
 <span class="lineNum">     535 </span>                :            : 
 <span class="lineNum">     536 </span>                :            : 
 <span class="lineNum">     537 </span>                :            : #ifdef _AVL_NEXT_POINTER
@@ -615,112 +615,112 @@
 <span class="lineNum">     540 </span>                :            : #endif
 <span class="lineNum">     541 </span>                :            : 
 <span class="lineNum">     542 </span>                :            :     // find smallest node in right sub-tree
-<span class="lineNum">     543 </span>                :<span class="lineCov">   15673051 :     right_subtree.root = node-&gt;right;</span>
-<span class="lineNum">     544 </span>                :<span class="lineCov">   15673051 :     next = avl_first(&amp;right_subtree);</span>
+<span class="lineNum">     543 </span>                :<span class="lineCov">   14623842 :     right_subtree.root = node-&gt;right;</span>
+<span class="lineNum">     544 </span>                :<span class="lineCov">   14623842 :     next = avl_first(&amp;right_subtree);</span>
 <span class="lineNum">     545 </span>                :            : 
-<span class="lineNum">     546 </span>        [<span class="branchCov" title="Branch 0 was taken 4596835 times"> + </span><span class="branchCov" title="Branch 1 was taken 11076216 times"> + </span>]:<span class="lineCov">   15673051 :     if (next) {</span>
+<span class="lineNum">     546 </span>        [<span class="branchCov" title="Branch 0 was taken 4423432 times"> + </span><span class="branchCov" title="Branch 1 was taken 10200410 times"> + </span>]:<span class="lineCov">   14623842 :     if (next) {</span>
 <span class="lineNum">     547 </span>                :            :         // 1. NEXT exists
-<span class="lineNum">     548 </span>        [<span class="branchCov" title="Branch 0 was taken 4596835 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    4596835 :         if (avl_parent(next)) {</span>
-<span class="lineNum">     549 </span>        [<span class="branchCov" title="Branch 0 was taken 429947 times"> + </span><span class="branchCov" title="Branch 1 was taken 4166888 times"> + </span>]:<span class="lineCov">    4596835 :             if (avl_parent(next) != node) {</span>
+<span class="lineNum">     548 </span>        [<span class="branchCov" title="Branch 0 was taken 4423432 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    4423432 :         if (avl_parent(next)) {</span>
+<span class="lineNum">     549 </span>        [<span class="branchCov" title="Branch 0 was taken 411418 times"> + </span><span class="branchCov" title="Branch 1 was taken 4012014 times"> + </span>]:<span class="lineCov">    4423432 :             if (avl_parent(next) != node) {</span>
 <span class="lineNum">     550 </span>                :            :                 // NODE is not NEXT's direct parent
 <span class="lineNum">     551 </span>                :            :                 // MUST ensure NEXT should be *left child* of its parent
 <span class="lineNum">     552 </span>                :            :                 // MUST ensure NEXT doesn't have right child
-<span class="lineNum">     553 </span>                :<span class="lineCov">     429947 :                 avl_parent(next)-&gt;left = next-&gt;right;</span>
-<span class="lineNum">     554 </span>        [<span class="branchCov" title="Branch 0 was taken 60268 times"> + </span><span class="branchCov" title="Branch 1 was taken 369679 times"> + </span>]:<span class="lineCov">     429947 :                 if (next-&gt;right)</span>
-<span class="lineNum">     555 </span>                :<span class="lineCov">      60268 :                     avl_set_parent(next-&gt;right, avl_parent(next));</span>
+<span class="lineNum">     553 </span>                :<span class="lineCov">     411418 :                 avl_parent(next)-&gt;left = next-&gt;right;</span>
+<span class="lineNum">     554 </span>        [<span class="branchCov" title="Branch 0 was taken 57955 times"> + </span><span class="branchCov" title="Branch 1 was taken 353463 times"> + </span>]:<span class="lineCov">     411418 :                 if (next-&gt;right)</span>
+<span class="lineNum">     555 </span>                :<span class="lineCov">      57955 :                     avl_set_parent(next-&gt;right, avl_parent(next));</span>
 <span class="lineNum">     556 </span>                :            :             }
 <span class="lineNum">     557 </span>                :            :         }
-<span class="lineNum">     558 </span>        [<span class="branchCov" title="Branch 0 was taken 3816598 times"> + </span><span class="branchCov" title="Branch 1 was taken 780237 times"> + </span>]:<span class="lineCov">    4596835 :         if (avl_parent(node)) {</span>
+<span class="lineNum">     558 </span>        [<span class="branchCov" title="Branch 0 was taken 3673314 times"> + </span><span class="branchCov" title="Branch 1 was taken 750118 times"> + </span>]:<span class="lineCov">    4423432 :         if (avl_parent(node)) {</span>
 <span class="lineNum">     559 </span>                :            :             // replace NODE by NEXT
-<span class="lineNum">     560 </span>        [<span class="branchCov" title="Branch 0 was taken 3473270 times"> + </span><span class="branchCov" title="Branch 1 was taken 343328 times"> + </span>]:<span class="lineCov">    3816598 :             if (avl_parent(node)-&gt;left == node) {</span>
-<span class="lineNum">     561 </span>                :<span class="lineCov">    3473270 :                 avl_parent(node)-&gt;left = next;</span>
+<span class="lineNum">     560 </span>        [<span class="branchCov" title="Branch 0 was taken 3347618 times"> + </span><span class="branchCov" title="Branch 1 was taken 325696 times"> + </span>]:<span class="lineCov">    3673314 :             if (avl_parent(node)-&gt;left == node) {</span>
+<span class="lineNum">     561 </span>                :<span class="lineCov">    3347618 :                 avl_parent(node)-&gt;left = next;</span>
 <span class="lineNum">     562 </span>                :            :             } else {
-<span class="lineNum">     563 </span>                :<span class="lineCov">     343328 :                 avl_parent(node)-&gt;right = next;</span>
+<span class="lineNum">     563 </span>                :<span class="lineCov">     325696 :                 avl_parent(node)-&gt;right = next;</span>
 <span class="lineNum">     564 </span>                :            :             }
 <span class="lineNum">     565 </span>                :            :         }
 <span class="lineNum">     566 </span>                :            : 
 <span class="lineNum">     567 </span>                :            :         // re-link pointers
-<span class="lineNum">     568 </span>        [<span class="branchCov" title="Branch 0 was taken 429947 times"> + </span><span class="branchCov" title="Branch 1 was taken 4166888 times"> + </span>]:<span class="lineCov">    4596835 :         if (node-&gt;right != next) {</span>
-<span class="lineNum">     569 </span>                :<span class="lineCov">     429947 :             next-&gt;right = node-&gt;right;</span>
-<span class="lineNum">     570 </span>        [<span class="branchCov" title="Branch 0 was taken 429947 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     429947 :             if (node-&gt;right) avl_set_parent(node-&gt;right, next);</span>
-<span class="lineNum">     571 </span>                :<span class="lineCov">     429947 :             cur = avl_parent(next);</span>
-<span class="lineNum">     572 </span>                :<span class="lineCov">     429947 :             bf = 1;</span>
+<span class="lineNum">     568 </span>        [<span class="branchCov" title="Branch 0 was taken 411418 times"> + </span><span class="branchCov" title="Branch 1 was taken 4012014 times"> + </span>]:<span class="lineCov">    4423432 :         if (node-&gt;right != next) {</span>
+<span class="lineNum">     569 </span>                :<span class="lineCov">     411418 :             next-&gt;right = node-&gt;right;</span>
+<span class="lineNum">     570 </span>        [<span class="branchCov" title="Branch 0 was taken 411418 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     411418 :             if (node-&gt;right) avl_set_parent(node-&gt;right, next);</span>
+<span class="lineNum">     571 </span>                :<span class="lineCov">     411418 :             cur = avl_parent(next);</span>
+<span class="lineNum">     572 </span>                :<span class="lineCov">     411418 :             bf = 1;</span>
 <span class="lineNum">     573 </span>                :            :         }else{
-<span class="lineNum">     574 </span>                :<span class="lineCov">    4166888 :             cur = next;</span>
-<span class="lineNum">     575 </span>                :<span class="lineCov">    4166888 :             bf = -1;</span>
+<span class="lineNum">     574 </span>                :<span class="lineCov">    4012014 :             cur = next;</span>
+<span class="lineNum">     575 </span>                :<span class="lineCov">    4012014 :             bf = -1;</span>
 <span class="lineNum">     576 </span>                :            :         }
 <span class="lineNum">     577 </span>                :            : 
-<span class="lineNum">     578 </span>                :<span class="lineCov">    4596835 :         next-&gt;left = node-&gt;left;</span>
-<span class="lineNum">     579 </span>        [<span class="branchCov" title="Branch 0 was taken 860546 times"> + </span><span class="branchCov" title="Branch 1 was taken 3736289 times"> + </span>]:<span class="lineCov">    4596835 :         if (node-&gt;left) avl_set_parent(node-&gt;left, next);</span>
-<span class="lineNum">     580 </span>                :<span class="lineCov">    4596835 :         avl_set_parent(next, avl_parent(node));</span>
+<span class="lineNum">     578 </span>                :<span class="lineCov">    4423432 :         next-&gt;left = node-&gt;left;</span>
+<span class="lineNum">     579 </span>        [<span class="branchCov" title="Branch 0 was taken 825215 times"> + </span><span class="branchCov" title="Branch 1 was taken 3598217 times"> + </span>]:<span class="lineCov">    4423432 :         if (node-&gt;left) avl_set_parent(node-&gt;left, next);</span>
+<span class="lineNum">     580 </span>                :<span class="lineCov">    4423432 :         avl_set_parent(next, avl_parent(node));</span>
 <span class="lineNum">     581 </span>                :            : 
 <span class="lineNum">     582 </span>                :            :         // inherit NODE's balance factor
-<span class="lineNum">     583 </span>                :<span class="lineCov">    4596835 :         avl_set_bf(next, avl_bf(node));</span>
+<span class="lineNum">     583 </span>                :<span class="lineCov">    4423432 :         avl_set_bf(next, avl_bf(node));</span>
 <span class="lineNum">     584 </span>                :            : 
 <span class="lineNum">     585 </span>                :            :     } else {
 <span class="lineNum">     586 </span>                :            :         // 2. NEXT == NULL (only when there's no right sub-tree)
-<span class="lineNum">     587 </span>                :<span class="lineCov">   11076216 :         p = avl_parent(node);</span>
-<span class="lineNum">     588 </span>        [<span class="branchCov" title="Branch 0 was taken 4607500 times"> + </span><span class="branchCov" title="Branch 1 was taken 6468716 times"> + </span>]:<span class="lineCov">   11076216 :         if (p) {</span>
-<span class="lineNum">     589 </span>        [<span class="branchCov" title="Branch 0 was taken 3991110 times"> + </span><span class="branchCov" title="Branch 1 was taken 616390 times"> + </span>]:<span class="lineCov">    4607500 :             if (p-&gt;left == node) {</span>
-<span class="lineNum">     590 </span>                :<span class="lineCov">    3991110 :                 p-&gt;left = node-&gt;left;</span>
-<span class="lineNum">     591 </span>                :<span class="lineCov">    3991110 :                 bf = 1;</span>
+<span class="lineNum">     587 </span>                :<span class="lineCov">   10200410 :         p = avl_parent(node);</span>
+<span class="lineNum">     588 </span>        [<span class="branchCov" title="Branch 0 was taken 4433430 times"> + </span><span class="branchCov" title="Branch 1 was taken 5766980 times"> + </span>]:<span class="lineCov">   10200410 :         if (p) {</span>
+<span class="lineNum">     589 </span>        [<span class="branchCov" title="Branch 0 was taken 3845298 times"> + </span><span class="branchCov" title="Branch 1 was taken 588132 times"> + </span>]:<span class="lineCov">    4433430 :             if (p-&gt;left == node) {</span>
+<span class="lineNum">     590 </span>                :<span class="lineCov">    3845298 :                 p-&gt;left = node-&gt;left;</span>
+<span class="lineNum">     591 </span>                :<span class="lineCov">    3845298 :                 bf = 1;</span>
 <span class="lineNum">     592 </span>                :            :             } else {
-<span class="lineNum">     593 </span>                :<span class="lineCov">     616390 :                 p-&gt;right = node-&gt;left;</span>
-<span class="lineNum">     594 </span>                :<span class="lineCov">     616390 :                 bf = -1;</span>
+<span class="lineNum">     593 </span>                :<span class="lineCov">     588132 :                 p-&gt;right = node-&gt;left;</span>
+<span class="lineNum">     594 </span>                :<span class="lineCov">     588132 :                 bf = -1;</span>
 <span class="lineNum">     595 </span>                :            :             }
 <span class="lineNum">     596 </span>                :            :         }
-<span class="lineNum">     597 </span>        [<span class="branchCov" title="Branch 0 was taken 477664 times"> + </span><span class="branchCov" title="Branch 1 was taken 10598552 times"> + </span>]:<span class="lineCov">   11076216 :         if (node-&gt;left)</span>
-<span class="lineNum">     598 </span>                :<span class="lineCov">     477664 :             avl_set_parent(node-&gt;left, p);</span>
+<span class="lineNum">     597 </span>        [<span class="branchCov" title="Branch 0 was taken 469020 times"> + </span><span class="branchCov" title="Branch 1 was taken 9731390 times"> + </span>]:<span class="lineCov">   10200410 :         if (node-&gt;left)</span>
+<span class="lineNum">     598 </span>                :<span class="lineCov">     469020 :             avl_set_parent(node-&gt;left, p);</span>
 <span class="lineNum">     599 </span>                :            : 
-<span class="lineNum">     600 </span>                :<span class="lineCov">   11076216 :         cur = avl_parent(node);</span>
+<span class="lineNum">     600 </span>                :<span class="lineCov">   10200410 :         cur = avl_parent(node);</span>
 <span class="lineNum">     601 </span>                :            :     }
 <span class="lineNum">     602 </span>                :            : 
 <span class="lineNum">     603 </span>                :            :     // reset root
-<span class="lineNum">     604 </span>        [<span class="branchCov" title="Branch 0 was taken 7248953 times"> + </span><span class="branchCov" title="Branch 1 was taken 8424098 times"> + </span>]:<span class="lineCov">   15673051 :     if (tree-&gt;root == node) {</span>
-<span class="lineNum">     605 </span>                :<span class="lineCov">    7248953 :         tree-&gt;root = next;</span>
-<span class="lineNum">     606 </span>        [<span class="branchCov" title="Branch 0 was taken 6468716 times"> + </span><span class="branchCov" title="Branch 1 was taken 780237 times"> + </span>]:<span class="lineCov">    7248953 :         if (next == NULL) {</span>
-<span class="lineNum">     607 </span>        [<span class="branchCov" title="Branch 0 was taken 330717 times"> + </span><span class="branchCov" title="Branch 1 was taken 6137999 times"> + </span>]:<span class="lineCov">    6468716 :             if (node-&gt;left) tree-&gt;root = node-&gt;left;</span>
+<span class="lineNum">     604 </span>        [<span class="branchCov" title="Branch 0 was taken 6517098 times"> + </span><span class="branchCov" title="Branch 1 was taken 8106744 times"> + </span>]:<span class="lineCov">   14623842 :     if (tree-&gt;root == node) {</span>
+<span class="lineNum">     605 </span>                :<span class="lineCov">    6517098 :         tree-&gt;root = next;</span>
+<span class="lineNum">     606 </span>        [<span class="branchCov" title="Branch 0 was taken 5766980 times"> + </span><span class="branchCov" title="Branch 1 was taken 750118 times"> + </span>]:<span class="lineCov">    6517098 :         if (next == NULL) {</span>
+<span class="lineNum">     607 </span>        [<span class="branchCov" title="Branch 0 was taken 331041 times"> + </span><span class="branchCov" title="Branch 1 was taken 5435939 times"> + </span>]:<span class="lineCov">    5766980 :             if (node-&gt;left) tree-&gt;root = node-&gt;left;</span>
 <span class="lineNum">     608 </span>                :            :         }
 <span class="lineNum">     609 </span>                :            :     }
 <span class="lineNum">     610 </span>                :            : 
 <span class="lineNum">     611 </span>                :            :     // recursive balancing process .. scan from CUR to root
-<span class="lineNum">     612 </span>        [<span class="branchCov" title="Branch 0 was taken 16199465 times"> + </span><span class="branchCov" title="Branch 1 was taken 6468716 times"> + </span>]:<span class="lineCov">   22668181 :     while(cur) {</span>
-<span class="lineNum">     613 </span>                :<span class="lineCov">   16199465 :         p = avl_parent(cur);</span>
-<span class="lineNum">     614 </span>        [<span class="branchCov" title="Branch 0 was taken 13850365 times"> + </span><span class="branchCov" title="Branch 1 was taken 2349100 times"> + </span>]:<span class="lineCov">   16199465 :         if (p) {</span>
+<span class="lineNum">     612 </span>        [<span class="branchCov" title="Branch 0 was taken 15598682 times"> + </span><span class="branchCov" title="Branch 1 was taken 5766980 times"> + </span>]:<span class="lineCov">   21365662 :     while(cur) {</span>
+<span class="lineNum">     613 </span>                :<span class="lineCov">   15598682 :         p = avl_parent(cur);</span>
+<span class="lineNum">     614 </span>        [<span class="branchCov" title="Branch 0 was taken 13354094 times"> + </span><span class="branchCov" title="Branch 1 was taken 2244588 times"> + </span>]:<span class="lineCov">   15598682 :         if (p) {</span>
 <span class="lineNum">     615 </span>                :            :             // if parent exists
-<span class="lineNum">     616 </span>                :<span class="lineCov">   13850365 :             bf_old = avl_bf(cur);</span>
+<span class="lineNum">     616 </span>                :<span class="lineCov">   13354094 :             bf_old = avl_bf(cur);</span>
 <span class="lineNum">     617 </span>                :            : 
-<span class="lineNum">     618 </span>        [<span class="branchCov" title="Branch 0 was taken 1148848 times"> + </span><span class="branchCov" title="Branch 1 was taken 12701517 times"> + </span>]:<span class="lineCov">   13850365 :             if (p-&gt;right == cur) {</span>
-<span class="lineNum">     619 </span>                :<span class="lineCov">    1148848 :                 cur = _balance_tree(cur, bf);</span>
-<span class="lineNum">     620 </span>                :<span class="lineCov">    1148848 :                 p-&gt;right = cur;</span>
+<span class="lineNum">     618 </span>        [<span class="branchCov" title="Branch 0 was taken 1086842 times"> + </span><span class="branchCov" title="Branch 1 was taken 12267252 times"> + </span>]:<span class="lineCov">   13354094 :             if (p-&gt;right == cur) {</span>
+<span class="lineNum">     619 </span>                :<span class="lineCov">    1086842 :                 cur = _balance_tree(cur, bf);</span>
+<span class="lineNum">     620 </span>                :<span class="lineCov">    1086842 :                 p-&gt;right = cur;</span>
 <span class="lineNum">     621 </span>                :            :             }else {
-<span class="lineNum">     622 </span>                :<span class="lineCov">   12701517 :                 cur = _balance_tree(cur, bf);</span>
-<span class="lineNum">     623 </span>                :<span class="lineCov">   12701517 :                 p-&gt;left = cur;</span>
+<span class="lineNum">     622 </span>                :<span class="lineCov">   12267252 :                 cur = _balance_tree(cur, bf);</span>
+<span class="lineNum">     623 </span>                :<span class="lineCov">   12267252 :                 p-&gt;left = cur;</span>
 <span class="lineNum">     624 </span>                :            :             }
 <span class="lineNum">     625 </span>                :            : 
 <span class="lineNum">     626 </span>                :            :             // calculate balance facter BF for parent
-<span class="lineNum">     627 </span>[<span class="branchCov" title="Branch 0 was taken 5582462 times"> + </span><span class="branchCov" title="Branch 1 was taken 8267903 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 3613301 times"> + </span><span class="branchCov" title="Branch 3 was taken 1969161 times"> + </span>]:<span class="lineCov">   13850365 :             if (cur-&gt;left == NULL &amp;&amp; cur-&gt;right == NULL) {</span>
+<span class="lineNum">     627 </span>[<span class="branchCov" title="Branch 0 was taken 5371355 times"> + </span><span class="branchCov" title="Branch 1 was taken 7982739 times"> + </span>][<span class="branchCov" title="Branch 2 was taken 3480734 times"> + </span><span class="branchCov" title="Branch 3 was taken 1890621 times"> + </span>]:<span class="lineCov">   13354094 :             if (cur-&gt;left == NULL &amp;&amp; cur-&gt;right == NULL) {</span>
 <span class="lineNum">     628 </span>                :            :                 // leaf node
-<span class="lineNum">     629 </span>        [<span class="branchCov" title="Branch 0 was taken 3358742 times"> + </span><span class="branchCov" title="Branch 1 was taken 254559 times"> + </span>]:<span class="lineCov">    3867860 :                 if (p-&gt;left == cur) bf = 1;</span>
-<span class="lineNum">     630 </span>                :<span class="lineCov">     254559 :                 else bf = -1;</span>
+<span class="lineNum">     629 </span>        [<span class="branchCov" title="Branch 0 was taken 3239888 times"> + </span><span class="branchCov" title="Branch 1 was taken 240846 times"> + </span>]:<span class="lineCov">    3721580 :                 if (p-&gt;left == cur) bf = 1;</span>
+<span class="lineNum">     630 </span>                :<span class="lineCov">     240846 :                 else bf = -1;</span>
 <span class="lineNum">     631 </span>                :            :             } else {
 <span class="lineNum">     632 </span>                :            :                 // index ndoe
-<span class="lineNum">     633 </span>                :<span class="lineCov">   10237064 :                 bf = 0;</span>
-<span class="lineNum">     634 </span>        [<span class="branchCov" title="Branch 2 was taken 3381829 times"> + </span><span class="branchCov" title="Branch 3 was taken 6855235 times"> + </span>]:<span class="lineCov">   10237064 :                 if (_abs(bf_old) &gt; _abs(avl_bf(cur))) {</span>
+<span class="lineNum">     633 </span>                :<span class="lineCov">    9873360 :                 bf = 0;</span>
+<span class="lineNum">     634 </span>        [<span class="branchCov" title="Branch 2 was taken 3261086 times"> + </span><span class="branchCov" title="Branch 3 was taken 6612274 times"> + </span>]:<span class="lineCov">    9873360 :                 if (_abs(bf_old) &gt; _abs(avl_bf(cur))) {</span>
 <span class="lineNum">     635 </span>                :            :                     // if ABS of balance factor decreases
 <span class="lineNum">     636 </span>                :            :                     // cascade to parent
-<span class="lineNum">     637 </span>        [<span class="branchCov" title="Branch 0 was taken 3061321 times"> + </span><span class="branchCov" title="Branch 1 was taken 320508 times"> + </span>]:<span class="lineCov">    3381829 :                     if (p-&gt;left == cur) bf = 1;</span>
-<span class="lineNum">     638 </span>                :<span class="lineCov">   13850365 :                     else bf = -1;</span>
+<span class="lineNum">     637 </span>        [<span class="branchCov" title="Branch 0 was taken 2958070 times"> + </span><span class="branchCov" title="Branch 1 was taken 303016 times"> + </span>]:<span class="lineCov">    3261086 :                     if (p-&gt;left == cur) bf = 1;</span>
+<span class="lineNum">     638 </span>                :<span class="lineCov">   13354094 :                     else bf = -1;</span>
 <span class="lineNum">     639 </span>                :            :                 }
 <span class="lineNum">     640 </span>                :            :             }
 <span class="lineNum">     641 </span>                :            : 
-<span class="lineNum">     642 </span>        [<span class="branchCov" title="Branch 0 was taken 2349100 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2349100 :         } else if(cur == tree-&gt;root){</span>
-<span class="lineNum">     643 </span>                :<span class="lineCov">    2349100 :             tree-&gt;root = _balance_tree(tree-&gt;root, bf);</span>
-<span class="lineNum">     644 </span>                :<span class="lineCov">    2349100 :             break;</span>
+<span class="lineNum">     642 </span>        [<span class="branchCov" title="Branch 0 was taken 2244588 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2244588 :         } else if(cur == tree-&gt;root){</span>
+<span class="lineNum">     643 </span>                :<span class="lineCov">    2244588 :             tree-&gt;root = _balance_tree(tree-&gt;root, bf);</span>
+<span class="lineNum">     644 </span>                :<span class="lineCov">    2244588 :             break;</span>
 <span class="lineNum">     645 </span>                :            :         }
-<span class="lineNum">     646 </span>        [<span class="branchCov" title="Branch 0 was taken 6855235 times"> + </span><span class="branchCov" title="Branch 1 was taken 6995130 times"> + </span>]:<span class="lineCov">   13850365 :         if (bf == 0) break;</span>
+<span class="lineNum">     646 </span>        [<span class="branchCov" title="Branch 0 was taken 6612274 times"> + </span><span class="branchCov" title="Branch 1 was taken 6741820 times"> + </span>]:<span class="lineCov">   13354094 :         if (bf == 0) break;</span>
 <span class="lineNum">     647 </span>                :            : 
-<span class="lineNum">     648 </span>                :<span class="lineCov">    6995130 :         cur = p;</span>
+<span class="lineNum">     648 </span>                :<span class="lineCov">    6741820 :         cur = p;</span>
 <span class="lineNum">     649 </span>                :            :     }
 <span class="lineNum">     650 </span>                :            : 
 <span class="lineNum">     651 </span>                :            :     __AVL_DEBUG_DISPLAY(tree);
